@@ -68,14 +68,14 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="bg-foreground text-background">
+    <footer className="border-t border-border bg-[#fffaf6] text-foreground">
       {/* Newsletter Banner */}
-      <div className="border-b border-background/10">
-        <div className="container mx-auto px-4 py-8">
+      <div className="border-b border-border">
+        <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div>
               <h3 className="font-serif font-bold text-xl mb-1">Stay in the loop</h3>
-              <p className="text-background/60 text-sm">Get weekly devotionals, event updates & more.</p>
+              <p className="text-muted-foreground text-sm">Get weekly devotionals, event updates and more.</p>
             </div>
             <form onSubmit={handleSubscribe} className="flex w-full md:w-auto gap-2">
               <Input
@@ -83,7 +83,7 @@ export const Footer = () => {
                 placeholder="Your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-background/10 border-background/20 text-background placeholder:text-background/40 min-w-[220px]"
+                className="bg-white border-border text-foreground placeholder:text-muted-foreground min-w-0 md:min-w-[220px]"
               />
               <Button type="submit" disabled={isSubscribing} variant="secondary" className="gap-2 flex-shrink-0">
                 <Send className="w-4 h-4" />
@@ -95,18 +95,18 @@ export const Footer = () => {
       </div>
 
       {/* Main Footer */}
-      <div className="container mx-auto px-4 py-10">
+      <div className="container mx-auto px-4 py-8">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <img src={branding.logo_url} alt={branding.site_name} className="w-10 h-10 object-contain rounded-full bg-background/10 p-1" />
+              <img src={branding.logo_url} alt={branding.site_name} className="w-10 h-10 object-contain rounded-full bg-white p-1 ring-1 ring-border" />
               <div>
                 <div className="font-serif font-bold text-lg">{branding.site_name}</div>
-                <div className="text-xs text-background/50 italic">{branding.tagline}</div>
+                <div className="text-xs text-muted-foreground italic">{branding.tagline}</div>
               </div>
             </div>
-            <p className="text-background/60 text-sm leading-relaxed mb-5">
+            <p className="text-muted-foreground text-sm leading-relaxed mb-5">
               Nurturing belief in Christ and developing Christ-like character through discipleship, evangelism, and missions.
             </p>
             <div className="flex gap-2">
@@ -114,7 +114,7 @@ export const Footer = () => {
                 const SIcon = platformIcons[s.platform] || Facebook;
                 return (
                   <a key={i} href={s.link} target="_blank" rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-full bg-background/10 hover:bg-secondary hover:text-secondary-foreground flex items-center justify-center transition-colors"
+                    className="w-9 h-9 rounded-full bg-white ring-1 ring-border hover:bg-secondary hover:text-secondary-foreground flex items-center justify-center transition-colors"
                     aria-label={s.platform} title={s.handle}>
                     <SIcon className="w-4 h-4" />
                   </a>
@@ -129,7 +129,7 @@ export const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.slice(0, 4).map((link) => (
                 <li key={link.to}>
-                  <Link to={link.to} className="text-sm text-background/60 hover:text-secondary transition-colors inline-flex items-center gap-1">
+                    <Link to={link.to} className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1">
                     {link.label}
                   </Link>
                 </li>
@@ -142,14 +142,14 @@ export const Footer = () => {
             <ul className="space-y-2">
               {quickLinks.slice(4).map((link) => (
                 <li key={link.to}>
-                  <Link to={link.to} className="text-sm text-background/60 hover:text-secondary transition-colors inline-flex items-center gap-1">
+                    <Link to={link.to} className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1">
                     {link.label}
                   </Link>
                 </li>
               ))}
               <li>
                 <a href={COMMUNITY_LINK} target="_blank" rel="noopener noreferrer"
-                  className="text-sm text-background/60 hover:text-secondary transition-colors inline-flex items-center gap-1">
+                  className="text-sm text-muted-foreground hover:text-primary transition-colors inline-flex items-center gap-1">
                   Join Community <ArrowUpRight className="w-3 h-3" />
                 </a>
               </li>
@@ -159,7 +159,7 @@ export const Footer = () => {
           {/* Contact */}
           <div>
             <h4 className="font-semibold text-sm uppercase tracking-wider text-secondary mb-4">Reach Us</h4>
-            <ul className="space-y-3 text-sm text-background/60">
+            <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
                 <Phone className="w-4 h-4 mt-0.5 flex-shrink-0 text-secondary" />
                 <a href={`tel:${contact.phone}`} className="hover:text-secondary transition-colors">{contact.phone}</a>
@@ -178,9 +178,9 @@ export const Footer = () => {
       </div>
 
       {/* Bottom */}
-      <div className="border-t border-background/10">
+      <div className="border-t border-border">
         <div className="container mx-auto px-4 py-5">
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-background/40">
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-muted-foreground">
             <p>© {new Date().getFullYear()} {branding.site_name}. All rights reserved.</p>
             <div className="flex items-center gap-4">
               <p className="flex items-center gap-1 text-secondary/70 italic">

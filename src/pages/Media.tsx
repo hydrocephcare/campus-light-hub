@@ -91,7 +91,7 @@ const Media = () => {
             <div className="flex flex-wrap gap-3">
               {featured && (
                 <Button
-                  onClick={() => setPlayingId(featured.id)}
+                  onClick={() => window.open(featured.youtube_url, "_blank", "noopener,noreferrer")}
                   size="lg"
                   className="bg-red-600 hover:bg-red-700 text-white gap-2"
                 >
@@ -187,7 +187,7 @@ const Media = () => {
                   <Card
                     key={sermon.id}
                     className="overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                    onClick={() => setPlayingId(sermon.id)}
+                    onClick={() => window.open(sermon.youtube_url, "_blank", "noopener,noreferrer")}
                   >
                     <div className="relative aspect-video overflow-hidden bg-muted">
                       <img

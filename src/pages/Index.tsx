@@ -44,6 +44,10 @@ const Index = () => {
         <AnimatedSection animation="fade-up" delay={100}>
           <QuickActions />
         </AnimatedSection>
+
+        <Suspense fallback={<SectionFallback />}>
+          <GalleryPreview />
+        </Suspense>
         
         <AnimatedSection animation="scale">
           <EnhancedStatsCounter />
@@ -105,10 +109,6 @@ const Index = () => {
           
           <AnimatedSection animation="fade-up">
             <LatestBlogPost />
-          </AnimatedSection>
-          
-          <AnimatedSection animation="fade-up">
-            <GalleryPreview />
           </AnimatedSection>
           
           <AnimatedSection animation="fade-up">

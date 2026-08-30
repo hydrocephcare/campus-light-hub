@@ -30,7 +30,7 @@ export const GalleryPhoto = ({ item, onOpen, priority = false }: Props) => {
     <button
       type="button"
       onClick={onOpen}
-      className="group relative aspect-square w-full overflow-hidden rounded-lg bg-muted ring-1 ring-border/40 transition-all duration-300 hover:z-10 hover:ring-2 hover:ring-primary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+      className="group relative aspect-square w-full overflow-hidden rounded-md bg-white p-1 ring-1 ring-border/60 transition-all duration-300 hover:z-10 hover:ring-2 hover:ring-primary/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary"
       aria-label={item.title || "Open photo"}
     >
       {isVideo ? (
@@ -46,7 +46,7 @@ export const GalleryPhoto = ({ item, onOpen, priority = false }: Props) => {
             src={optimizedImageUrl(item.media_url, { width: 600, quality: 72 })}
             alt={item.title || "Church gallery photo"}
             onLoad={() => setLoaded(true)}
-            className={`h-full w-full object-cover transition-all duration-500 ease-out group-hover:scale-[1.04] ${
+            className={`h-full w-full object-contain transition-all duration-500 ease-out ${
               loaded ? "opacity-100" : "opacity-0"
             }`}
             loading={priority ? "eager" : "lazy"}

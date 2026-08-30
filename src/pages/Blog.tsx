@@ -63,46 +63,46 @@ const Blog = () => {
     <div className="min-h-screen bg-[#f7f7f5] text-[#191919]">
       <Header />
       <main>
-        <section className="border-b border-white/10 bg-[#191919] text-white">
+        <section className="border-b border-[#ded6cf] bg-[#fffaf6] text-[#201a17]">
           <div className="container mx-auto px-4 py-7 md:py-10">
-            <div className="flex items-end justify-between gap-6 border-b border-white/20 pb-5">
+            <div className="flex items-end justify-between gap-6 border-b border-[#ded6cf] pb-5">
               <div>
-                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-[#ff9d2e]">
+                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-[#9d3529]">
                   <BookOpen className="h-4 w-4" /> MKU Christian Union
                 </div>
                 <h1 className="font-serif text-4xl font-bold md:text-6xl">The Journal</h1>
               </div>
-              <p className="hidden max-w-sm text-right text-sm leading-6 text-white/65 md:block">
+              <p className="hidden max-w-sm text-right text-sm leading-6 text-black/60 md:block">
                 Sermons, testimonies and reflections from our life together in Christ.
               </p>
             </div>
           </div>
 
           {loading ? (
-            <div className="flex min-h-[420px] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#ff9d2e]" /></div>
+            <div className="flex min-h-[420px] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#9d3529]" /></div>
           ) : featured ? (
             <Link to={`/blog/${featured.slug}`} className="group block">
               <div className="container mx-auto grid px-4 pb-10 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,.95fr)] md:items-center md:gap-12 md:pb-14">
                 <div className="order-2 py-8 md:order-1 md:py-12">
-                  <div className="mb-5 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase text-white/60">
-                    <span className="text-[#ff9d2e]">Featured message</span><span aria-hidden="true">/</span><span>{featured.category || "Story"}</span>
+                  <div className="mb-4 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase text-black/50">
+                    <span className="text-[#9d3529]">Featured message</span><span aria-hidden="true">/</span><span>{featured.category || "Story"}</span>
                   </div>
-                  <h2 className="max-w-3xl font-serif text-4xl font-bold leading-tight md:text-5xl lg:text-6xl">{featured.title}</h2>
-                  <p className="mt-5 max-w-2xl text-base leading-7 text-white/70 md:text-lg">{featured.excerpt}</p>
-                  <div className="mt-8 flex flex-wrap items-center gap-5 text-sm text-white/60">
+                  <h2 className="max-w-3xl font-serif text-3xl font-bold leading-tight md:text-5xl">{featured.title}</h2>
+                  <p className="mt-4 max-w-2xl text-base leading-7 text-black/65 md:text-lg">{featured.excerpt}</p>
+                  <div className="mt-6 flex flex-wrap items-center gap-5 text-sm text-black/50">
                     {featured.published_at && <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {formatDate(featured.published_at)}</span>}
                     <span className="flex items-center gap-2"><Clock className="h-4 w-4" /> {Math.max(1, Math.ceil(featured.content.length / 1500))} min read</span>
                   </div>
-                  <span className="mt-9 inline-flex items-center gap-2 border-b border-[#ff9d2e] pb-1 text-sm font-semibold transition-colors group-hover:text-[#ff9d2e]">
+                  <span className="mt-7 inline-flex items-center gap-2 border-b border-[#9d3529] pb-1 text-sm font-semibold transition-colors group-hover:text-[#9d3529]">
                     Read the message <ArrowUpRight className="h-4 w-4" />
                   </span>
                 </div>
-                <div className="order-1 flex justify-center bg-[#101010] md:order-2">
+                <div className="order-1 flex justify-center bg-white p-2 ring-1 ring-[#ded6cf] md:order-2">
                   <img src={featured.featured_image || defaultImage} alt={featured.title} className="aspect-square w-full max-w-[620px] object-contain" />
                 </div>
               </div>
             </Link>
-          ) : <div className="container mx-auto px-4 py-24 text-center text-white/60">No stories published yet.</div>}
+          ) : <div className="container mx-auto px-4 py-24 text-center text-black/60">No stories published yet.</div>}
         </section>
 
         <section className="sticky top-[56px] z-30 border-b border-black/10 bg-[#f7f7f5]/95 backdrop-blur md:top-[64px]">

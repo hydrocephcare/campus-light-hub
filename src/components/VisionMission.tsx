@@ -5,8 +5,8 @@ import { useSiteSetting } from "@/hooks/useSiteSettings";
 const iconMap: Record<string, React.ElementType> = { Target, Heart, Users, BookOpen, Globe, Shield, Star, Award, School, Sparkles };
 
 export const VisionMission = () => {
-  const { data: vision } = useSiteSetting("vision", { title: "Our Vision", description: "" });
-  const { data: mission } = useSiteSetting("mission", { title: "Our Mission", description: "" });
+  const { data: vision } = useSiteSetting("vision", { title: "Our Vision", description: "To nurture a Christ-centred student community that knows God, lives out the Gospel and influences the campus and society." });
+  const { data: mission } = useSiteSetting("mission", { title: "Our Mission", description: "To build believers through Scripture, prayer, worship, discipleship, fellowship, evangelism and missions." });
   const { data: coreValues } = useSiteSetting("core_values", []);
 
   return (

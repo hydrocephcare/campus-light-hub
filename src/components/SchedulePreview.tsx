@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, Clock, MapPin, ArrowRight, Sun, BookOpen, Users, Heart, Music } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import { staticDailySchedule } from "@/data/staticSiteContent";
 
 interface DailyScheduleItem {
   id: string;
@@ -45,9 +46,11 @@ export const SchedulePreview = () => {
         .order("display_order");
 
       if (error) throw error;
-      setSchedule(data || []);
+      const fallback = staticDailySchedule.filter((item) => item.day_of_week === today);
+      setSchedule(data && data.length > 0 ? data : fallback);
     } catch (error) {
       console.error("Error fetching schedule:", error);
+      setSchedule(staticDailySchedule.filter((item) => item.day_of_week === today));
     } finally {
       setLoading(false);
     }
@@ -90,8 +93,8 @@ export const SchedulePreview = () => {
               ) : displaySchedule.length === 0 ? (
                 <div className="p-6 text-center text-muted-foreground">
                   <Calendar className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                  <p>No activities scheduled for today.</p>
-                  <p className="text-sm">Check the full schedule for other days.</p>
+                  <p>Today is open for personal fellowship and rest.</p>
+                  <p className="text-sm">The full weekly program is available below.</p>
                 </div>
               ) : (
                 <div className="divide-y">

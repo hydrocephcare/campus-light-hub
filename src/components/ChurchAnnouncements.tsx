@@ -134,7 +134,7 @@ export const ChurchAnnouncements = () => {
                 >
                   <Button variant="outline" size="sm" className="text-xs h-7">
                     <Info className="w-3 h-3 mr-1" />
-                    Learn More
+                    Ask about this
                   </Button>
                 </a>
               </div>

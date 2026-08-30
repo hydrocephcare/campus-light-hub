@@ -28,8 +28,8 @@ const About = () => {
   const [leaders, setLeaders] = useState<Leader[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedLeader, setSelectedLeader] = useState<Leader | null>(null);
-  const { data: vision } = useSiteSetting("vision", { title: "Our Vision", description: "" });
-  const { data: mission } = useSiteSetting("mission", { title: "Our Mission", description: "" });
+  const { data: vision } = useSiteSetting("vision", { title: "Our Vision", description: "To nurture a Christ-centred student community that knows God, lives out the Gospel and influences the campus and society." });
+  const { data: mission } = useSiteSetting("mission", { title: "Our Mission", description: "To build believers through Scripture, prayer, worship, discipleship, fellowship, evangelism and missions." });
   const { data: stats } = useSiteSetting("stats", []);
 
   useSEO({
@@ -209,7 +209,15 @@ const About = () => {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-center text-muted-foreground py-12">Leadership team coming soon.</p>
+                  <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
+                    {["Chairperson", "Vice Chairperson", "Secretary", "Treasurer", "Prayer Coordinator", "Missions Coordinator", "Bible Study Coordinator", "Music Coordinator"].map((position) => (
+                      <div key={position} className="border border-border bg-white p-4 text-center">
+                        <div className="mx-auto mb-3 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10"><Users className="h-6 w-6 text-primary" /></div>
+                        <p className="text-sm font-semibold text-foreground">{position}</p>
+                        <p className="mt-1 text-xs text-muted-foreground">2026/27 leader photo to be added</p>
+                      </div>
+                    ))}
+                  </div>
                 )}
               </div>
             </div>

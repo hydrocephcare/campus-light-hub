@@ -37,7 +37,12 @@ export const LeadersPreview = () => {
   }, []);
 
   if (loading) return null;
-  if (leaders.length === 0) return null;
+  const previewLeaders = leaders.length > 0 ? leaders : [
+    { id: "chair", name: "2026/27 Leadership", position: "Chairperson", image_url: null },
+    { id: "vice-chair", name: "2026/27 Leadership", position: "Vice Chairperson", image_url: null },
+    { id: "secretary", name: "2026/27 Leadership", position: "Secretary", image_url: null },
+    { id: "treasurer", name: "2026/27 Leadership", position: "Treasurer", image_url: null },
+  ];
 
   return (
     <section className="py-12 md:py-16 bg-gradient-to-br from-muted/30 via-background to-muted/20">
@@ -51,7 +56,7 @@ export const LeadersPreview = () => {
         </div>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
-          {leaders.map((leader) => (
+          {previewLeaders.map((leader) => (
             <Card key={leader.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-card">
               <div className="aspect-[4/5] overflow-hidden bg-muted">
                 {leader.image_url ? (

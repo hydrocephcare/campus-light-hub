@@ -91,7 +91,7 @@ const Events = () => {
             <img
               src={optimizedImageUrl(featuredEvent ? getEventImage(featuredEvent.category, featuredEvent.image_url) : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=60", { width: 1600, quality: 70 })}
               alt="Events"
-              className="w-full h-full object-cover"
+              className="w-full h-full object-contain bg-[#17120f]"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-background via-black/50 to-black/30" />
           </div>
@@ -139,11 +139,11 @@ const Events = () => {
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
                   {filteredEvents.map((event) => (
                     <Card key={event.id} id={event.id} className="overflow-hidden group hover:shadow-xl transition-all duration-300 bg-card">
-                      <div className="aspect-[16/10] overflow-hidden relative">
+                      <div className="aspect-square overflow-hidden relative bg-[#f5f1ed] p-2">
                         <img
                           src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 720, quality: 68 })}
                           alt={event.title}
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                          className="w-full h-full object-contain"
                           loading="lazy"
                         />
                         {event.category && (
@@ -180,7 +180,7 @@ const Events = () => {
                         </div>
                         <div className="flex gap-2">
                           <Button className="flex-1" size="sm" onClick={() => { setSelectedEvent(event); setDialogOpen(true); }}>
-                            Register <ArrowRight className="w-4 h-4 ml-1" />
+                            Event details <ArrowRight className="w-4 h-4 ml-1" />
                           </Button>
                           <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => shareEvent(event)}>
                             <Share2 className="w-4 h-4" />
@@ -208,8 +208,8 @@ const Events = () => {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-7xl mx-auto">
                 {pastEvents.slice(0, 8).map((event) => (
                   <Card key={event.id} className="overflow-hidden opacity-60 hover:opacity-80 transition-opacity">
-                    <div className="aspect-video overflow-hidden grayscale">
-                      <img src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 480, quality: 62 })} alt={event.title} className="w-full h-full object-cover" loading="lazy" decoding="async" />
+                    <div className="aspect-square overflow-hidden bg-muted p-2">
+                      <img src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 700, quality: 82 })} alt={event.title} className="w-full h-full object-contain" loading="lazy" decoding="async" />
                     </div>
                     <div className="p-3">
                       <h4 className="font-medium text-sm text-muted-foreground line-clamp-1">{event.title}</h4>

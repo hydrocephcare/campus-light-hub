@@ -41,7 +41,7 @@ const Gallery = () => {
   const sentinelRef = useRef<HTMLDivElement | null>(null);
 
   useSEO({
-    title: "Photo Gallery — Moments of Faith",
+    title: "Church Announcements — MKU Christian Union",
     description: "Browse photos and videos capturing worship, fellowship, and community at MKU Christian Union.",
     image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1200&q=80",
     url: "https://mkucuu.lovable.app/gallery",
@@ -201,7 +201,7 @@ const Gallery = () => {
           <div className="absolute inset-0">
             <img
               src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1600&q=70"
-              alt="Gallery"
+              alt="MKUCU announcement archive"
               className="w-full h-full object-cover"
               loading="eager"
             />
@@ -209,13 +209,13 @@ const Gallery = () => {
           </div>
           <div className="container mx-auto px-4 relative z-10 pb-10 md:pb-14">
             <div className="inline-flex items-center gap-2 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium mb-4">
-              <Camera className="w-4 h-4" /> Photo Gallery
+              <Camera className="w-4 h-4" /> Notice Board
             </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-              Moments of Faith
+              Announcement Archive
             </h1>
             <p className="text-base md:text-lg text-white/80 max-w-2xl">
-              Browse photos grouped by date — just like an album of memories.
+              Browse full program posters from services, fellowships, missions and special gatherings.
             </p>
           </div>
         </section>
@@ -261,7 +261,7 @@ const Gallery = () => {
                         </h2>
                       </div>
                       <span className="text-xs md:text-sm text-muted-foreground whitespace-nowrap">
-                        {month.total} {month.total === 1 ? "photo" : "photos"}
+                        {month.total} {month.total === 1 ? "poster" : "posters"}
                       </span>
                     </div>
 
@@ -280,7 +280,7 @@ const Gallery = () => {
                               {day.dayLabel}
                             </h3>
                             <span className="whitespace-nowrap rounded-full bg-muted px-2 py-0.5 text-[11px] text-muted-foreground">
-                              {day.items.length} {day.items.length === 1 ? "photo" : "photos"}
+                              {day.items.length} {day.items.length === 1 ? "poster" : "posters"}
                             </span>
                           </div>
 
@@ -312,7 +312,7 @@ const Gallery = () => {
                         }}
                       >
                         {loadingMore && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
-                        Load older photos
+                        Load older posters
                     </Button>
                   </div>
                 )}
@@ -320,8 +320,8 @@ const Gallery = () => {
             ) : (
               <div className="text-center py-20">
                 <ImageIcon className="w-16 h-16 text-muted-foreground/40 mx-auto mb-4" />
-                <p className="text-lg font-medium text-muted-foreground">No gallery items yet</p>
-                <p className="text-sm text-muted-foreground/70 mt-1">Photos will appear here once uploaded</p>
+                <p className="text-lg font-medium text-muted-foreground">No announcements yet</p>
+                <p className="text-sm text-muted-foreground/70 mt-1">Program posters will appear here once uploaded</p>
               </div>
             )}
           </div>

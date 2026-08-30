@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
-import { Camera, ArrowRight } from "lucide-react";
+import { Megaphone, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
@@ -27,14 +27,15 @@ export const GalleryPreview = () => {
   }, []);
 
   return (
-    <section className="py-12 md:py-20 bg-gradient-to-br from-background via-muted/30 to-background">
+    <section className="border-y border-border bg-[#fffaf6] py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 bg-secondary/20 text-secondary px-4 py-2 rounded-full mb-4">
-            <Camera className="w-5 h-5" />
-            <span className="text-sm font-semibold">Photo Gallery</span>
+          <div className="mb-3 inline-flex items-center gap-2 text-primary">
+            <Megaphone className="w-5 h-5" />
+            <span className="text-sm font-semibold uppercase">Notice board</span>
           </div>
-          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">Moments of Faith</h2>
+          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-3">Church Announcements</h2>
+          <p className="mx-auto max-w-xl text-sm leading-6 text-muted-foreground">See the full program posters for services, fellowships, missions and special gatherings.</p>
         </div>
       </div>
 
@@ -44,19 +45,19 @@ export const GalleryPreview = () => {
           <Link
             key={img.id}
             to="/gallery"
-            className="group relative w-[72%] flex-shrink-0 snap-center overflow-hidden rounded-2xl bg-muted shadow-lg ring-1 ring-border/50 sm:w-[46%] lg:w-[31%] xl:w-[24%]"
+            className="group relative w-[82%] flex-shrink-0 snap-center overflow-hidden rounded-md bg-white shadow-sm ring-1 ring-border sm:w-[48%] lg:w-[31%] xl:w-[24%]"
           >
-            <div className="aspect-[3/4] w-full sm:aspect-[4/5]">
+            <div className="aspect-square w-full p-2">
               <img
                 src={optimizedImageUrl(img.media_url, { width: 700, quality: 72 })}
                 alt={img.title}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-contain"
                 loading="lazy"
                 decoding="async"
               />
             </div>
-            <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/25 to-transparent p-3 pt-10">
-              <p className="line-clamp-2 text-sm font-semibold text-white sm:text-base">{img.title}</p>
+            <div className="border-t border-border px-3 py-3">
+              <p className="line-clamp-2 text-sm font-semibold text-foreground sm:text-base">{img.title}</p>
             </div>
           </Link>
         ))}
@@ -69,7 +70,7 @@ export const GalleryPreview = () => {
         <div className="text-center">
           <Link to="/gallery">
             <Button size="lg" className="bg-secondary hover:bg-secondary/90 text-secondary-foreground">
-              View Full Gallery <ArrowRight className="ml-2 w-5 h-5" />
+              View announcement archive <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
           </Link>
         </div>

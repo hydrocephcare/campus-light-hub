@@ -70,15 +70,14 @@ export const UpcomingEvents = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-5xl mx-auto mb-6">
           {events.map((event) => (
             <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group border-border bg-card">
-              <div className="relative h-32 overflow-hidden">
+              <div className="relative aspect-square overflow-hidden bg-[#f5f1ed] p-2">
                 <img
                   src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 520, quality: 66 })}
                   alt={event.title}
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="w-full h-full object-contain"
                   loading="lazy"
                   decoding="async"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 {event.category && (
                   <Badge className="absolute top-2 right-2 bg-primary text-primary-foreground text-xs px-2 py-0.5">{event.category}</Badge>
                 )}
@@ -102,7 +101,7 @@ export const UpcomingEvents = () => {
                   className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xs h-8"
                   onClick={() => { setSelectedEvent(event); setDialogOpen(true); }}
                 >
-                  Register <ArrowRight className="w-3 h-3 ml-1" />
+                  View event details <ArrowRight className="w-3 h-3 ml-1" />
                 </Button>
               </div>
             </Card>

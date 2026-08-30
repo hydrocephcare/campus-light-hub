@@ -98,20 +98,20 @@ const BlogPost = () => {
     <div className="min-h-screen bg-[#f7f7f5] text-[#191919]">
       <Header />
       <main>
-        <header className="bg-[#191919] text-white">
+        <header className="border-b border-[#ded6cf] bg-[#fffaf6] text-[#201a17]">
           <div className="container mx-auto max-w-5xl px-4 py-9 md:py-16">
-            <Link to="/blog" className="mb-10 inline-flex items-center gap-2 text-sm text-white/55 transition-colors hover:text-white">
+            <Link to="/blog" className="mb-7 inline-flex items-center gap-2 text-sm text-black/55 transition-colors hover:text-black">
               <ChevronLeft className="h-4 w-4" /> The Journal
             </Link>
             <div className="max-w-4xl">
               <div className="mb-5 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase">
-                <span className="text-[#ff9d2e]">{post.category || "Story"}</span>
-                <span className="text-white/30">/</span>
-                <span className="text-white/55">MKU Christian Union</span>
+                <span className="text-[#9d3529]">{post.category || "Story"}</span>
+                <span className="text-black/25">/</span>
+                <span className="text-black/50">MKU Christian Union</span>
               </div>
-              <h1 className="font-serif text-4xl font-bold leading-tight md:text-6xl lg:text-7xl">{post.title}</h1>
-              {post.excerpt && <p className="mt-6 max-w-3xl text-lg leading-8 text-white/68 md:text-xl">{post.excerpt}</p>}
-              <div className="mt-8 flex flex-wrap items-center gap-5 border-t border-white/15 pt-5 text-sm text-white/55">
+              <h1 className="font-serif text-3xl font-bold leading-tight md:text-5xl lg:text-6xl">{post.title}</h1>
+              {post.excerpt && <p className="mt-5 max-w-3xl text-base leading-7 text-black/65 md:text-lg">{post.excerpt}</p>}
+              <div className="mt-7 flex flex-wrap items-center gap-5 border-t border-black/10 pt-5 text-sm text-black/50">
                 {post.published_at && <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {format(new Date(post.published_at), "d MMMM yyyy")}</span>}
                 <span className="flex items-center gap-2"><Clock className="h-4 w-4" /> {readTime} min read</span>
               </div>
@@ -127,7 +127,7 @@ const BlogPost = () => {
           </section>
         )}
 
-        <article className="container mx-auto max-w-5xl px-4 py-12 md:py-20">
+        <article className="container mx-auto max-w-5xl px-5 py-10 md:py-16">
           <div className="grid items-start gap-10 lg:grid-cols-[120px_minmax(0,720px)] lg:gap-16">
             <aside className="order-2 lg:order-1 lg:sticky lg:top-28">
               <div className="flex items-center gap-2 border-y border-black/10 py-4 lg:flex-col lg:border-0 lg:py-0">
@@ -142,13 +142,13 @@ const BlogPost = () => {
               <div
                 className="prose max-w-none
                   prose-headings:font-serif prose-headings:font-bold prose-headings:text-[#191919]
-                  prose-h2:mt-14 prose-h2:border-t prose-h2:border-black/15 prose-h2:pt-8 prose-h2:text-3xl
-                  prose-h3:mt-9 prose-h3:text-2xl
-                  prose-p:mb-6 prose-p:text-[17px] prose-p:leading-8 prose-p:text-black/75 md:prose-p:text-lg
+                  prose-h2:mt-11 prose-h2:border-t prose-h2:border-black/15 prose-h2:pt-7 prose-h2:text-2xl
+                  prose-h3:mt-8 prose-h3:text-xl
+                  prose-p:mb-5 prose-p:text-base prose-p:leading-7 prose-p:text-black/75 md:prose-p:text-[17px]
                   prose-strong:font-semibold prose-strong:text-black
                   prose-blockquote:my-9 prose-blockquote:border-l-4 prose-blockquote:border-[#b64032] prose-blockquote:bg-white prose-blockquote:px-6 prose-blockquote:py-5 prose-blockquote:not-italic
-                  prose-blockquote:text-xl prose-blockquote:font-serif prose-blockquote:leading-8 prose-blockquote:text-black
-                  prose-ul:my-7 prose-ul:space-y-3 prose-li:text-[17px] prose-li:leading-7 prose-li:text-black/75
+                  prose-blockquote:text-lg prose-blockquote:font-serif prose-blockquote:leading-7 prose-blockquote:text-black
+                  prose-ul:my-6 prose-ul:space-y-2 prose-li:text-base prose-li:leading-7 prose-li:text-black/75
                   prose-hr:my-12 prose-hr:border-black/15"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />
@@ -162,13 +162,13 @@ const BlogPost = () => {
                 </div>
               )}
 
-              <div className="mt-14 border-y border-black/15 py-8">
+              <div className="mt-10 border-y border-black/15 py-6">
                 <p className="text-xs font-bold uppercase text-[#9d3529]">Mount Kenya University Christian Union</p>
                 <h2 className="mt-2 font-serif text-2xl font-bold">Stay rooted. Keep building.</h2>
                 <p className="mt-2 max-w-xl text-sm leading-6 text-black/55">Share this message with a friend, revisit the Scriptures, and carry the lesson into the semester.</p>
               </div>
 
-              <div className="mt-14"><CommentsSection postSlug={post.slug} /></div>
+              <div className="mt-10"><CommentsSection postSlug={post.slug} /></div>
             </div>
           </div>
         </article>

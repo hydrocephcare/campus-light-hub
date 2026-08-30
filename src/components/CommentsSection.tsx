@@ -317,10 +317,10 @@ export const CommentsSection = memo(({ postSlug }: CommentsSectionProps) => {
   };
 
   return (
-    <div className="mt-10 pt-6 border-t border-border">
+    <div className="mt-8 pt-6 border-t border-border">
       <div className="flex items-center gap-3 mb-5">
         <MessageCircle className="w-5 h-5 text-primary" />
-        <h2 className="text-xl font-serif font-bold text-foreground">
+        <h2 className="text-lg font-serif font-bold text-foreground">
           Comments ({topLevelComments.length})
         </h2>
       </div>
@@ -351,8 +351,7 @@ export const CommentsSection = memo(({ postSlug }: CommentsSectionProps) => {
       )}
 
       {!isLoading && topLevelComments.length === 0 && (
-        <div className="text-center py-8 text-muted-foreground">
-          <MessageCircle className="w-10 h-10 mx-auto mb-3 opacity-50" />
+        <div className="py-5 text-sm text-muted-foreground">
           <p className="text-sm">No comments yet. Be the first to share!</p>
         </div>
       )}

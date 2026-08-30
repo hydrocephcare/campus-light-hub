@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Quote, ArrowRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
+import { mergePublishedBlogPosts } from "@/data/blogPosts";
 
 interface BlogPost {
   id: string;
@@ -32,9 +33,8 @@ export const LatestBlogPost = () => {
       .limit(1)
       .maybeSingle();
 
-    if (!error && data) {
-      setPost(data);
-    }
+    const [latestPost] = mergePublishedBlogPosts(!error && data ? [data] : []);
+    setPost(latestPost || null);
     setLoading(false);
   };
 

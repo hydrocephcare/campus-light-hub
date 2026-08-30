@@ -8,6 +8,7 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
+import { mergePublishedBlogPosts } from "@/data/blogPosts";
 
 interface BlogPost {
   id: string;
@@ -44,9 +45,10 @@ const Blog = () => {
           .eq("is_published", true)
           .order("published_at", { ascending: false });
         if (error) throw error;
-        setBlogPosts(data || []);
+        setBlogPosts(mergePublishedBlogPosts(data || []));
       } catch (error) {
         console.error("Error fetching blog posts:", error);
+        setBlogPosts(mergePublishedBlogPosts([]));
       } finally {
         setLoading(false);
       }

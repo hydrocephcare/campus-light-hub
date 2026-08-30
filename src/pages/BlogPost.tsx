@@ -11,6 +11,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { format } from "date-fns";
 import { useSEO } from "@/hooks/useSEO";
+import { findBuiltInBlogPost, mergePublishedBlogPosts } from "@/data/blogPosts";
 
 interface BlogPost {
   id: string;
@@ -40,6 +41,7 @@ const BlogPost = () => {
 
   const fetchPost = async () => {
     try {
+      const builtInPost = slug ? findBuiltInBlogPost(slug) : null;
       const { data, error } = await supabase
         .from('blog_posts')
         .select('*')
@@ -47,10 +49,11 @@ const BlogPost = () => {
         .eq('is_published', true)
         .maybeSingle();
 
-      if (error) throw error;
-      setPost(data);
+      if (error && !builtInPost) throw error;
+      const resolvedPost = data || builtInPost;
+      setPost(resolvedPost);
 
-      if (data) {
+      if (resolvedPost) {
         const { data: related } = await supabase
           .from('blog_posts')
           .select('*')
@@ -58,7 +61,11 @@ const BlogPost = () => {
           .neq('slug', slug)
           .limit(3);
         
-        setRelatedPosts(related || []);
+        setRelatedPosts(
+          mergePublishedBlogPosts(related || [])
+            .filter((relatedPost) => relatedPost.slug !== resolvedPost.slug)
+            .slice(0, 3),
+        );
       }
     } catch (error) {
       console.error('Error fetching post:', error);

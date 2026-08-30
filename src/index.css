@@ -1,0 +1,280 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 220 40% 12%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 220 40% 12%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 40% 12%;
+
+    --primary: 152 55% 33%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 45 93% 47%;
+    --secondary-foreground: 220 40% 12%;
+
+    --muted: 220 14% 96%;
+    --muted-foreground: 220 9% 46%;
+
+    --accent: 0 72% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 152 55% 33%;
+
+    --radius: 0.75rem;
+
+    /* Custom MKU CU colors */
+    --forest: 152 55% 20%;
+    --forest-light: 152 55% 33%;
+    --gold: 45 93% 47%;
+    --gold-light: 48 96% 89%;
+    --crimson: 0 72% 51%;
+    
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(152 55% 33%) 0%, hsl(152 55% 20%) 100%);
+    --gradient-gold: linear-gradient(135deg, hsl(45 93% 47%) 0%, hsl(48 96% 53%) 100%);
+    --gradient-hero: linear-gradient(135deg, hsl(152 55% 20% / 0.95) 0%, hsl(152 55% 33% / 0.9) 100%);
+    
+    /* Shadows */
+    --shadow-soft: 0 4px 6px -1px hsl(220 40% 12% / 0.1), 0 2px 4px -1px hsl(220 40% 12% / 0.06);
+    --shadow-medium: 0 10px 15px -3px hsl(220 40% 12% / 0.1), 0 4px 6px -2px hsl(220 40% 12% / 0.05);
+    --shadow-large: 0 20px 25px -5px hsl(220 40% 12% / 0.1), 0 10px 10px -5px hsl(220 40% 12% / 0.04);
+    --shadow-glow: 0 0 30px hsl(152 55% 33% / 0.3);
+    
+    /* Transitions */
+    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .dark {
+    --background: 152 30% 8%;
+    --foreground: 0 0% 98%;
+
+    --card: 152 30% 12%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 152 30% 12%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 152 55% 45%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 45 93% 47%;
+    --secondary-foreground: 220 40% 12%;
+
+    --muted: 152 30% 15%;
+    --muted-foreground: 220 14% 71%;
+
+    --accent: 0 72% 51%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 152 30% 20%;
+    --input: 152 30% 20%;
+    --ring: 152 55% 45%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    font-weight: 700;
+  }
+
+  /* Blog prose styles */
+  .prose {
+    color: hsl(var(--foreground));
+    max-width: 65ch;
+  }
+
+  .prose .lead {
+    font-size: 1.25rem;
+    line-height: 1.75;
+    color: hsl(var(--muted-foreground));
+    font-weight: 500;
+    margin-bottom: 2rem;
+    margin-top: 1.5rem;
+  }
+
+  .prose .conclusion {
+    font-size: 1.125rem;
+    line-height: 1.75;
+    font-style: italic;
+    padding: 1.5rem;
+    background: hsl(var(--muted));
+    border-left: 4px solid hsl(var(--gold));
+    margin-top: 2rem;
+    border-radius: 0.5rem;
+  }
+
+  /* Rich text editor styles */
+  .ql-container {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 1rem;
+    min-height: 250px;
+  }
+
+  .ql-editor {
+    min-height: 250px;
+    color: hsl(var(--foreground));
+  }
+
+  .ql-toolbar {
+    border-color: hsl(var(--border)) !important;
+    background: hsl(var(--muted));
+  }
+
+  .ql-container {
+    border-color: hsl(var(--border)) !important;
+  }
+
+  .ql-editor.ql-blank::before {
+    color: hsl(var(--muted-foreground));
+    font-style: normal;
+  }
+
+  .dark .ql-toolbar {
+    background: hsl(var(--muted));
+  }
+
+  .dark .ql-stroke {
+    stroke: hsl(var(--foreground));
+  }
+
+  .dark .ql-fill {
+    fill: hsl(var(--foreground));
+  }
+
+  .dark .ql-picker-label {
+    color: hsl(var(--foreground));
+  }
+
+  .dark .ql-picker-options {
+    background: hsl(var(--card));
+    border-color: hsl(var(--border));
+  }
+
+  .dark .ql-picker-item {
+    color: hsl(var(--foreground));
+  }
+}
+
+@layer utilities {
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scaleIn 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+
+  .animate-slide-in-left {
+    animation: slideInLeft 0.6s ease-out forwards;
+  }
+
+  .animate-slide-in-right {
+    animation: slideInRight 0.6s ease-out forwards;
+  }
+
+  .gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .gradient-gold {
+    background: var(--gradient-gold);
+  }
+
+  .gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .text-gradient {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .shadow-glow {
+    box-shadow: var(--shadow-glow);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}

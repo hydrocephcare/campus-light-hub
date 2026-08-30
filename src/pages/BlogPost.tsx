@@ -28,15 +28,6 @@ interface BlogPostRecord {
 
 const fallbackImage = "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1200&q=85";
 
-// Ink & parchment palette — deliberately warmer / higher-contrast than a flat cream+terracotta default.
-const PAPER = "#F6EFE0";
-const PAPER_CARD = "#FCF8EE";
-const INK = "#1C1712";
-const OXBLOOD = "#7A2E22";
-const OXBLOOD_DEEP = "#4E1D16";
-const BRASS = "#A07A2C";
-const FOREST = "#37493F";
-
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
   const [post, setPost] = useState<BlogPostRecord | null>(null);
@@ -87,10 +78,10 @@ const BlogPost = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen" style={{ background: PAPER }}>
+      <div className="min-h-screen bg-[#F6EFE0]">
         <Header />
         <main className="flex min-h-[60vh] items-center justify-center">
-          <Loader2 className="h-8 w-8 animate-spin" style={{ color: OXBLOOD }} />
+          <Loader2 className="h-8 w-8 animate-spin text-[#7A2E22]" />
         </main>
         <Footer />
       </div>
@@ -99,12 +90,12 @@ const BlogPost = () => {
 
   if (!post) {
     return (
-      <div className="min-h-screen" style={{ background: PAPER, color: INK }}>
+      <div className="min-h-screen bg-[#F6EFE0] text-[#1C1712]">
         <Header />
         <main className="container mx-auto px-4 py-28 text-center">
-          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.25em]" style={{ color: OXBLOOD }}>The Journal</p>
+          <p className="mb-3 font-mono text-xs font-bold uppercase tracking-[0.25em] text-[#7A2E22]">The Journal</p>
           <h1 className="font-serif text-4xl font-bold">Story not found</h1>
-          <Link to="/blog" className="mt-8 inline-flex items-center gap-2 border-b pb-1 text-sm font-semibold" style={{ borderColor: INK }}>
+          <Link to="/blog" className="mt-8 inline-flex items-center gap-2 border-b border-black pb-1 text-sm font-semibold">
             <ChevronLeft className="h-4 w-4" /> Back to the journal
           </Link>
         </main>
@@ -114,32 +105,26 @@ const BlogPost = () => {
   }
 
   const readTime = Math.max(1, Math.ceil(post.content.length / 1500));
+  const heroImage = post.featured_image || fallbackImage;
 
   return (
-    <div className="min-h-screen" style={{ background: PAPER, color: INK }}>
+    <div className="min-h-screen bg-[#F6EFE0] text-[#1C1712]">
       <Header />
       <main>
         {/* ---------------- Hero ---------------- */}
-        <header className="relative overflow-hidden border-b" style={{ borderColor: `${INK}1f`, background: `linear-gradient(180deg, ${PAPER_CARD} 0%, ${PAPER} 100%)` }}>
-          <div
-            className="pointer-events-none absolute inset-x-0 top-0 h-[3px]"
-            style={{ background: `repeating-linear-gradient(90deg, ${OXBLOOD} 0 28px, ${BRASS} 28px 30px, transparent 30px 58px)` }}
-          />
+        <header className="border-b-[3px] border-[#7A2E22] bg-gradient-to-b from-[#FCF8EE] to-[#F6EFE0]">
           <div className="container mx-auto max-w-[1180px] px-5 py-12 md:py-20">
-            <Link to="/blog" className="mb-10 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.2em] transition-colors hover:opacity-70" style={{ color: `${INK}99` }}>
+            <Link to="/blog" className="mb-10 inline-flex items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.2em] text-black/55 transition-colors hover:text-black">
               <ChevronLeft className="h-3.5 w-3.5" /> The Journal
             </Link>
 
-            <div className={`grid items-start gap-10 lg:gap-16 ${post.featured_image ? "lg:grid-cols-[minmax(0,1fr)_360px]" : "lg:max-w-[820px]"}`}>
+            <div className="grid items-start gap-10 lg:grid-cols-[minmax(0,1fr)_360px] lg:gap-16">
               <div>
                 <div className="mb-5 flex flex-wrap items-center gap-3">
-                  <span
-                    className="inline-flex items-center px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-white"
-                    style={{ background: OXBLOOD }}
-                  >
+                  <span className="inline-flex items-center bg-[#7A2E22] px-3 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-white">
                     {post.category || "Story"}
                   </span>
-                  <span className="font-mono text-[11px] uppercase tracking-[0.18em]" style={{ color: `${INK}70` }}>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-black/50">
                     Mount Kenya University Christian Union
                   </span>
                 </div>
@@ -149,12 +134,12 @@ const BlogPost = () => {
                 </h1>
 
                 {post.excerpt && (
-                  <p className="mt-6 max-w-2xl border-l-2 pl-5 text-lg leading-8" style={{ borderColor: BRASS, color: `${INK}b3` }}>
+                  <p className="mt-6 max-w-2xl border-l-2 border-[#A07A2C] pl-5 text-lg leading-8 text-black/70">
                     {post.excerpt}
                   </p>
                 )}
 
-                <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2 pt-5 font-mono text-[13px]" style={{ color: `${INK}80`, borderTop: `1px solid ${INK}1f` }}>
+                <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-2 border-t border-black/10 pt-5 font-mono text-[13px] text-black/60">
                   {post.published_at && (
                     <span className="flex items-center gap-2">
                       <Calendar className="h-3.5 w-3.5" /> {format(new Date(post.published_at), "d MMMM yyyy").toUpperCase()}
@@ -166,63 +151,45 @@ const BlogPost = () => {
                 </div>
               </div>
 
-              {post.featured_image && (
-                <figure className="relative mx-auto w-full max-w-[320px] p-3 shadow-[0_18px_40px_-20px_rgba(28,23,18,0.45)] lg:mx-0" style={{ background: PAPER_CARD, border: `1px solid ${INK}1f` }}>
-                  <div className="absolute -left-2 -top-2 h-4 w-4 border-l-2 border-t-2" style={{ borderColor: BRASS }} />
-                  <div className="absolute -right-2 -bottom-2 h-4 w-4 border-b-2 border-r-2" style={{ borderColor: BRASS }} />
-                  <img src={post.featured_image} alt={post.title} className="aspect-square h-auto w-full object-contain" />
-                </figure>
-              )}
+              <figure className="relative mx-auto w-full max-w-[320px] border border-black/10 bg-[#FCF8EE] p-3 shadow-[0_18px_40px_-20px_rgba(28,23,18,0.45)] lg:mx-0">
+                <div className="absolute -left-2 -top-2 h-4 w-4 border-l-2 border-t-2 border-[#A07A2C]" />
+                <div className="absolute -right-2 -bottom-2 h-4 w-4 border-b-2 border-r-2 border-[#A07A2C]" />
+                <img src={heroImage} alt={post.title} className="aspect-square h-auto w-full object-cover" />
+              </figure>
             </div>
           </div>
         </header>
 
         {/* ---------------- Body + rail ---------------- */}
-        <article style={{ background: PAPER }}>
+        <article className="bg-[#F6EFE0]">
           <div className="container mx-auto max-w-[1180px] px-5 py-14 md:py-20">
             <div className="grid gap-14 lg:grid-cols-[minmax(0,1fr)_280px]">
               {/* Main column */}
               <div className="min-w-0 max-w-[720px]">
                 <div
                   className="prose prose-neutral max-w-none
-                    first:prose-p:first-letter:float-left first:prose-p:first-letter:mr-3 first:prose-p:first-letter:mt-1
-                    first:prose-p:first-letter:font-serif first:prose-p:first-letter:text-[4.4rem] first:prose-p:first-letter:font-bold
-                    first:prose-p:first-letter:leading-[0.78]
-                    prose-headings:font-serif prose-headings:font-bold
-                    prose-h2:mb-5 prose-h2:mt-14 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h2:tracking-[-0.01em]
+                    prose-headings:font-serif prose-headings:font-bold prose-headings:text-[#1C1712]
+                    prose-h2:mb-5 prose-h2:mt-14 prose-h2:border-t prose-h2:border-black/10 prose-h2:pt-8 prose-h2:text-[1.65rem] prose-h2:leading-tight prose-h2:tracking-[-0.01em]
                     prose-h3:mb-3 prose-h3:mt-10 prose-h3:text-[1.25rem] prose-h3:leading-snug
-                    prose-p:mb-5 prose-p:mt-0 prose-p:text-[1.08rem] prose-p:leading-[1.9]
-                    prose-strong:font-bold
-                    prose-blockquote:relative prose-blockquote:my-10 prose-blockquote:border-none prose-blockquote:px-8 prose-blockquote:py-6
-                    prose-blockquote:font-serif prose-blockquote:text-xl prose-blockquote:not-italic prose-blockquote:leading-8
-                    prose-ul:my-6 prose-ul:space-y-2.5 prose-li:text-[1.03rem] prose-li:leading-7
-                    prose-hr:my-14"
-                  style={
-                    {
-                      color: `${INK}cc`,
-                      "--tw-prose-headings": INK,
-                      "--tw-prose-bold": INK,
-                    } as React.CSSProperties
-                  }
-                >
-                  <style>{`
-                    .prose h2 { border-top: 1px solid ${INK}1f; padding-top: 2rem; }
-                    .prose h2::before { content: ""; display: block; width: 34px; height: 3px; background: ${BRASS}; margin-bottom: 1rem; }
-                    .prose blockquote { background: ${PAPER_CARD}; border-left: 3px solid ${OXBLOOD}; color: ${INK}; }
-                    .prose blockquote p { margin: 0; }
-                    .prose li::marker { color: ${OXBLOOD}; }
-                    .prose > p:first-of-type:first-letter { color: ${OXBLOOD}; }
-                    .prose a { color: ${OXBLOOD_DEEP}; text-decoration-color: ${BRASS}; text-underline-offset: 3px; }
-                  `}</style>
-                  <div dangerouslySetInnerHTML={{ __html: post.content }} />
-                </div>
+                    prose-p:mb-5 prose-p:mt-0 prose-p:text-[1.08rem] prose-p:leading-[1.9] prose-p:text-black/75
+                    prose-strong:font-bold prose-strong:text-[#1C1712]
+                    prose-blockquote:my-10 prose-blockquote:border-l-4 prose-blockquote:border-[#7A2E22] prose-blockquote:bg-[#FCF8EE] prose-blockquote:px-6 prose-blockquote:py-5
+                    prose-blockquote:font-serif prose-blockquote:text-xl prose-blockquote:not-italic prose-blockquote:leading-8 prose-blockquote:text-[#1C1712]
+                    prose-ul:my-6 prose-ul:space-y-2.5 prose-li:text-[1.03rem] prose-li:leading-7 prose-li:text-black/75
+                    prose-a:text-[#4E1D16] prose-a:underline prose-a:decoration-[#A07A2C] prose-a:underline-offset-4
+                    prose-hr:my-14 prose-hr:border-black/15
+                    first:prose-p:first-letter:float-left first:prose-p:first-letter:mr-3 first:prose-p:first-letter:mt-1
+                    first:prose-p:first-letter:font-serif first:prose-p:first-letter:text-[4.2rem] first:prose-p:first-letter:font-bold
+                    first:prose-p:first-letter:leading-[0.78] first:prose-p:first-letter:text-[#7A2E22]"
+                  dangerouslySetInnerHTML={{ __html: post.content }}
+                />
 
                 {post.tags && post.tags.length > 0 && (
-                  <div className="mt-16 pt-8" style={{ borderTop: `1px solid ${INK}1f` }}>
-                    <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: `${INK}70` }}>Filed under</p>
+                  <div className="mt-16 border-t border-black/10 pt-8">
+                    <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-black/55">Filed under</p>
                     <div className="flex flex-wrap gap-2">
                       {post.tags.map((tag) => (
-                        <Badge key={tag} variant="outline" className="rounded-none px-3 py-1.5 text-sm font-medium" style={{ borderColor: `${INK}30`, background: PAPER_CARD, color: INK }}>
+                        <Badge key={tag} variant="outline" className="rounded-none border-black/20 bg-[#FCF8EE] px-3 py-1.5 text-sm font-medium text-[#1C1712]">
                           {tag}
                         </Badge>
                       ))}
@@ -233,55 +200,49 @@ const BlogPost = () => {
                 <div className="mt-14" id="comments"><CommentsSection postSlug={post.slug} /></div>
               </div>
 
-              {/* Sticky rail */}
+              {/* Sticky rail (desktop) */}
               <aside className="hidden lg:block">
                 <div className="sticky top-24 space-y-8">
-                  <div className="p-5" style={{ background: PAPER_CARD, border: `1px solid ${INK}1f` }}>
-                    <p className="mb-4 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: `${INK}70` }}>
+                  <div className="border border-black/10 bg-[#FCF8EE] p-5">
+                    <p className="mb-4 flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-black/55">
                       <Share2 className="h-3.5 w-3.5" /> Share this story
                     </p>
                     <div className="flex items-center gap-2">
-                      <Button size="icon" className="h-10 w-10 rounded-none text-white hover:opacity-90" style={{ background: OXBLOOD }} onClick={shareFacebook} title="Share on Facebook" aria-label="Share on Facebook">
-                        <Facebook className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" className="h-10 w-10 rounded-none text-white hover:opacity-90" style={{ background: OXBLOOD }} onClick={shareTwitter} title="Share on X" aria-label="Share on X">
-                        <Twitter className="h-4 w-4" />
-                      </Button>
-                      <Button size="icon" variant="outline" className="h-10 w-10 rounded-none" style={{ borderColor: `${INK}30` }} onClick={copyLink} title="Copy link" aria-label="Copy link">
-                        <Link2 className="h-4 w-4" />
-                      </Button>
+                      <Button size="icon" className="h-10 w-10 rounded-none bg-[#7A2E22] text-white hover:bg-[#5c231a]" onClick={shareFacebook} aria-label="Share on Facebook"><Facebook className="h-4 w-4" /></Button>
+                      <Button size="icon" className="h-10 w-10 rounded-none bg-[#7A2E22] text-white hover:bg-[#5c231a]" onClick={shareTwitter} aria-label="Share on X"><Twitter className="h-4 w-4" /></Button>
+                      <Button size="icon" variant="outline" className="h-10 w-10 rounded-none border-black/20" onClick={copyLink} aria-label="Copy link"><Link2 className="h-4 w-4" /></Button>
                     </div>
                   </div>
 
-                  <div className="p-5" style={{ background: OXBLOOD_DEEP, color: "#F6EFE0" }}>
-                    <Quote className="mb-3 h-5 w-5" style={{ color: BRASS }} />
+                  <div className="bg-[#4E1D16] p-5 text-[#F6EFE0]">
+                    <Quote className="mb-3 h-5 w-5 text-[#A07A2C]" />
                     <p className="font-serif text-lg font-bold leading-snug">Stay rooted. Keep building.</p>
-                    <p className="mt-2 text-sm leading-6" style={{ color: "#F6EFE0b3" }}>
+                    <p className="mt-2 text-sm leading-6 text-[#F6EFE0]/75">
                       Share this message with a friend, revisit the Scriptures, and carry the lesson into the semester.
                     </p>
                   </div>
 
-                  <div className="p-5" style={{ border: `1px solid ${INK}1f` }}>
-                    <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: FOREST }}>On this page</p>
-                    <p className="text-sm leading-6" style={{ color: `${INK}90` }}>{readTime} minute read · {post.category || "Story"}</p>
+                  <div className="border border-black/10 p-5">
+                    <p className="mb-3 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-[#37493F]">On this page</p>
+                    <p className="text-sm leading-6 text-black/60">{readTime} minute read · {post.category || "Story"}</p>
                   </div>
                 </div>
               </aside>
             </div>
 
-            {/* Mobile share + CTA (rail content, reflowed) */}
+            {/* Share + CTA (mobile) */}
             <div className="mt-14 space-y-6 lg:hidden">
-              <div className="flex items-center gap-2 border-y py-4" style={{ borderColor: `${INK}1f` }}>
-                <span className="mr-auto flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em]" style={{ color: `${INK}70` }}>
+              <div className="flex items-center gap-2 border-y border-black/10 py-4">
+                <span className="mr-auto flex items-center gap-2 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-black/55">
                   <Share2 className="h-3.5 w-3.5" /> Share
                 </span>
-                <Button size="icon" className="h-10 w-10 rounded-none text-white" style={{ background: OXBLOOD }} onClick={shareFacebook} aria-label="Share on Facebook"><Facebook className="h-4 w-4" /></Button>
-                <Button size="icon" className="h-10 w-10 rounded-none text-white" style={{ background: OXBLOOD }} onClick={shareTwitter} aria-label="Share on X"><Twitter className="h-4 w-4" /></Button>
-                <Button size="icon" variant="outline" className="h-10 w-10 rounded-none" style={{ borderColor: `${INK}30` }} onClick={copyLink} aria-label="Copy link"><Link2 className="h-4 w-4" /></Button>
+                <Button size="icon" className="h-10 w-10 rounded-none bg-[#7A2E22] text-white" onClick={shareFacebook} aria-label="Share on Facebook"><Facebook className="h-4 w-4" /></Button>
+                <Button size="icon" className="h-10 w-10 rounded-none bg-[#7A2E22] text-white" onClick={shareTwitter} aria-label="Share on X"><Twitter className="h-4 w-4" /></Button>
+                <Button size="icon" variant="outline" className="h-10 w-10 rounded-none border-black/20" onClick={copyLink} aria-label="Copy link"><Link2 className="h-4 w-4" /></Button>
               </div>
-              <div className="p-5" style={{ background: OXBLOOD_DEEP, color: "#F6EFE0" }}>
+              <div className="bg-[#4E1D16] p-5 text-[#F6EFE0]">
                 <p className="font-serif text-lg font-bold leading-snug">Stay rooted. Keep building.</p>
-                <p className="mt-2 text-sm leading-6" style={{ color: "#F6EFE0b3" }}>
+                <p className="mt-2 text-sm leading-6 text-[#F6EFE0]/75">
                   Share this message with a friend, revisit the Scriptures, and carry the lesson into the semester.
                 </p>
               </div>
@@ -291,22 +252,22 @@ const BlogPost = () => {
 
         {/* ---------------- Related ---------------- */}
         {relatedPosts.length > 0 && (
-          <section className="border-t py-16 md:py-24" style={{ borderColor: `${INK}1f`, background: PAPER_CARD }}>
+          <section className="border-t border-black/10 bg-[#FCF8EE] py-16 md:py-24">
             <div className="container mx-auto max-w-[1180px] px-5">
-              <div className="mb-10 flex items-end justify-between border-b pb-5" style={{ borderColor: `${INK}1f` }}>
+              <div className="mb-10 flex items-end justify-between border-b border-black/10 pb-5">
                 <h2 className="font-serif text-3xl font-bold md:text-4xl">Continue reading</h2>
-                <Link to="/blog" className="hidden items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.15em] sm:flex" style={{ color: OXBLOOD }}>
+                <Link to="/blog" className="hidden items-center gap-2 font-mono text-xs font-bold uppercase tracking-[0.15em] text-[#7A2E22] sm:flex">
                   All stories <ArrowUpRight className="h-4 w-4" />
                 </Link>
               </div>
               <div className="grid gap-10 md:grid-cols-3">
                 {relatedPosts.map((related) => (
                   <Link key={related.id} to={`/blog/${related.slug}`} className="group">
-                    <div className="aspect-[4/3] overflow-hidden" style={{ background: PAPER }}>
+                    <div className="aspect-[4/3] overflow-hidden bg-[#F6EFE0]">
                       <img src={related.featured_image || fallbackImage} alt={related.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.04]" />
                     </div>
-                    <p className="mt-5 font-mono text-[11px] font-bold uppercase tracking-[0.18em]" style={{ color: OXBLOOD }}>{related.category || "Story"}</p>
-                    <h3 className="mt-2 font-serif text-xl font-bold leading-snug transition-colors" style={{ color: INK }}>{related.title}</h3>
+                    <p className="mt-5 font-mono text-[11px] font-bold uppercase tracking-[0.18em] text-[#7A2E22]">{related.category || "Story"}</p>
+                    <h3 className="mt-2 font-serif text-xl font-bold leading-snug text-[#1C1712] transition-colors group-hover:text-[#7A2E22]">{related.title}</h3>
                   </Link>
                 ))}
               </div>

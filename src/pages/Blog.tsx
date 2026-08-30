@@ -60,57 +60,57 @@ const Blog = () => {
   const stories = filtered.slice(1);
 
   return (
-    <div className="min-h-screen bg-[#f7f7f5] text-[#191919]">
+    <div className="min-h-screen bg-[#f7f7f5] text-[#191919] dark:bg-[#2B2420] dark:text-[#F1E9DC]">
       <Header />
       <main>
-        <section className="border-b border-[#ded6cf] bg-[#fffaf6] text-[#201a17]">
+        <section className="border-b border-[#ded6cf] bg-[#fffaf6] text-[#201a17] dark:border-white/10 dark:bg-[#332B25] dark:text-[#F1E9DC]">
           <div className="container mx-auto px-4 py-7 md:py-10">
-            <div className="flex items-end justify-between gap-6 border-b border-[#ded6cf] pb-5">
+            <div className="flex items-end justify-between gap-6 border-b border-[#ded6cf] pb-5 dark:border-white/10">
               <div>
-                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-[#9d3529]">
+                <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-[#9d3529] dark:text-[#E08B76]">
                   <BookOpen className="h-4 w-4" /> MKU Christian Union
                 </div>
                 <h1 className="font-serif text-4xl font-bold md:text-6xl">The Journal</h1>
               </div>
-              <p className="hidden max-w-sm text-right text-sm leading-6 text-black/60 md:block">
+              <p className="hidden max-w-sm text-right text-sm leading-6 text-black/60 dark:text-[#F1E9DC]/65 md:block">
                 Sermons, testimonies and reflections from our life together in Christ.
               </p>
             </div>
           </div>
 
           {loading ? (
-            <div className="flex min-h-[420px] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#9d3529]" /></div>
+            <div className="flex min-h-[420px] items-center justify-center"><Loader2 className="h-8 w-8 animate-spin text-[#9d3529] dark:text-[#E08B76]" /></div>
           ) : featured ? (
             <Link to={`/blog/${featured.slug}`} className="group block">
               <div className="container mx-auto grid px-4 pb-10 md:grid-cols-[minmax(0,1.05fr)_minmax(360px,.95fr)] md:items-center md:gap-12 md:pb-14">
                 <div className="order-2 py-8 md:order-1 md:py-12">
-                  <div className="mb-4 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase text-black/50">
-                    <span className="text-[#9d3529]">Featured message</span><span aria-hidden="true">/</span><span>{featured.category || "Story"}</span>
+                  <div className="mb-4 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase text-black/50 dark:text-[#F1E9DC]/55">
+                    <span className="text-[#9d3529] dark:text-[#E08B76]">Featured message</span><span aria-hidden="true">/</span><span>{featured.category || "Story"}</span>
                   </div>
                   <h2 className="max-w-3xl font-serif text-3xl font-bold leading-tight md:text-5xl">{featured.title}</h2>
-                  <p className="mt-4 max-w-2xl text-base leading-7 text-black/65 md:text-lg">{featured.excerpt}</p>
-                  <div className="mt-6 flex flex-wrap items-center gap-5 text-sm text-black/50">
+                  <p className="mt-4 max-w-2xl text-base leading-7 text-black/65 dark:text-[#F1E9DC]/75 md:text-lg">{featured.excerpt}</p>
+                  <div className="mt-6 flex flex-wrap items-center gap-5 text-sm text-black/50 dark:text-[#F1E9DC]/55">
                     {featured.published_at && <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {formatDate(featured.published_at)}</span>}
                     <span className="flex items-center gap-2"><Clock className="h-4 w-4" /> {Math.max(1, Math.ceil(featured.content.length / 1500))} min read</span>
                   </div>
-                  <span className="mt-7 inline-flex items-center gap-2 border-b border-[#9d3529] pb-1 text-sm font-semibold transition-colors group-hover:text-[#9d3529]">
+                  <span className="mt-7 inline-flex items-center gap-2 border-b border-[#9d3529] pb-1 text-sm font-semibold transition-colors group-hover:text-[#9d3529] dark:border-[#E08B76] dark:group-hover:text-[#E08B76]">
                     Read the message <ArrowUpRight className="h-4 w-4" />
                   </span>
                 </div>
-                <div className="order-1 flex justify-center bg-white p-2 ring-1 ring-[#ded6cf] md:order-2">
+                <div className="order-1 flex justify-center bg-white p-2 ring-1 ring-[#ded6cf] dark:bg-[#221b16] dark:ring-white/10 md:order-2">
                   <img src={featured.featured_image || defaultImage} alt={featured.title} className="aspect-square w-full max-w-[620px] object-contain" />
                 </div>
               </div>
             </Link>
-          ) : <div className="container mx-auto px-4 py-24 text-center text-black/60">No stories published yet.</div>}
+          ) : <div className="container mx-auto px-4 py-24 text-center text-black/60 dark:text-[#F1E9DC]/60">No stories published yet.</div>}
         </section>
 
-        <section className="sticky top-[56px] z-30 border-b border-black/10 bg-[#f7f7f5]/95 backdrop-blur md:top-[64px]">
+        <section className="sticky top-[56px] z-30 border-b border-black/10 bg-[#f7f7f5]/95 backdrop-blur dark:border-white/10 dark:bg-[#2B2420]/95 md:top-[64px]">
           <div className="container mx-auto flex items-center gap-6 overflow-x-auto px-4 py-4">
-            <span className="hidden text-xs font-bold uppercase text-black/45 sm:block">Browse</span>
+            <span className="hidden text-xs font-bold uppercase text-black/45 dark:text-[#F1E9DC]/45 sm:block">Browse</span>
             {categories.map((category) => (
               <button key={category} onClick={() => setSelectedCategory(category)}
-                className={`shrink-0 border-b-2 px-1 py-1 text-sm font-semibold transition-colors ${selectedCategory === category ? "border-[#b64032] text-[#191919]" : "border-transparent text-black/50 hover:text-black"}`}>
+                className={`shrink-0 border-b-2 px-1 py-1 text-sm font-semibold transition-colors ${selectedCategory === category ? "border-[#b64032] text-[#191919] dark:border-[#E08B76] dark:text-[#F1E9DC]" : "border-transparent text-black/50 hover:text-black dark:text-[#F1E9DC]/50 dark:hover:text-[#F1E9DC]"}`}>
                 {category}
               </button>
             ))}
@@ -119,21 +119,21 @@ const Blog = () => {
 
         {stories.length > 0 && (
           <section className="container mx-auto px-4 py-12 md:py-16">
-            <div className="mb-8 flex items-end justify-between border-b border-black/15 pb-4">
+            <div className="mb-8 flex items-end justify-between border-b border-black/15 pb-4 dark:border-white/10">
               <h2 className="font-serif text-3xl font-bold">More from the journal</h2>
-              <span className="text-sm text-black/50">{stories.length} {stories.length === 1 ? "story" : "stories"}</span>
+              <span className="text-sm text-black/50 dark:text-[#F1E9DC]/50">{stories.length} {stories.length === 1 ? "story" : "stories"}</span>
             </div>
             <div className="grid gap-x-8 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
               {stories.map((post) => (
                 <Link key={post.id} to={`/blog/${post.slug}`} className="group block">
-                  <div className="aspect-[4/3] overflow-hidden bg-[#e8e8e5]"><img src={post.featured_image || defaultImage} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" /></div>
+                  <div className="aspect-[4/3] overflow-hidden bg-[#e8e8e5] dark:bg-[#332B25]"><img src={post.featured_image || defaultImage} alt={post.title} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]" loading="lazy" /></div>
                   <div className="pt-5">
                     <div className="mb-3 flex items-center justify-between gap-3">
-                      <Badge variant="outline" className="rounded-none border-[#b64032]/30 bg-transparent text-[#8f3026]">{post.category || "Story"}</Badge>
-                      {post.published_at && <span className="text-xs text-black/45">{formatDate(post.published_at)}</span>}
+                      <Badge variant="outline" className="rounded-none border-[#b64032]/30 bg-transparent text-[#8f3026] dark:border-[#E08B76]/40 dark:text-[#E08B76]">{post.category || "Story"}</Badge>
+                      {post.published_at && <span className="text-xs text-black/45 dark:text-[#F1E9DC]/45">{formatDate(post.published_at)}</span>}
                     </div>
-                    <h3 className="font-serif text-2xl font-bold leading-snug transition-colors group-hover:text-[#9d3529]">{post.title}</h3>
-                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-black/60">{post.excerpt}</p>
+                    <h3 className="font-serif text-2xl font-bold leading-snug transition-colors group-hover:text-[#9d3529] dark:group-hover:text-[#E08B76]">{post.title}</h3>
+                    <p className="mt-3 line-clamp-3 text-sm leading-6 text-black/60 dark:text-[#F1E9DC]/65">{post.excerpt}</p>
                   </div>
                 </Link>
               ))}
@@ -141,11 +141,11 @@ const Blog = () => {
           </section>
         )}
 
-        <section className="border-t border-black/10 bg-white py-12">
+        <section className="border-t border-black/10 bg-white py-12 dark:border-white/10 dark:bg-[#332B25]">
           <div className="container mx-auto flex flex-col justify-between gap-5 px-4 md:flex-row md:items-center">
-            <div><h2 className="font-serif text-2xl font-bold">A story worth sharing?</h2><p className="mt-1 text-sm text-black/55">Tell us what God has done in your life.</p></div>
+            <div><h2 className="font-serif text-2xl font-bold">A story worth sharing?</h2><p className="mt-1 text-sm text-black/55 dark:text-[#F1E9DC]/60">Tell us what God has done in your life.</p></div>
             <a href="https://wa.me/254115475543?text=I%20want%20to%20share%20my%20testimony" target="_blank" rel="noopener noreferrer"
-              className="inline-flex w-fit items-center gap-2 bg-[#191919] px-5 py-3 text-sm font-semibold text-white hover:bg-[#b64032]">
+              className="inline-flex w-fit items-center gap-2 bg-[#191919] px-5 py-3 text-sm font-semibold text-white hover:bg-[#b64032] dark:bg-[#C9695A] dark:hover:bg-[#B85847]">
               Share your testimony <ArrowUpRight className="h-4 w-4" />
             </a>
           </div>

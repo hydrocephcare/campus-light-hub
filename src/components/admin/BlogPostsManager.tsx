@@ -78,7 +78,7 @@ export const BlogPostsManager = () => {
       toast.error("Paste some text first");
       return;
     }
-    const html = marked.parse(markdownDraft, { async: false }) as string;
+    const html = marked.parse(markdownDraft, { async: false, breaks: true }) as string;
     setFormData((prev) => ({
       ...prev,
       content: prev.content ? prev.content + html : html,

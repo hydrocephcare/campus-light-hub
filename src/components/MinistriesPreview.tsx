@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
+import { staticMinistries } from "@/data/staticSiteContent";
 
 interface Ministry {
   id: string;
@@ -69,9 +70,10 @@ export const MinistriesPreview = () => {
         .limit(4);
 
       if (error) throw error;
-      setMinistries(data || []);
+      setMinistries(data && data.length > 0 ? data : staticMinistries.slice(0, 4));
     } catch (error) {
       console.error("Error fetching ministries:", error);
+      setMinistries(staticMinistries.slice(0, 4));
     } finally {
       setLoading(false);
     }

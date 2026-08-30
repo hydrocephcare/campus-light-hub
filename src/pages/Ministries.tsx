@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import { useSEO } from "@/hooks/useSEO";
 import { optimizedImageUrl } from "@/lib/imageUrl";
+import { staticMinistries } from "@/data/staticSiteContent";
 
 interface Ministry {
   id: string;
@@ -47,9 +48,10 @@ const Ministries = () => {
     const fetchMinistries = async () => {
       try {
         const { data } = await supabase.from("ministries").select("*").eq("is_active", true).order("name");
-        setMinistries(data || []);
+        setMinistries(data && data.length > 0 ? data : staticMinistries);
       } catch (e) {
         console.error(e);
+        setMinistries(staticMinistries);
       } finally {
         setLoading(false);
       }

@@ -4,6 +4,7 @@ import { Camera, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
+import { staticGalleryItems } from "@/data/staticSiteContent";
 
 interface GalleryItem {
   id: string;
@@ -11,12 +12,7 @@ interface GalleryItem {
   title: string;
 }
 
-const fallbackImages = [
-  { id: "1", media_url: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=800&q=80", title: "Sunday Worship" },
-  { id: "2", media_url: "https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80", title: "Praise Night" },
-  { id: "3", media_url: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=800&q=80", title: "Campus Outreach" },
-  { id: "4", media_url: "https://images.unsplash.com/photo-1491438590914-bc09fcaaf77a?auto=format&fit=crop&w=800&q=80", title: "Bible Study" },
-];
+const fallbackImages = staticGalleryItems.slice(0, 6);
 
 export const GalleryPreview = () => {
   const [images, setImages] = useState<GalleryItem[]>(fallbackImages);

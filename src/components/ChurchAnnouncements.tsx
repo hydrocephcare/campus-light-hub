@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { staticAnnouncements } from "@/data/staticSiteContent";
 
 interface Announcement {
   id: string;
@@ -37,9 +38,10 @@ export const ChurchAnnouncements = () => {
         .limit(3);
 
       if (error) throw error;
-      setAnnouncements(data || []);
+      setAnnouncements(data && data.length > 0 ? data : staticAnnouncements);
     } catch (error) {
       console.error("Error fetching announcements:", error);
+      setAnnouncements(staticAnnouncements);
     } finally {
       setLoading(false);
     }

@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { getEventImage } from "@/lib/eventImages";
 import { EventRegistrationDialog } from "@/components/EventRegistrationDialog";
 import { optimizedImageUrl } from "@/lib/imageUrl";
+import { staticEvents } from "@/data/staticSiteContent";
 
 interface Event {
   id: string;
@@ -37,9 +38,14 @@ export const UpcomingEvents = () => {
           .order("event_date", { ascending: true })
           .limit(3);
         if (error) throw error;
-        setEvents(data || []);
+        const today = new Date().toISOString().split("T")[0];
+        const merged = new Map(staticEvents.filter((event) => event.event_date >= today).map((event) => [event.id, event]));
+        (data || []).forEach((event) => merged.set(event.id, event));
+        setEvents([...merged.values()].sort((a, b) => a.event_date.localeCompare(b.event_date)).slice(0, 3));
       } catch (error) {
         console.error("Error fetching events:", error);
+        const today = new Date().toISOString().split("T")[0];
+        setEvents(staticEvents.filter((event) => event.event_date >= today).slice(0, 3));
       } finally {
         setLoading(false);
       }

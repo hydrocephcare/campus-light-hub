@@ -12,6 +12,7 @@ import {
 import { COMMUNITY_LINK } from "@/lib/communityLink";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
+import { staticDailySchedule, staticFellowships } from "@/data/staticSiteContent";
 
 interface DailyScheduleItem {
   id: string;
@@ -112,11 +113,13 @@ const Schedule = () => {
         supabase.from("home_fellowships").select("*").eq("is_active", true),
         supabase.from("faqs").select("*").eq("is_active", true).order("display_order"),
       ]);
-      if (scheduleRes.data) setDbSchedule(scheduleRes.data);
-      if (fellowshipsRes.data) setDbFellowships(fellowshipsRes.data);
+      setDbSchedule(scheduleRes.data && scheduleRes.data.length > 0 ? scheduleRes.data : staticDailySchedule);
+      setDbFellowships(fellowshipsRes.data && fellowshipsRes.data.length > 0 ? fellowshipsRes.data : staticFellowships);
       if (faqsRes.data) setDbFaqs(faqsRes.data);
     } catch (error) {
       console.error("Error fetching schedule data:", error);
+      setDbSchedule(staticDailySchedule);
+      setDbFellowships(staticFellowships);
     } finally {
       setLoading(false);
     }

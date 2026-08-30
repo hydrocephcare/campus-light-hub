@@ -13,6 +13,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { getEventImage } from "@/lib/eventImages";
 import { EventRegistrationDialog } from "@/components/EventRegistrationDialog";
 import { optimizedImageUrl } from "@/lib/imageUrl";
+import { staticEvents } from "@/data/staticSiteContent";
 
 interface Event {
   id: string;
@@ -48,9 +49,12 @@ const Events = () => {
         .gte("event_date", threeMonthsAgo.toISOString().split("T")[0])
         .order("event_date", { ascending: true });
       if (error) throw error;
-      setEvents(data || []);
+      const merged = new Map(staticEvents.map((event) => [event.id, event]));
+      (data || []).forEach((event) => merged.set(event.id, event));
+      setEvents([...merged.values()].sort((a, b) => a.event_date.localeCompare(b.event_date)));
     } catch (error) {
       toast.error("Failed to load events");
+      setEvents([...staticEvents].sort((a, b) => a.event_date.localeCompare(b.event_date)));
     } finally {
       setLoading(false);
     }

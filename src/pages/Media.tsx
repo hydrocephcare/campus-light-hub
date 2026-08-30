@@ -6,6 +6,7 @@ import { Play, Youtube, Loader2, Video, TrendingUp, Clock, Music, BookOpen } fro
 import { useState, useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
+import { staticSermons } from "@/data/staticSiteContent";
 
 interface Sermon {
   id: string;
@@ -43,9 +44,10 @@ const Media = () => {
         .select("*")
         .order("sermon_date", { ascending: false });
       if (error) throw error;
-      setSermons(data || []);
+      setSermons(data && data.length > 0 ? data : staticSermons);
     } catch (error) {
       console.error("Error fetching sermons:", error);
+      setSermons(staticSermons);
     } finally {
       setLoading(false);
     }

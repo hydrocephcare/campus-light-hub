@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { GalleryPhoto } from "@/components/GalleryPhoto";
+import { staticGalleryItems } from "@/data/staticSiteContent";
 
 
 interface GalleryItem {
@@ -59,11 +60,17 @@ const Gallery = () => {
         .order("created_at", { ascending: false })
         .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
       if (error) throw error;
-      setItems((current) => (page === 0 ? data || [] : [...current, ...(data || [])]));
+      setItems((current) => {
+        if (page > 0) return [...current, ...(data || [])];
+        const merged = new Map(staticGalleryItems.map((item) => [item.id, item]));
+        (data || []).forEach((item) => merged.set(item.id, item));
+        return [...merged.values()].sort((a, b) => b.created_at.localeCompare(a.created_at));
+      });
       setHasMoreItems((data || []).length === PAGE_SIZE);
     } catch (error) {
       console.error("Error fetching gallery:", error);
       toast.error("Failed to load gallery");
+      if (page === 0) setItems(staticGalleryItems);
     } finally {
       setLoading(false);
       setLoadingMore(false);

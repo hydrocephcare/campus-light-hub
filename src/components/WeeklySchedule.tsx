@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { useState, useEffect } from "react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { staticWeeklyActivities } from "@/data/staticSiteContent";
 
 interface WeeklyActivity {
   id: string;
@@ -138,10 +139,11 @@ export const WeeklySchedule = () => {
         .order("day_of_week");
 
       if (error) throw error;
-      setActivities(data || []);
+      setActivities(data && data.length > 0 ? data : staticWeeklyActivities);
     } catch (error) {
       console.error("Error fetching weekly activities:", error);
       toast.error("Failed to load weekly activities");
+      setActivities(staticWeeklyActivities);
     } finally {
       setLoading(false);
     }

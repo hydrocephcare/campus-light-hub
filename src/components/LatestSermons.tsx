@@ -3,6 +3,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { staticSermons } from "@/data/staticSiteContent";
 import { useSiteSetting } from "@/hooks/useSiteSettings";
 
 interface Sermon {
@@ -31,9 +32,10 @@ export const LatestSermons = () => {
           .order("sermon_date", { ascending: false })
           .limit(3);
         if (error) throw error;
-        setSermons(data || []);
+      setSermons(data && data.length > 0 ? data : staticSermons.slice(0, 3));
       } catch (error) {
-        console.error("Error fetching sermons:", error);
+      console.error("Error fetching sermons:", error);
+      setSermons(staticSermons.slice(0, 3));
       } finally {
         setLoading(false);
       }

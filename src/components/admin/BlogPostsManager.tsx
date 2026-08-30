@@ -227,7 +227,7 @@ export const BlogPostsManager = () => {
                   modules={quillModules}
                   formats={quillFormats}
                   placeholder="Write your post..."
-                  className="[&_.ql-container]:min-h-[150px] [&_.ql-editor]:min-h-[150px] text-sm"
+                  className="[&_.ql-container]:min-h-[360px] [&_.ql-editor]:min-h-[360px] [&_.ql-editor]:text-base [&_.ql-editor]:leading-7 text-sm"
                 />
               </div>
             </div>
@@ -268,12 +268,12 @@ export const BlogPostsManager = () => {
           ) : (
             <div className="space-y-2">
               {posts.map((post) => (
-                <div key={post.id} className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg">
+                <div key={post.id} className="flex items-start gap-3 border-b border-border p-3 last:border-0">
                   {post.featured_image && (
                     <img
                       src={post.featured_image}
                       alt=""
-                      className="w-12 h-12 rounded object-cover flex-shrink-0"
+                      className="h-16 w-16 flex-shrink-0 rounded bg-white object-contain ring-1 ring-border"
                     />
                   )}
                   <div className="flex-1 min-w-0">

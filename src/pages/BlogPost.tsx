@@ -99,56 +99,55 @@ const BlogPost = () => {
       <Header />
       <main>
         <header className="border-b border-[#ded6cf] bg-[#fffaf6] text-[#201a17]">
-          <div className="container mx-auto max-w-5xl px-4 py-9 md:py-16">
-            <Link to="/blog" className="mb-7 inline-flex items-center gap-2 text-sm text-black/55 transition-colors hover:text-black">
+          <div className="container mx-auto max-w-6xl px-5 py-8 md:py-12">
+            <Link to="/blog" className="mb-6 inline-flex items-center gap-2 text-sm font-medium text-black/55 transition-colors hover:text-black">
               <ChevronLeft className="h-4 w-4" /> The Journal
             </Link>
-            <div className="max-w-4xl">
-              <div className="mb-5 flex flex-wrap items-center gap-3 text-xs font-semibold uppercase">
-                <span className="text-[#9d3529]">{post.category || "Story"}</span>
-                <span className="text-black/25">/</span>
-                <span className="text-black/50">MKU Christian Union</span>
+            <div className={`grid items-center gap-8 ${post.featured_image ? "lg:grid-cols-[minmax(0,1fr)_400px]" : ""}`}>
+              <div className="max-w-3xl">
+                <div className="mb-4 flex flex-wrap items-center gap-3 text-xs font-bold uppercase">
+                  <span className="text-[#9d3529]">{post.category || "Story"}</span>
+                  <span className="text-black/25">/</span>
+                  <span className="text-black/50">MKU Christian Union</span>
+                </div>
+                <h1 className="font-serif text-[2rem] font-bold leading-[1.08] sm:text-[2.35rem] md:text-5xl lg:text-[3.4rem]">{post.title}</h1>
+                {post.excerpt && <p className="mt-5 max-w-2xl text-base leading-7 text-black/65 md:text-lg">{post.excerpt}</p>}
+                <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-black/10 pt-4 text-sm text-black/50">
+                  {post.published_at && <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {format(new Date(post.published_at), "d MMMM yyyy")}</span>}
+                  <span className="flex items-center gap-2"><Clock className="h-4 w-4" /> {readTime} min read</span>
+                </div>
               </div>
-              <h1 className="font-serif text-3xl font-bold leading-tight md:text-5xl lg:text-6xl">{post.title}</h1>
-              {post.excerpt && <p className="mt-5 max-w-3xl text-base leading-7 text-black/65 md:text-lg">{post.excerpt}</p>}
-              <div className="mt-7 flex flex-wrap items-center gap-5 border-t border-black/10 pt-5 text-sm text-black/50">
-                {post.published_at && <span className="flex items-center gap-2"><Calendar className="h-4 w-4" /> {format(new Date(post.published_at), "d MMMM yyyy")}</span>}
-                <span className="flex items-center gap-2"><Clock className="h-4 w-4" /> {readTime} min read</span>
-              </div>
+              {post.featured_image && (
+                <figure className="order-first mx-auto w-full max-w-[300px] bg-white p-2 shadow-sm ring-1 ring-[#ded6cf] sm:max-w-[360px] lg:order-last lg:max-w-[400px]">
+                  <img src={post.featured_image} alt={post.title} className="aspect-square h-auto w-full object-contain" />
+                </figure>
+              )}
             </div>
           </div>
         </header>
 
-        {post.featured_image && (
-          <section className="border-b border-black/10 bg-white">
-            <div className="container mx-auto flex justify-center px-4 py-8 md:py-12">
-              <img src={post.featured_image} alt={post.title} className="aspect-square w-full max-w-4xl object-contain" />
-            </div>
-          </section>
-        )}
-
-        <article className="container mx-auto max-w-5xl px-5 py-10 md:py-16">
-          <div className="grid items-start gap-10 lg:grid-cols-[120px_minmax(0,720px)] lg:gap-16">
-            <aside className="order-2 lg:order-1 lg:sticky lg:top-28">
-              <div className="flex items-center gap-2 border-y border-black/10 py-4 lg:flex-col lg:border-0 lg:py-0">
-                <span className="mr-auto flex items-center gap-2 text-xs font-bold uppercase text-black/40 lg:mb-2 lg:mr-0"><Share2 className="h-4 w-4" /> Share</span>
+        <article className="bg-white">
+          <div className="mx-auto max-w-[720px] px-5 py-10 md:py-16">
+            <aside className="mb-9 border-y border-black/10 py-3">
+              <div className="flex items-center gap-2">
+                <span className="mr-auto flex items-center gap-2 text-xs font-bold uppercase text-black/40"><Share2 className="h-4 w-4" /> Share</span>
                 <Button size="icon" variant="outline" className="h-10 w-10 rounded-full border-black/15 bg-transparent" onClick={shareFacebook} title="Share on Facebook" aria-label="Share on Facebook"><Facebook className="h-4 w-4" /></Button>
                 <Button size="icon" variant="outline" className="h-10 w-10 rounded-full border-black/15 bg-transparent" onClick={shareTwitter} title="Share on X" aria-label="Share on X"><Twitter className="h-4 w-4" /></Button>
                 <Button size="icon" variant="outline" className="h-10 w-10 rounded-full border-black/15 bg-transparent" onClick={copyLink} title="Copy link" aria-label="Copy link"><Link2 className="h-4 w-4" /></Button>
               </div>
             </aside>
 
-            <div className="order-1 min-w-0 lg:order-2">
+            <div className="min-w-0">
               <div
-                className="prose max-w-none
+                className="prose prose-neutral max-w-none
                   prose-headings:font-serif prose-headings:font-bold prose-headings:text-[#191919]
-                  prose-h2:mt-11 prose-h2:border-t prose-h2:border-black/15 prose-h2:pt-7 prose-h2:text-2xl
-                  prose-h3:mt-8 prose-h3:text-xl
-                  prose-p:mb-5 prose-p:text-base prose-p:leading-7 prose-p:text-black/75 md:prose-p:text-[17px]
+                  prose-h2:mb-4 prose-h2:mt-12 prose-h2:border-t prose-h2:border-black/10 prose-h2:pt-8 prose-h2:text-[1.7rem] prose-h2:leading-tight
+                  prose-h3:mb-3 prose-h3:mt-9 prose-h3:text-[1.3rem] prose-h3:leading-snug
+                  prose-p:mb-5 prose-p:mt-0 prose-p:text-[1.05rem] prose-p:leading-[1.85] prose-p:text-black/75
                   prose-strong:font-semibold prose-strong:text-black
-                  prose-blockquote:my-9 prose-blockquote:border-l-4 prose-blockquote:border-[#b64032] prose-blockquote:bg-white prose-blockquote:px-6 prose-blockquote:py-5 prose-blockquote:not-italic
+                  prose-blockquote:my-9 prose-blockquote:border-l-4 prose-blockquote:border-[#b64032] prose-blockquote:bg-[#fff8f2] prose-blockquote:px-5 prose-blockquote:py-4 prose-blockquote:not-italic
                   prose-blockquote:text-lg prose-blockquote:font-serif prose-blockquote:leading-7 prose-blockquote:text-black
-                  prose-ul:my-6 prose-ul:space-y-2 prose-li:text-base prose-li:leading-7 prose-li:text-black/75
+                  prose-ul:my-6 prose-ul:space-y-2 prose-li:text-[1.02rem] prose-li:leading-7 prose-li:text-black/75
                   prose-hr:my-12 prose-hr:border-black/15"
                 dangerouslySetInnerHTML={{ __html: post.content }}
               />

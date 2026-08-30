@@ -3,12 +3,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Pencil, Trash2, Eye, Plus, FileText } from "lucide-react";
+import { Pencil, Trash2, Eye, Plus, FileText, WandSparkles } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import { marked } from "marked";
 import { ImageUpload } from "./ImageUpload";
 
 interface BlogPost {
@@ -28,6 +30,7 @@ export const BlogPostsManager = () => {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [markdownDraft, setMarkdownDraft] = useState("");
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -68,6 +71,20 @@ export const BlogPostsManager = () => {
     }
 
     setPosts(data || []);
+  };
+
+  const convertMarkdownDraft = () => {
+    if (!markdownDraft.trim()) {
+      toast.error("Paste some text first");
+      return;
+    }
+    const html = marked.parse(markdownDraft, { async: false }) as string;
+    setFormData((prev) => ({
+      ...prev,
+      content: prev.content ? prev.content + html : html,
+    }));
+    setMarkdownDraft("");
+    toast.success("Formatted and added to the post");
   };
 
   const generateSlug = (title: string) => {
@@ -215,6 +232,28 @@ export const BlogPostsManager = () => {
                 placeholder="Brief summary..."
                 className="h-9 text-sm"
               />
+            </div>
+
+            <div className="space-y-2 rounded-lg border border-dashed border-primary/40 bg-primary/5 p-3">
+              <Label htmlFor="markdown-draft" className="text-xs flex items-center gap-1.5">
+                <WandSparkles className="h-3.5 w-3.5" />
+                Paste from AI (Markdown)
+              </Label>
+              <p className="text-[11px] text-muted-foreground -mt-1">
+                Paste text copied straight from ChatGPT/Claude here (with ## headings, **bold**, - bullets, etc).
+                Click "Format &amp; insert" to turn it into a properly structured post below — plain pasting into
+                the editor directly does not preserve headings or lists.
+              </p>
+              <Textarea
+                id="markdown-draft"
+                value={markdownDraft}
+                onChange={(e) => setMarkdownDraft(e.target.value)}
+                placeholder={"## A heading\n\nSome text...\n\n- point one\n- point two"}
+                className="min-h-[120px] text-sm font-mono"
+              />
+              <Button type="button" size="sm" variant="secondary" onClick={convertMarkdownDraft}>
+                Format &amp; insert into post
+              </Button>
             </div>
 
             <div className="space-y-2">

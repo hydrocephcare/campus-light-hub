@@ -11,8 +11,6 @@ import {
 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
-import { useAuth, AVAILABLE_DEPARTMENTS } from "@/hooks/useAuth";
-import { Loader2 } from "lucide-react";
 
 const WeeklyActivitiesManager = lazy(() => import("@/components/admin/WeeklyActivitiesManager").then(m => ({ default: m.WeeklyActivitiesManager })));
 const EventsManager = lazy(() => import("@/components/admin/EventsManager").then(m => ({ default: m.EventsManager })));
@@ -98,30 +96,16 @@ const allMenuItems = [
 ];
 
 const AdminDashboard = () => {
-  const { profile, departments } = useAuth();
-  const approvedDepts = departments.filter(d => d.is_approved);
-  const deptLabels = approvedDepts.map(d => AVAILABLE_DEPARTMENTS.find(ad => ad.value === d.department)?.label || d.department);
-
   return (
     <div className="space-y-6">
       <Card>
         <CardHeader>
-          <CardTitle className="text-xl">Welcome, {profile?.full_name || "Admin"} 👋</CardTitle>
-          <CardDescription>You're managing the MKU CU website. Here's your access overview.</CardDescription>
+          <CardTitle className="text-xl">Welcome, Admin 👋</CardTitle>
+          <CardDescription>You're managing the MKU CU website.</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div>
-            <h4 className="text-sm font-medium mb-2">Your Assigned Roles</h4>
-            <div className="flex flex-wrap gap-2">
-              {deptLabels.length > 0 ? deptLabels.map((label, i) => (
-                <Badge key={i} className="bg-primary/10 text-primary border-primary/20">{label}</Badge>
-              )) : (
-                <span className="text-sm text-muted-foreground">No roles assigned yet</span>
-              )}
-            </div>
-          </div>
           <p className="text-sm text-muted-foreground">
-            Use the sidebar to navigate to your sections. You can only see and edit content that's within your assigned departments.
+            Use the sidebar to navigate to any section.
           </p>
         </CardContent>
       </Card>
@@ -129,33 +113,8 @@ const AdminDashboard = () => {
   );
 };
 
-const WaitingForApproval = ({ onSignOut }: { onSignOut: () => void }) => (
-  <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
-    <Card className="max-w-md w-full text-center">
-      <CardHeader>
-        <div className="w-16 h-16 rounded-full bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center mx-auto mb-3">
-          <Clock className="w-8 h-8 text-amber-600" />
-        </div>
-        <CardTitle>Waiting for Approval</CardTitle>
-        <CardDescription>
-          Your account has been created successfully. A super admin needs to assign you a department role before you can access the admin panel. Please check back later.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-3">
-        <Button variant="outline" className="w-full" onClick={() => window.location.href = "/"}>
-          <Home className="w-4 h-4 mr-2" /> Back to Site
-        </Button>
-        <Button variant="ghost" className="w-full text-muted-foreground" onClick={onSignOut}>
-          <LogOut className="w-4 h-4 mr-2" /> Sign Out
-        </Button>
-      </CardContent>
-    </Card>
-  </div>
-);
-
 const Admin = () => {
   const navigate = useNavigate();
-  const { user, profile, isAdmin, departments, loading, signOut, hasDepartmentAccess } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -182,48 +141,14 @@ const Admin = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  useEffect(() => {
-    if (!loading && !user) {
-      navigate("/login");
-    }
-  }, [loading, user, navigate]);
+  // Admin gate password (footer "Admin" button) is the only access control here —
+  // real Supabase login is skipped entirely so the dashboard opens immediately.
 
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center bg-muted/30">
-        <div className="text-center">
-          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-primary" />
-          <p className="text-muted-foreground">Loading admin panel...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (!user) return null;
-
-  // If user has no approved departments and is not admin, show waiting screen
-  const hasApprovedAccess = isAdmin || departments.some(d => d.is_approved);
-  if (!hasApprovedAccess) {
-    return <WaitingForApproval onSignOut={async () => { await signOut(); navigate("/login"); }} />;
-  }
-
-  // Dashboard is always accessible; filter rest by department access
-  const menuItems = allMenuItems.filter(item => 
-    item.id === "dashboard" || hasDepartmentAccess(item.id)
-  );
+  // Dashboard is always accessible; everyone who reaches this page has full access
+  const menuItems = allMenuItems;
 
   const renderContent = () => {
     if (activeTab === "dashboard") return <AdminDashboard />;
-
-    if (!hasDepartmentAccess(activeTab)) {
-      return (
-        <div className="text-center py-20">
-          <Shield className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-          <h3 className="text-lg font-semibold mb-2">Access Restricted</h3>
-          <p className="text-muted-foreground">You don't have permission to access this section.</p>
-        </div>
-      );
-    }
 
     const Manager = managerComponents[activeTab as keyof typeof managerComponents];
     if (!Manager) return <AdminDashboard />;
@@ -237,16 +162,12 @@ const Admin = () => {
 
   const currentMenuItem = allMenuItems.find(item => item.id === activeTab);
 
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/login");
+  const handleSignOut = () => {
+    navigate("/");
   };
 
   // Get user's primary role label for display
-  const primaryDept = departments.find(d => d.is_approved);
-  const roleLabel = primaryDept 
-    ? AVAILABLE_DEPARTMENTS.find(ad => ad.value === primaryDept.department)?.label || primaryDept.department
-    : isAdmin ? "Admin" : "User";
+  const roleLabel = "Admin";
 
   return (
     <div className="min-h-screen bg-muted/30 touch-manipulation">
@@ -289,7 +210,7 @@ const Admin = () => {
               <LayoutDashboard className="h-5 w-5 text-primary-foreground" />
             </div>
             <div className="min-w-0">
-              <h1 className="font-bold text-foreground truncate">{profile?.full_name || "Admin"}</h1>
+              <h1 className="font-bold text-foreground truncate">Admin</h1>
               <p className="text-xs text-muted-foreground truncate">{roleLabel}</p>
             </div>
           </div>
@@ -297,7 +218,7 @@ const Admin = () => {
           {/* Mobile Header in Sidebar */}
           <div className="lg:hidden flex items-center justify-between p-4 border-b border-border safe-area-top pt-6">
             <div>
-              <span className="font-bold text-lg block">{profile?.full_name || "Menu"}</span>
+              <span className="font-bold text-lg block">Menu</span>
               <span className="text-xs text-muted-foreground">{roleLabel}</span>
             </div>
             <Button variant="ghost" size="icon" className="h-10 w-10 rounded-xl active:scale-95 transition-transform" onClick={() => setSidebarOpen(false)}>

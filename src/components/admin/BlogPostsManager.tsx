@@ -44,6 +44,7 @@ export const BlogPostsManager = () => {
     toolbar: [
       [{ 'header': [1, 2, 3, false] }],
       ['bold', 'italic', 'underline'],
+      ['blockquote'],
       [{ 'list': 'ordered' }, { 'list': 'bullet' }],
       ['link', 'image'],
       ['clean']
@@ -52,7 +53,7 @@ export const BlogPostsManager = () => {
 
   const quillFormats = [
     'header', 'bold', 'italic', 'underline',
-    'list', 'bullet', 'link', 'image'
+    'blockquote', 'list', 'bullet', 'link', 'image'
   ];
 
   useEffect(() => {
@@ -78,7 +79,11 @@ export const BlogPostsManager = () => {
       toast.error("Paste some text first");
       return;
     }
-    const html = marked.parse(markdownDraft, { async: false, breaks: true }) as string;
+    let html = marked.parse(markdownDraft, { async: false, breaks: true }) as string;
+    // Quill's HTML importer mis-parses lists/blockquotes when there is
+    // insignificant whitespace between block tags (e.g. "<ul>\n<li>"),
+    // dropping the <ul>/<li>/<blockquote> structure entirely. Collapse it.
+    html = html.replace(/>\s+</g, "><").trim();
     setFormData((prev) => ({
       ...prev,
       content: prev.content ? prev.content + html : html,

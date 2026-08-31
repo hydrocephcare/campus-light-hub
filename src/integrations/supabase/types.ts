@@ -652,6 +652,7 @@ export type Database = {
           description: string | null
           id: string
           is_featured: boolean | null
+          media_kind: string
           media_type: string
           media_url: string
           title: string
@@ -663,6 +664,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_featured?: boolean | null
+          media_kind?: string
           media_type: string
           media_url: string
           title: string
@@ -674,6 +676,7 @@ export type Database = {
           description?: string | null
           id?: string
           is_featured?: boolean | null
+          media_kind?: string
           media_type?: string
           media_url?: string
           title?: string

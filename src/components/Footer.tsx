@@ -68,7 +68,7 @@ export const Footer = () => {
   ];
 
   return (
-    <footer className="border-t border-border bg-[#fffaf6] text-foreground">
+    <footer className="border-t border-border bg-card text-foreground">
       {/* Newsletter Banner */}
       <div className="border-b border-border">
         <div className="container mx-auto px-4 py-6">
@@ -83,7 +83,7 @@ export const Footer = () => {
                 placeholder="Your email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="bg-white border-border text-foreground placeholder:text-muted-foreground min-w-0 md:min-w-[220px]"
+                className="bg-background border-border text-foreground placeholder:text-muted-foreground min-w-0 md:min-w-[220px]"
               />
               <Button type="submit" disabled={isSubscribing} variant="secondary" className="gap-2 flex-shrink-0">
                 <Send className="w-4 h-4" />
@@ -100,7 +100,7 @@ export const Footer = () => {
           {/* Brand */}
           <div className="col-span-2 md:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <img src={branding.logo_url} alt={branding.site_name} className="w-10 h-10 object-contain rounded-full bg-white p-1 ring-1 ring-border" />
+              <img src={branding.logo_url} alt={branding.site_name} className="w-10 h-10 object-contain rounded-full bg-background p-1 ring-1 ring-border" />
               <div>
                 <div className="font-serif font-bold text-lg">{branding.site_name}</div>
                 <div className="text-xs text-muted-foreground italic">{branding.tagline}</div>
@@ -114,7 +114,7 @@ export const Footer = () => {
                 const SIcon = platformIcons[s.platform] || Facebook;
                 return (
                   <a key={i} href={s.link} target="_blank" rel="noopener noreferrer"
-                    className="w-9 h-9 rounded-full bg-white ring-1 ring-border hover:bg-secondary hover:text-secondary-foreground flex items-center justify-center transition-colors"
+                    className="w-9 h-9 rounded-full bg-background ring-1 ring-border hover:bg-secondary hover:text-secondary-foreground flex items-center justify-center transition-colors"
                     aria-label={s.platform} title={s.handle}>
                     <SIcon className="w-4 h-4" />
                   </a>

@@ -70,5 +70,5 @@ const galleryRecords: Array<[string, string, string]> = [
 export const staticGalleryItems = galleryRecords.map(([file, title, category], index) => {
   const match = file.match(/IMG-(\d{4})(\d{2})(\d{2})/);
   const createdAt = match ? `${match[1]}-${match[2]}-${match[3]}T12:00:00+03:00` : "2026-01-01T12:00:00+03:00";
-  return { id: `static-gallery-${index + 1}`, title, description: `${title} - MKU Christian Union 2025/26 archive.`, media_url: `${archiveRoot}/${file}`, media_type: "image", category, is_featured: index >= galleryRecords.length - 6, created_at: createdAt };
+  return { id: `static-gallery-${index + 1}`, title, description: `${title} - MKU Christian Union 2025/26 archive.`, media_url: `${archiveRoot}/${file}`, media_type: "image", category, media_kind: "poster", is_featured: index >= galleryRecords.length - 6, created_at: createdAt };
 }).reverse();

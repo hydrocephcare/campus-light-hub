@@ -93,7 +93,7 @@ export const ChurchAnnouncements = () => {
                   <div className="flex flex-wrap items-center gap-2 mb-1.5">
                     <h3 className="font-bold text-sm text-foreground">{announcement.title}</h3>
                     {announcement.priority === "high" && (
-                      <Badge className="bg-accent text-white text-xs px-1.5 py-0">Priority</Badge>
+                      <Badge className="bg-accent text-accent-foreground text-xs px-1.5 py-0">Priority</Badge>
                     )}
                   </div>
 

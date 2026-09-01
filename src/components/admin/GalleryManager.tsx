@@ -18,6 +18,7 @@ interface GalleryItem {
   media_type: string;
   category: string | null;
   is_featured: boolean | null;
+  media_kind?: string | null;
 }
 
 const categories = ["Events", "Worship", "Outreach", "Fellowship", "Other"];
@@ -56,9 +57,11 @@ export const GalleryManager = () => {
     media_type: "image",
     category: "Events",
     is_featured: false,
+    media_kind: "photo",
   });
   const [bulkUrls, setBulkUrls] = useState("");
   const [bulkCategory, setBulkCategory] = useState("Events");
+  const [bulkKind, setBulkKind] = useState("photo");
   const [bulkBusy, setBulkBusy] = useState(false);
 
   useEffect(() => {
@@ -69,7 +72,7 @@ export const GalleryManager = () => {
     try {
       const { data, error } = await supabase
         .from("media_gallery")
-        .select("id,title,description,media_url,media_type,category,is_featured")
+        .select("id,title,description,media_url,media_type,category,is_featured,media_kind")
         .order("created_at", { ascending: false })
         .limit(ADMIN_PAGE_SIZE);
 
@@ -91,6 +94,7 @@ export const GalleryManager = () => {
       media_type: "image",
       category: "Events",
       is_featured: false,
+      media_kind: "photo",
     });
     setIsEditing(false);
     setEditingId(null);
@@ -104,6 +108,7 @@ export const GalleryManager = () => {
       media_type: item.media_type,
       category: item.category || "Events",
       is_featured: item.is_featured || false,
+      media_kind: item.media_kind || "photo",
     });
     setEditingId(item.id);
     setIsEditing(true);
@@ -123,6 +128,7 @@ export const GalleryManager = () => {
             media_type: formData.media_type,
             category: formData.category,
             is_featured: formData.is_featured,
+            media_kind: formData.media_kind,
           })
           .eq("id", editingId);
 
@@ -136,6 +142,7 @@ export const GalleryManager = () => {
           media_type: formData.media_type,
           category: formData.category,
           is_featured: formData.is_featured,
+          media_kind: formData.media_kind,
         });
 
         if (error) throw error;
@@ -175,6 +182,7 @@ export const GalleryManager = () => {
         media_type: "image",
         category: bulkCategory,
         is_featured: false,
+        media_kind: bulkKind,
       }));
       const { error } = await supabase.from("media_gallery").insert(rows);
       if (error) throw error;
@@ -204,6 +212,7 @@ export const GalleryManager = () => {
           media_type: file.type.startsWith("video") ? "video" : "image",
           category: bulkCategory,
           is_featured: false,
+          media_kind: bulkKind,
         };
       }));
       const rows = uploads.filter(Boolean) as any[];
@@ -239,6 +248,13 @@ export const GalleryManager = () => {
               rows={3}
             />
             <div className="space-y-2">
+              <Select value={bulkKind} onValueChange={setBulkKind}>
+                <SelectTrigger><SelectValue /></SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="photo">Photo (Photos page)</SelectItem>
+                  <SelectItem value="poster">Poster (Notice Board)</SelectItem>
+                </SelectContent>
+              </Select>
               <Select value={bulkCategory} onValueChange={setBulkCategory}>
                 <SelectTrigger><SelectValue /></SelectTrigger>
                 <SelectContent>
@@ -343,6 +359,19 @@ export const GalleryManager = () => {
               </SelectContent>
             </Select>
 
+            <Select
+              value={formData.media_kind}
+              onValueChange={(value) => setFormData({ ...formData, media_kind: value })}
+            >
+              <SelectTrigger className="w-48">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="photo">Photo (Photos page)</SelectItem>
+                <SelectItem value="poster">Poster (Notice Board)</SelectItem>
+              </SelectContent>
+            </Select>
+
             <label className="flex items-center gap-2 cursor-pointer">
               <input
                 type="checkbox"
@@ -384,6 +413,9 @@ export const GalleryManager = () => {
               {item.is_featured && (
                 <Badge className="absolute top-2 left-2">Featured</Badge>
               )}
+              <Badge variant="secondary" className="absolute bottom-2 left-2 capitalize">
+                {item.media_kind || "photo"}
+              </Badge>
             </div>
             <div className="p-3">
               <p className="font-medium text-sm truncate">{item.title}</p>

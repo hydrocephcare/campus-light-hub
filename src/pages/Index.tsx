@@ -24,6 +24,7 @@ const PrayerRequestForm = lazy(() => import("@/components/PrayerRequestForm").th
 const GivingSection = lazy(() => import("@/components/GivingSection").then(m => ({ default: m.GivingSection })));
 const GuestForm = lazy(() => import("@/components/GuestForm").then(m => ({ default: m.GuestForm })));
 const LatestBlogPost = lazy(() => import("@/components/LatestBlogPost").then(m => ({ default: m.LatestBlogPost })));
+const PhotoGalleryPreview = lazy(() => import("@/components/PhotoGalleryPreview").then(m => ({ default: m.PhotoGalleryPreview })));
 const GalleryPreview = lazy(() => import("@/components/GalleryPreview").then(m => ({ default: m.GalleryPreview })));
 const ConnectWithUs = lazy(() => import("@/components/ConnectWithUs").then(m => ({ default: m.ConnectWithUs })));
 
@@ -68,6 +69,12 @@ const Index = () => {
         <AnimatedSection animation="fade-up">
           <ChurchAnnouncements />
         </AnimatedSection>
+
+        <Suspense fallback={<SectionFallback />}>
+          <AnimatedSection animation="fade-up">
+            <PhotoGalleryPreview />
+          </AnimatedSection>
+        </Suspense>
 
         {/* Below-fold lazy-loaded sections */}
         <Suspense fallback={<SectionFallback />}>

@@ -58,7 +58,7 @@ export const GalleryPhoto = ({ item, onOpen, priority = false }: Props) => {
             } ${loaded ? "opacity-100" : "opacity-0"} group-hover:scale-[1.02]`}
             loading={priority ? "eager" : "lazy"}
             decoding="async"
-            fetchPriority={priority ? "high" : "low"}
+            {...({ fetchpriority: priority ? "high" : "low" } as any)}
           />
         </>
       )}

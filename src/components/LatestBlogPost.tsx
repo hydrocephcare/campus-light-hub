@@ -14,6 +14,10 @@ interface BlogPost {
   content: string;
   featured_image: string | null;
   published_at: string | null;
+  category?: string | null;
+  tags?: string[] | null;
+  is_published?: boolean | null;
+  created_at?: string | null;
 }
 
 export const LatestBlogPost = () => {
@@ -27,7 +31,7 @@ export const LatestBlogPost = () => {
   const fetchLatestPost = async () => {
     const { data, error } = await supabase
       .from("blog_posts")
-      .select("id, title, slug, excerpt, content, featured_image, published_at")
+      .select("id, title, slug, excerpt, content, featured_image, published_at, category, tags, is_published, created_at")
       .eq("is_published", true)
       .order("published_at", { ascending: false })
       .limit(1)

@@ -3,7 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { 
   Home, Info, UserPlus, Calendar, CalendarDays, Church, Mail, 
   Video, FileText, Image, Vote, HandHelping, Menu, X, Youtube, 
-  Phone, ChevronDown, ChevronRight, ExternalLink
+  Phone, ChevronDown, ChevronRight, ExternalLink, Megaphone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -45,7 +45,8 @@ const navGroups = [
     items: [
       { to: "/media", label: "Sermons", icon: Video, desc: "Watch sermons" },
       { to: "/blog", label: "Blog", icon: FileText, desc: "Faith stories" },
-      { to: "/gallery", label: "Gallery", icon: Image, desc: "Photos & videos" },
+      { to: "/gallery", label: "Notice Board", icon: Megaphone, desc: "Announcement posters" },
+      { to: "/photos", label: "Photos", icon: Image, desc: "Church photo gallery" },
     ],
   },
   {

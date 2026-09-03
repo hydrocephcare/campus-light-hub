@@ -13,6 +13,7 @@ import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
 const Index = lazyWithRetry(() => import("./pages/Index"));
 const About = lazyWithRetry(() => import("./pages/About"));
 const Events = lazyWithRetry(() => import("./pages/Events"));
+const EventDetail = lazyWithRetry(() => import("./pages/EventDetail"));
 const Media = lazyWithRetry(() => import("./pages/Media"));
 const Blog = lazyWithRetry(() => import("./pages/Blog"));
 const BlogPost = lazyWithRetry(() => import("./pages/BlogPost"));

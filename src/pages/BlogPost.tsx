@@ -69,12 +69,15 @@ const BlogPost = () => {
     type: "article",
   });
 
+  // Share through the preview endpoint so WhatsApp/Facebook/X show this
+  // story's own featured image instead of the generic site logo.
+  const previewLink = () => shareUrl("post", slug || "");
   const copyLink = () => {
-    navigator.clipboard.writeText(window.location.href);
+    navigator.clipboard.writeText(previewLink());
     toast.success("Link copied");
   };
-  const shareFacebook = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`, "_blank");
-  const shareTwitter = () => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(post?.title || "")}`, "_blank");
+  const shareFacebook = () => window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(previewLink())}`, "_blank");
+  const shareTwitter = () => window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(previewLink())}&text=${encodeURIComponent(post?.title || "")}`, "_blank");
 
   if (loading) {
     return (

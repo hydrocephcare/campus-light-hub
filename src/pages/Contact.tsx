@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +29,12 @@ const Contact = () => {
 
   const churchLocation = { lat: -1.0333, lng: 37.0833 };
 
+  const hero = usePageHero("contact", {
+    title: "Get In Touch",
+    subtitle: "We'd love to hear from you. Reach out anytime!",
+    image: "https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1920&q=60",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -36,7 +43,7 @@ const Contact = () => {
         <section className="relative min-h-[45vh] md:min-h-[55vh] flex items-end overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1423666639041-f56000c27a9a?auto=format&fit=crop&w=1920&q=60"
+              src={hero.image}
               alt="Get in touch"
               className="w-full h-full object-cover"
             />
@@ -44,10 +51,10 @@ const Contact = () => {
           </div>
           <div className="container mx-auto px-4 relative z-10 pb-10 md:pb-16">
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-              Get In Touch
+              {hero.title}
             </h1>
             <p className="text-lg md:text-xl text-white/80 max-w-2xl">
-              We'd love to hear from you. Reach out anytime!
+              {hero.subtitle}
             </p>
           </div>
         </section>

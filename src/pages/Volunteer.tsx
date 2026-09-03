@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -46,6 +47,13 @@ const Volunteer = () => {
     fetch();
   }, []);
 
+  const hero = usePageHero("volunteer", {
+    badge: "Serve With Us",
+    title: "Volunteer Opportunities",
+    subtitle: "Use your gifts and talents to serve God and build His kingdom on campus",
+    image: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1920&q=60",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -54,7 +62,7 @@ const Volunteer = () => {
         <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-end overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1559027615-cd4628902d4a?auto=format&fit=crop&w=1920&q=60"
+              src={hero.image}
               alt="Volunteering"
               className="w-full h-full object-cover"
             />
@@ -62,13 +70,13 @@ const Volunteer = () => {
           </div>
           <div className="container mx-auto px-4 relative z-10 pb-10 md:pb-16">
             <div className="inline-flex items-center gap-2 bg-primary/90 text-primary-foreground px-3 py-1 rounded-full text-sm font-medium mb-4">
-              <HandHelping className="w-4 h-4" /> Serve With Us
+              <HandHelping className="w-4 h-4" /> {hero.badge}
             </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-              Volunteer Opportunities
+              {hero.title}
             </h1>
             <p className="text-base md:text-lg text-white/80 max-w-2xl">
-              Use your gifts and talents to serve God and build His kingdom on campus
+              {hero.subtitle}
             </p>
           </div>
         </section>

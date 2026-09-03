@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -138,6 +139,12 @@ const Schedule = () => {
 
   const currentTheme = dayThemes[selectedDay] || dayThemes.Sunday;
 
+  const hero = usePageHero("schedule", {
+    badge: "MKUCU 2025/2026 Regime",
+    title: "Weekly Schedule",
+    subtitle: "Join us for worship, fellowship, and spiritual growth throughout the week",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -155,12 +162,12 @@ const Schedule = () => {
             <div className="absolute inset-0 bg-gradient-to-t from-background via-black/50 to-black/30" />
           </div>
           <div className="container mx-auto px-4 relative z-10 pb-10 md:pb-16">
-            <Badge className="bg-secondary/90 text-secondary-foreground mb-4">MKUCU 2025/2026 Regime</Badge>
+            <Badge className="bg-secondary/90 text-secondary-foreground mb-4">{hero.badge}</Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-              Weekly Schedule
+              {hero.title}
             </h1>
             <p className="text-lg md:text-xl text-white/80 max-w-2xl">
-              Join us for worship, fellowship, and spiritual growth throughout the week
+              {hero.subtitle}
             </p>
           </div>
         </section>

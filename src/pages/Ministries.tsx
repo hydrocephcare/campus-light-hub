@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -64,6 +65,13 @@ const Ministries = () => {
     return iconMap[iconName] || Heart;
   };
 
+  const hero = usePageHero("ministries", {
+    badge: "Serve With Purpose",
+    title: "Our Ministries",
+    subtitle: "Discover your calling and make a difference. Everyone has a gift — find where yours can be used.",
+    image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1600&q=60",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -72,7 +80,7 @@ const Ministries = () => {
       <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-end overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src={optimizedImageUrl("https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1600&q=60", { width: 1600, quality: 70 })}
+            src={optimizedImageUrl(hero.image!, { width: 1600, quality: 70 })}
             alt="Ministries"
             className="w-full h-full object-cover"
             loading="eager"
@@ -81,13 +89,13 @@ const Ministries = () => {
         </div>
         <div className="container mx-auto px-4 relative z-10 pb-10 md:pb-16">
           <div className="inline-flex items-center gap-2 bg-secondary/90 text-secondary-foreground px-3 py-1 rounded-full text-sm font-medium mb-4">
-            <Church className="w-4 h-4" /> Serve With Purpose
+            <Church className="w-4 h-4" /> {hero.badge}
           </div>
           <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-            Our Ministries
+            {hero.title}
           </h1>
           <p className="text-base md:text-lg text-white/80 max-w-2xl">
-            Discover your calling and make a difference. Everyone has a gift — find where yours can be used.
+            {hero.subtitle}
           </p>
         </div>
       </section>

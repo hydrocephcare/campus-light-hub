@@ -63,19 +63,10 @@ export const SiteSettingsManager = () => {
   const saveSetting = async (key: string, value: any) => {
     setSaving(key);
     try {
-      // Try update first, then upsert if no rows affected
-      const { error: updateError, count } = await (supabase as any)
+      const { error } = await (supabase as any)
         .from("site_settings")
-        .update({ value })
-        .eq("key", key);
-      
-      if (updateError) {
-        // Fallback: upsert
-        const { error } = await (supabase as any)
-          .from("site_settings")
-          .upsert({ key, value }, { onConflict: "key" });
-        if (error) throw error;
-      }
+        .upsert({ key, value }, { onConflict: "key" });
+      if (error) throw error;
       toast.success("Saved successfully!");
     } catch (e) {
       console.error(e);

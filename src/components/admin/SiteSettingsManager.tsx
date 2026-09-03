@@ -9,6 +9,7 @@ import { Plus, Trash2, Save, Loader2, Sparkles, Globe } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { ImageUpload } from "./ImageUpload";
+import { PAGE_KEYS, type PageContentMap } from "@/hooks/usePageContent";
 
 interface StatItem { icon: string; value: number; suffix: string; label: string; }
 interface CoreValue { icon: string; title: string; description: string; }
@@ -29,6 +30,7 @@ export const SiteSettingsManager = () => {
   const [givingInfo, setGivingInfo] = useState({ till_number: "", till_name: "", scripture: "", scripture_ref: "" });
   const [dailyVerses, setDailyVerses] = useState<DailyVerse[]>([]);
   const [quickActions, setQuickActions] = useState<QuickAction[]>([]);
+  const [pageContent, setPageContent] = useState<PageContentMap>({});
   const [aiPrompt, setAiPrompt] = useState("");
   const [aiResponse, setAiResponse] = useState("");
   const [aiLoading, setAiLoading] = useState(false);
@@ -51,6 +53,7 @@ export const SiteSettingsManager = () => {
       if (settings.giving_info) setGivingInfo(settings.giving_info);
       if (settings.daily_verses) setDailyVerses(settings.daily_verses);
       if (settings.quick_actions) setQuickActions(settings.quick_actions);
+      if (settings.page_content) setPageContent(settings.page_content);
     } catch (e) {
       console.error(e);
       toast.error("Failed to load settings");
@@ -148,6 +151,7 @@ export const SiteSettingsManager = () => {
           <TabsTrigger value="giving" className="text-xs">Giving</TabsTrigger>
           <TabsTrigger value="verses" className="text-xs">Daily Verses</TabsTrigger>
           <TabsTrigger value="actions" className="text-xs">Quick Actions</TabsTrigger>
+          <TabsTrigger value="pages" className="text-xs">📄 Pages</TabsTrigger>
           <TabsTrigger value="ai" className="text-xs">✨ AI Assistant</TabsTrigger>
         </TabsList>
 
@@ -332,6 +336,40 @@ export const SiteSettingsManager = () => {
                 <Button variant="outline" size="sm" onClick={() => setQuickActions([...quickActions, { icon: "Star", title: "", description: "", color: "bg-primary", link: "/" }])}><Plus className="w-4 h-4 mr-1" />Add Action</Button>
                 <Button size="sm" onClick={() => saveSetting("quick_actions", quickActions)} disabled={saving === "quick_actions"}><Save className="w-4 h-4 mr-1" />Save</Button>
               </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="pages" className="space-y-4">
+          <Card>
+            <CardHeader><CardTitle className="text-lg">Page Titles & Hero Images</CardTitle></CardHeader>
+            <CardContent className="space-y-5">
+              <p className="text-sm text-muted-foreground">Edit the heading, subtitle, small badge label and background image at the top of each page. Leave a field blank to keep the built-in default.</p>
+              {PAGE_KEYS.map(({ key, label }) => {
+                const page = pageContent[key] || {};
+                const update = (field: string, value: string) =>
+                  setPageContent({ ...pageContent, [key]: { ...page, [field]: value } });
+                return (
+                  <div key={key} className="p-4 border rounded-lg space-y-3">
+                    <h4 className="font-semibold text-sm">{label}</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      <div><Label className="text-xs">Badge label</Label><Input value={page.badge || ""} onChange={e => update("badge", e.target.value)} placeholder="e.g. Notice Board" /></div>
+                      <div><Label className="text-xs">Title</Label><Input value={page.title || ""} onChange={e => update("title", e.target.value)} placeholder="Page heading" /></div>
+                    </div>
+                    <div><Label className="text-xs">Subtitle</Label><Textarea value={page.subtitle || ""} onChange={e => update("subtitle", e.target.value)} rows={2} placeholder="Short intro sentence" /></div>
+                    <ImageUpload
+                      label="Hero background image"
+                      value={page.image || ""}
+                      onChange={(url) => update("image", url)}
+                      folder="pages"
+                      hint="Upload a wide image or paste a link."
+                    />
+                  </div>
+                );
+              })}
+              <Button size="sm" onClick={() => saveSetting("page_content", pageContent)} disabled={saving === "page_content"}>
+                {saving === "page_content" ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4 mr-1" />}Save Pages
+              </Button>
             </CardContent>
           </Card>
         </TabsContent>

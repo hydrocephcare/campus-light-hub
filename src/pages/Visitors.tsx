@@ -1,5 +1,6 @@
 import { COMMUNITY_LINK } from "@/lib/communityLink";
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
@@ -105,6 +106,12 @@ const Visitors = () => {
     setFormData({ name: "", email: "", phone: "", message: "" });
   };
 
+  const hero = usePageHero("visitors", {
+    title: "New Here? Welcome!",
+    subtitle: "MKU Christian Union is a vibrant community of believers passionate about knowing Christ and making Him known on campus and beyond.",
+    image: "https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1920&q=75",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -113,7 +120,7 @@ const Visitors = () => {
       <section className="relative py-20 md:py-28 overflow-hidden">
         <div className="absolute inset-0">
           <img
-            src="https://images.unsplash.com/photo-1529070538774-1843cb3265df?auto=format&fit=crop&w=1920&q=75"
+            src={hero.image}
             alt="Welcoming community"
             className="w-full h-full object-cover"
           />
@@ -121,11 +128,10 @@ const Visitors = () => {
         </div>
         <div className="container mx-auto px-4 text-center relative z-10">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-6">
-            New Here? <span className="text-secondary">Welcome!</span>
+            {hero.title}
           </h1>
           <p className="text-lg md:text-xl text-white/85 max-w-2xl mx-auto mb-8">
-            MKU Christian Union is a vibrant community of believers passionate about 
-            knowing Christ and making Him known on campus and beyond.
+            {hero.subtitle}
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <a href="#guest-form">

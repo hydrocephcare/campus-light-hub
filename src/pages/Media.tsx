@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -80,13 +81,13 @@ const Media = () => {
           </div>
           <div className="container mx-auto px-4 relative z-10 pb-10 md:pb-16">
             <div className="inline-flex items-center gap-2 bg-red-600 text-white px-3 py-1 rounded-full text-sm font-medium mb-4">
-              <Youtube className="w-4 h-4" /> MKU CU Media
+              <Youtube className="w-4 h-4" /> {hero.badge}
             </div>
             <h1 className="text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-              Sermons & Teachings
+              {hero.title}
             </h1>
             <p className="text-base md:text-lg text-white/80 max-w-2xl mb-6">
-              Watch sermons, worship sessions, and teachings from MKU Christian Union
+              {hero.subtitle}
             </p>
             <div className="flex flex-wrap gap-3">
               {featured && (

@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -84,6 +85,11 @@ const Events = () => {
 
   const featuredEvent = upcomingEvents.find(e => e.is_featured) || upcomingEvents[0];
 
+  const hero = usePageHero("events", {
+    title: "Events & Gatherings",
+    subtitle: "Join us for life-changing gatherings, worship services, and fellowship opportunities",
+  });
+
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
@@ -103,10 +109,10 @@ const Events = () => {
               <CalendarDays className="w-3 h-3 mr-1" /> {upcomingEvents.length} Upcoming
             </Badge>
             <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-              Events & Gatherings
+              {hero.title}
             </h1>
             <p className="text-lg md:text-xl text-white/80 max-w-2xl">
-              Join us for life-changing gatherings, worship services, and fellowship opportunities
+              {hero.subtitle}
             </p>
           </div>
         </section>

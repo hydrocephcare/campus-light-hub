@@ -1,4 +1,7 @@
-import { Calendar, MapPin, Clock, ArrowRight } from "lucide-react";
+import { Calendar, MapPin, Clock, ArrowRight, Share2 } from "lucide-react";
+import { Link } from "react-router-dom";
+import { toast } from "sonner";
+import { shareItem } from "@/lib/shareLinks";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";

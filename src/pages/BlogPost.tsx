@@ -9,6 +9,7 @@ import { Badge } from "@/components/ui/badge";
 import { CommentsSection } from "@/components/CommentsSection";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
+import { shareUrl } from "@/lib/shareLinks";
 import { toast } from "sonner";
 import { findBuiltInBlogPost, mergePublishedBlogPosts } from "@/data/blogPosts";
 

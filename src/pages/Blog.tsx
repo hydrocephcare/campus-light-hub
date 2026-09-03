@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight, BookOpen, Calendar, Clock, Loader2 } from "lucide-react";
@@ -59,6 +60,12 @@ const Blog = () => {
   const featured = filtered[0];
   const stories = filtered.slice(1);
 
+  const hero = usePageHero("blog", {
+    badge: "MKU Christian Union",
+    title: "The Journal",
+    subtitle: "Sermons, testimonies and reflections from our life together in Christ.",
+  });
+
   return (
     <div className="min-h-screen bg-[#f7f7f5] text-[#191919] dark:bg-[#2B2420] dark:text-[#F1E9DC]">
       <Header />
@@ -68,12 +75,12 @@ const Blog = () => {
             <div className="flex items-end justify-between gap-6 border-b border-[#ded6cf] pb-5 dark:border-white/10">
               <div>
                 <div className="mb-2 flex items-center gap-2 text-xs font-semibold uppercase text-[#9d3529] dark:text-[#E08B76]">
-                  <BookOpen className="h-4 w-4" /> MKU Christian Union
+                  <BookOpen className="h-4 w-4" /> {hero.badge}
                 </div>
-                <h1 className="font-serif text-4xl font-bold md:text-6xl">The Journal</h1>
+                <h1 className="font-serif text-4xl font-bold md:text-6xl">{hero.title}</h1>
               </div>
               <p className="hidden max-w-sm text-right text-sm leading-6 text-black/60 dark:text-[#F1E9DC]/65 md:block">
-                Sermons, testimonies and reflections from our life together in Christ.
+                {hero.subtitle}
               </p>
             </div>
           </div>

@@ -96,13 +96,30 @@ export const UpcomingEvents = () => {
                     <span className="line-clamp-1">{event.location}</span>
                   </div>
                 </div>
-                <Button
-                  size="sm"
-                  className="w-full bg-primary hover:bg-primary/90 text-primary-foreground text-xs h-8"
-                  onClick={() => { setSelectedEvent(event); setDialogOpen(true); }}
-                >
-                  View event details <ArrowRight className="w-3 h-3 ml-1" />
-                </Button>
+                <div className="flex gap-2">
+                  <Button asChild size="sm" className="flex-1 text-xs h-9 rounded-full">
+                    <Link to={`/events/${event.id}`}>
+                      View details <ArrowRight className="w-3 h-3 ml-1" />
+                    </Link>
+                  </Button>
+                  <Button
+                    variant="outline"
+                    size="icon"
+                    className="h-9 w-9 rounded-full"
+                    aria-label={`Share ${event.title}`}
+                    onClick={() =>
+                      shareItem({
+                        kind: "event",
+                        key: event.id,
+                        title: event.title,
+                        text: `${event.title} — ${new Date(event.event_date).toLocaleDateString()} at ${event.location}`,
+                        onCopied: () => toast.success("Event link copied!"),
+                      })
+                    }
+                  >
+                    <Share2 className="w-3.5 h-3.5" />
+                  </Button>
+                </div>
               </div>
             </Card>
           ))}

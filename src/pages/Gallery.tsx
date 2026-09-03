@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo, useRef } from "react";
 import { useLocation, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Megaphone, X, ChevronLeft, ChevronRight, Loader2, Image as ImageIcon, CalendarDays, Camera } from "lucide-react";
@@ -219,7 +220,7 @@ const Gallery = () => {
         <section className="relative min-h-[38vh] md:min-h-[46vh] flex items-end overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1600&q=70"
+              src={hero.image}
               alt="MKU Christian Union gathering"
               className="w-full h-full object-cover"
               loading="eager"
@@ -229,15 +230,13 @@ const Gallery = () => {
           <div className="container mx-auto px-4 relative z-10 pb-8 md:pb-12">
             <div className="inline-flex items-center gap-2 bg-primary text-primary-foreground px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide mb-4">
               {tab === "poster" ? <Megaphone className="w-3.5 h-3.5" /> : <Camera className="w-3.5 h-3.5" />}
-              {tab === "poster" ? "Notice Board" : "Photo Gallery"}
+              {hero.badge}
             </div>
             <h1 className="text-3xl md:text-5xl font-serif font-bold text-foreground mb-3">
-              {tab === "poster" ? "Announcement Posters" : "Church Photos"}
+              {hero.title}
             </h1>
             <p className="text-base md:text-lg text-muted-foreground max-w-2xl">
-              {tab === "poster"
-                ? "Official program posters for services, fellowships, missions and special gatherings."
-                : "Moments captured across worship, fellowship, missions and campus life."}
+              {hero.subtitle}
             </p>
           </div>
         </section>

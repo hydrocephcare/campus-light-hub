@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,6 +58,12 @@ const About = () => {
     }
   };
 
+  const hero = usePageHero("about", {
+    title: "MKU Christian Union",
+    subtitle: "A vibrant community of students committed to living out the knowledge of God on campus and beyond.",
+    image: "https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&w=1920&q=75",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -65,7 +72,7 @@ const About = () => {
         <section className="relative min-h-[60vh] md:min-h-[80vh] flex items-end overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src="https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&w=1920&q=75"
+              src={hero.image}
               alt="Church community"
               className="w-full h-full object-cover"
             />
@@ -74,10 +81,10 @@ const About = () => {
            <div className="container mx-auto px-4 relative z-10 pb-12 md:pb-20">
             <div className="max-w-3xl">
               <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif font-bold text-white mb-4 leading-[1.1]">
-                MKU Christian<br />Union
+                {hero.title}
               </h1>
               <p className="text-lg md:text-xl text-white/80 max-w-xl mb-8">
-                A vibrant community of students committed to living out the knowledge of God on campus and beyond.
+                {hero.subtitle}
               </p>
               {/* Stats inline */}
               <div className="flex flex-wrap gap-8 md:gap-12">

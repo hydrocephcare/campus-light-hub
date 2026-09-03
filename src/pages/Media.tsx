@@ -58,6 +58,12 @@ const Media = () => {
   const filtered = activeFilter === "All" ? sermons : sermons.filter(s => (s.category || "Other") === activeFilter);
   const featured = sermons.find(s => s.is_featured) || sermons[0];
 
+  const hero = usePageHero("media", {
+    badge: "MKU CU Media",
+    title: "Sermons & Teachings",
+    subtitle: "Watch sermons, worship sessions, and teachings from MKU Christian Union",
+  });
+
   return (
     <div className="min-h-screen bg-background">
       <Header />

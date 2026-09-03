@@ -11,9 +11,10 @@ import { toast } from "sonner";
 import { AnimatedSection } from "@/components/AnimatedSection";
 import { useSEO } from "@/hooks/useSEO";
 import { getEventImage } from "@/lib/eventImages";
-import { EventRegistrationDialog } from "@/components/EventRegistrationDialog";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { staticEvents } from "@/data/staticSiteContent";
+import { Link } from "react-router-dom";
+import { shareItem } from "@/lib/shareLinks";
 
 interface Event {
   id: string;
@@ -32,8 +33,6 @@ interface Event {
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
   const [filter, setFilter] = useState("all");
   const today = new Date().toISOString().split("T")[0];
 
@@ -72,11 +71,15 @@ const Events = () => {
   const categories = ["all", ...new Set(upcomingEvents.map(e => e.category).filter(Boolean))];
   const filteredEvents = filter === "all" ? upcomingEvents : upcomingEvents.filter(e => e.category === filter);
 
+  // Uses the link-preview endpoint so shared events carry their own poster.
   const shareEvent = (event: Event) => {
-    const url = `${window.location.origin}/events#${event.id}`;
-    const text = `${event.title} - ${new Date(event.event_date).toLocaleDateString()} at ${event.location}`;
-    if (navigator.share) navigator.share({ title: event.title, text, url });
-    else { navigator.clipboard.writeText(url); toast.success("Event link copied!"); }
+    shareItem({
+      kind: "event",
+      key: event.id,
+      title: event.title,
+      text: `${event.title} - ${new Date(event.event_date).toLocaleDateString()} at ${event.location}`,
+      onCopied: () => toast.success("Event link copied!"),
+    });
   };
 
   const featuredEvent = upcomingEvents.find(e => e.is_featured) || upcomingEvents[0];
@@ -179,10 +182,12 @@ const Events = () => {
                           </div>
                         </div>
                         <div className="flex gap-2">
-                          <Button className="flex-1" size="sm" onClick={() => { setSelectedEvent(event); setDialogOpen(true); }}>
-                            Event details <ArrowRight className="w-4 h-4 ml-1" />
+                          <Button asChild className="flex-1 rounded-full" size="sm">
+                            <Link to={`/events/${event.id}`}>
+                              View details <ArrowRight className="w-4 h-4 ml-1" />
+                            </Link>
                           </Button>
-                          <Button variant="outline" size="icon" className="h-9 w-9" onClick={() => shareEvent(event)}>
+                          <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={() => shareEvent(event)}>
                             <Share2 className="w-4 h-4" />
                           </Button>
                         </div>
@@ -207,7 +212,7 @@ const Events = () => {
               <h2 className="text-2xl font-serif font-bold text-muted-foreground mb-6">Past Events</h2>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-7xl mx-auto">
                 {pastEvents.slice(0, 8).map((event) => (
-                  <Card key={event.id} className="overflow-hidden opacity-60 hover:opacity-80 transition-opacity">
+                  <Card key={event.id} className="overflow-hidden opacity-70 hover:opacity-100 transition-opacity">
                     <div className="aspect-square overflow-hidden bg-muted p-2">
                       <img src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 700, quality: 82 })} alt={event.title} className="w-full h-full object-contain" loading="lazy" decoding="async" />
                     </div>
@@ -236,7 +241,6 @@ const Events = () => {
         </section>
       </main>
       <Footer />
-      <EventRegistrationDialog open={dialogOpen} onOpenChange={setDialogOpen} event={selectedEvent} />
     </div>
   );
 };

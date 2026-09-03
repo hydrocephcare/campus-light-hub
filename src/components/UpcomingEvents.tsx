@@ -8,7 +8,6 @@ import { Badge } from "@/components/ui/badge";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getEventImage } from "@/lib/eventImages";
-import { EventRegistrationDialog } from "@/components/EventRegistrationDialog";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { staticEvents } from "@/data/staticSiteContent";
 
@@ -28,8 +27,6 @@ interface Event {
 export const UpcomingEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
-  const [dialogOpen, setDialogOpen] = useState(false);
 
   useEffect(() => {
     const fetchEvents = async () => {
@@ -136,8 +133,6 @@ export const UpcomingEvents = () => {
           </a>
         </div>
       </div>
-
-      <EventRegistrationDialog open={dialogOpen} onOpenChange={setDialogOpen} event={selectedEvent} />
     </section>
   );
 };

@@ -212,7 +212,18 @@ const Gallery = () => {
     };
   }, [selectedIndex]);
 
+  const hero = usePageHero(tab === "poster" ? "gallery" : "photos", {
+    badge: tab === "poster" ? "Notice Board" : "Photo Gallery",
+    title: tab === "poster" ? "Announcement Posters" : "Church Photos",
+    subtitle:
+      tab === "poster"
+        ? "Official program posters for services, fellowships, missions and special gatherings."
+        : "Moments captured across worship, fellowship, missions and campus life.",
+    image: "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1600&q=70",
+  });
+
   return (
+
     <div className="min-h-screen bg-background">
       <Header />
       <main>

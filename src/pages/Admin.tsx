@@ -29,6 +29,7 @@ const HeroSlidesManager = lazy(() => import("@/components/admin/HeroSlidesManage
 const PrayerRequestsManager = lazy(() => import("@/components/admin/PrayerRequestsManager").then(m => ({ default: m.PrayerRequestsManager })));
 const CommentsManager = lazy(() => import("@/components/admin/CommentsManager").then(m => ({ default: m.CommentsManager })));
 const GalleryManager = lazy(() => import("@/components/admin/GalleryManager").then(m => ({ default: m.GalleryManager })));
+const MissionsManager = lazy(() => import("@/components/admin/MissionsManager").then(m => ({ default: m.MissionsManager })));
 const NotificationsManager = lazy(() => import("@/components/admin/NotificationsManager").then(m => ({ default: m.NotificationsManager })));
 const SiteSettingsManager = lazy(() => import("@/components/admin/SiteSettingsManager").then(m => ({ default: m.SiteSettingsManager })));
 const GuestsManager = lazy(() => import("@/components/admin/GuestsManager").then(m => ({ default: m.GuestsManager })));

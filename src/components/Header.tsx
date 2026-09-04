@@ -47,6 +47,7 @@ const navGroups = [
       { to: "/blog", label: "Blog", icon: FileText, desc: "Faith stories" },
       { to: "/gallery", label: "Notice Board", icon: Megaphone, desc: "Announcement posters" },
       { to: "/photos", label: "Photos", icon: Image, desc: "Church photo gallery" },
+      { to: "/missions", label: "Missions", icon: Globe2, desc: "Mission photos & videos" },
     ],
   },
   {

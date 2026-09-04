@@ -24,6 +24,7 @@ const PrayerRequestForm = lazy(() => import("@/components/PrayerRequestForm").th
 const GivingSection = lazy(() => import("@/components/GivingSection").then(m => ({ default: m.GivingSection })));
 const GuestForm = lazy(() => import("@/components/GuestForm").then(m => ({ default: m.GuestForm })));
 const LatestBlogPost = lazy(() => import("@/components/LatestBlogPost").then(m => ({ default: m.LatestBlogPost })));
+const MissionsPreview = lazy(() => import("@/components/MissionsPreview").then(m => ({ default: m.MissionsPreview })));
 const PhotoGalleryPreview = lazy(() => import("@/components/PhotoGalleryPreview").then(m => ({ default: m.PhotoGalleryPreview })));
 const GalleryPreview = lazy(() => import("@/components/GalleryPreview").then(m => ({ default: m.GalleryPreview })));
 const ConnectWithUs = lazy(() => import("@/components/ConnectWithUs").then(m => ({ default: m.ConnectWithUs })));
@@ -73,6 +74,12 @@ const Index = () => {
         <Suspense fallback={<SectionFallback />}>
           <AnimatedSection animation="fade-up">
             <PhotoGalleryPreview />
+          </AnimatedSection>
+        </Suspense>
+
+        <Suspense fallback={<SectionFallback />}>
+          <AnimatedSection animation="fade-up">
+            <MissionsPreview />
           </AnimatedSection>
         </Suspense>
 

@@ -25,6 +25,8 @@ export const LeadersManager = () => {
     image_url: "",
     display_order: 0,
     is_active: true,
+    term: "2026-2027",
+    docket: "Executive Committee",
   });
 
   useEffect(() => {
@@ -35,6 +37,7 @@ export const LeadersManager = () => {
     const { data, error } = await supabase
       .from("leaders")
       .select("*")
+      .order("term", { ascending: false })
       .order("display_order");
 
     if (error) {
@@ -86,6 +89,8 @@ export const LeadersManager = () => {
       image_url: leader.image_url || "",
       display_order: leader.display_order || 0,
       is_active: leader.is_active ?? true,
+      term: leader.term || "2026-2027",
+      docket: leader.docket || "",
     });
   };
 
@@ -116,6 +121,8 @@ export const LeadersManager = () => {
       image_url: "",
       display_order: 0,
       is_active: true,
+      term: "2026-2027",
+      docket: "Executive Committee",
     });
   };
 
@@ -164,6 +171,25 @@ export const LeadersManager = () => {
                 square
               />
               <div className="space-y-2">
+                <Label htmlFor="term">Spiritual Year / Term</Label>
+                <Input
+                  id="term"
+                  placeholder="2026-2027"
+                  value={formData.term}
+                  onChange={(e) => setFormData({ ...formData, term: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="docket">Docket / Group</Label>
+                <Input
+                  id="docket"
+                  placeholder="Executive Committee"
+                  value={formData.docket}
+                  onChange={(e) => setFormData({ ...formData, docket: e.target.value })}
+                />
+              </div>
+              <div className="space-y-2">
                 <Label htmlFor="display_order">Display Order</Label>
                 <Input
                   id="display_order"
@@ -206,6 +232,7 @@ export const LeadersManager = () => {
               <TableRow>
                 <TableHead>Name</TableHead>
                 <TableHead>Position</TableHead>
+                <TableHead>Term</TableHead>
                 <TableHead>Email</TableHead>
                 <TableHead>Order</TableHead>
                 <TableHead>Status</TableHead>
@@ -217,6 +244,7 @@ export const LeadersManager = () => {
                 <TableRow key={leader.id}>
                   <TableCell className="font-medium">{leader.name}</TableCell>
                   <TableCell>{leader.position}</TableCell>
+                  <TableCell>{leader.term}</TableCell>
                   <TableCell>{leader.email}</TableCell>
                   <TableCell>{leader.display_order}</TableCell>
                   <TableCell>{leader.is_active ? "Active" : "Inactive"}</TableCell>

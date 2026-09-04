@@ -294,13 +294,60 @@ export const EventsManager = () => {
               />
             </div>
 
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="theme" className="text-xs">Theme</Label>
+                <Input
+                  id="theme"
+                  value={formData.theme}
+                  onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
+                  placeholder="e.g., Jesus Glorified"
+                  className="h-9 text-sm"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="scripture" className="text-xs">Scripture</Label>
+                <Input
+                  id="scripture"
+                  value={formData.scripture}
+                  onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
+                  placeholder="e.g., John 17:1"
+                  className="h-9 text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label className="text-xs">Event Type</Label>
+                <Select value={formData.event_type} onValueChange={(v) => setFormData({ ...formData, event_type: v })}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {EVENT_TYPES.map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="slug" className="text-xs">Link slug</Label>
+                <Input
+                  id="slug"
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                  placeholder="auto from title"
+                  className="h-9 text-sm"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="description" className="text-xs">Description</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={2}
+                rows={3}
                 className="text-sm resize-none"
               />
             </div>
@@ -324,6 +371,37 @@ export const EventsManager = () => {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="drive_folder_url" className="text-xs">Photo source folder (Google Drive)</Label>
+              <Input
+                id="drive_folder_url"
+                type="url"
+                value={formData.drive_folder_url}
+                onChange={(e) => setFormData({ ...formData, drive_folder_url: e.target.value })}
+                placeholder="https://drive.google.com/drive/folders/..."
+                className="h-9 text-sm"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-6 pt-1">
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="is_published"
+                  checked={formData.is_published}
+                  onCheckedChange={(v) => setFormData({ ...formData, is_published: v })}
+                />
+                <Label htmlFor="is_published" className="text-xs">Published on site</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onCheckedChange={(v) => setFormData({ ...formData, is_featured: v })}
+                />
+                <Label htmlFor="is_featured" className="text-xs">Featured</Label>
+              </div>
+            </div>
+
             <div className="flex gap-2 pt-2">
               <Button type="submit" disabled={loading} size="sm">
                 {loading ? "Saving..." : editingId ? "Update" : "Create"}
@@ -334,6 +412,7 @@ export const EventsManager = () => {
                 </Button>
               )}
             </div>
+
           </form>
         </CardContent>
       </Card>

@@ -25,7 +25,7 @@ export const PhotoGalleryPreview = () => {
     const fetchPhotos = async () => {
       const { data } = await supabase
         .from("media_gallery")
-        .select("id, media_url, title, category, media_kind")
+        .select("id, media_url, title, category, media_kind").neq("category", "Unverified Archive")
         .order("created_at", { ascending: false })
         .limit(40);
       const live = (data || []).filter((item) => resolveMediaKind(item) === "photo");

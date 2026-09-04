@@ -466,6 +466,72 @@ export const EventsManager = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Livestream / recording archive */}
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <Video className="h-4 w-4 text-primary" />
+            <div>
+              <CardTitle className="text-base">Recordings ({videos.length})</CardTitle>
+              <CardDescription className="text-xs">
+                Attach each YouTube livestream to the event it belongs to. Unattached recordings stay hidden from the public pages.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-3 pt-0">
+          {videos.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">No recordings yet</p>
+          ) : (
+            <div className="space-y-2">
+              {videos.map((v) => (
+                <div key={v.id} className="space-y-2 rounded-lg bg-muted/50 p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-foreground">{v.title || v.youtube_id}</p>
+                      <a
+                        href={v.youtube_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary underline break-all"
+                      >
+                        {v.youtube_url}
+                      </a>
+                      {v.notes && <p className="mt-1 text-xs text-muted-foreground">{v.notes}</p>}
+                    </div>
+                    <div className="flex flex-shrink-0 items-center gap-2">
+                      {!v.event_id && <Badge variant="outline" className="text-[10px]">Unclassified</Badge>}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => deleteVideo(v.id)}
+                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                  <Select value={v.event_id || "none"} onValueChange={(val) => assignVideo(v.id, val)}>
+                    <SelectTrigger className="h-9 text-sm">
+                      <SelectValue placeholder="Attach to event" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Not attached</SelectItem>
+                      {events.map((e) => (
+                        <SelectItem key={e.id} value={e.id}>
+                          {e.title} · {new Date(e.event_date).toLocaleDateString()}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
+
   );
 };

@@ -189,7 +189,7 @@ const EventDetail = () => {
                 <img
                   src={optimizedImageUrl(image, { width: 1200, quality: 78 })}
                   alt={event.title}
-                  className="h-full w-full rounded-xl object-contain"
+                  className="mx-auto max-h-[60vh] w-full rounded-xl object-contain"
                 />
               </div>
 

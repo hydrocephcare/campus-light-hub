@@ -73,9 +73,20 @@ const LeaderCard = ({ leader, featured = false }: { leader: Leader; featured?: b
   </Card>
 );
 
+interface TermRow {
+  term: string;
+  label: string | null;
+  scripture: string | null;
+  poster_url: string | null;
+  is_current: boolean;
+  display_order: number | null;
+}
+
 const Leadership = () => {
   const [leaders, setLeaders] = useState<Leader[]>([]);
+  const [termRows, setTermRows] = useState<TermRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [view, setView] = useState<"current" | "past">("current");
   const [activeTerm, setActiveTerm] = useState<string | null>(null);
   const hero = usePageHero("leadership", {
     badge: "MKUCU Leadership",
@@ -86,32 +97,46 @@ const Leadership = () => {
   useSEO({
     title: "MKUCU Leadership — Executive Committee 2026–2027",
     description:
-      "Meet the Mount Kenya University Christian Union Executive Committee for the Spiritual Year 2026–2027.",
+      "Meet the Mount Kenya University Christian Union Executive Committee for the Spiritual Year 2026–2027, and browse past leadership administrations.",
     url: "https://campus-light-hub.lovable.app/leadership",
   });
 
   useEffect(() => {
     const load = async () => {
-      const { data, error } = await supabase
-        .from("leaders")
-        .select("id,name,position,image_url,display_order,term,docket,bio")
-        .eq("is_active", true)
-        .order("term", { ascending: false })
-        .order("display_order", { ascending: true });
+      const [{ data, error }, { data: termData }] = await Promise.all([
+        supabase
+          .from("leaders")
+          .select("id,name,position,image_url,display_order,term,docket,bio")
+          .eq("is_active", true)
+          .order("term", { ascending: false })
+          .order("display_order", { ascending: true }),
+        supabase
+          .from("leadership_terms")
+          .select("term,label,scripture,poster_url,is_current,display_order")
+          .order("display_order", { ascending: true }),
+      ]);
       if (error) console.error("Error fetching leaders:", error);
       setLeaders((data as Leader[]) || []);
+      setTermRows((termData as TermRow[]) || []);
       setLoading(false);
     };
     load();
   }, []);
 
-  const terms = useMemo(() => {
-    const unique = [...new Set(leaders.map((l) => l.term))];
-    return unique.sort((a, b) => b.localeCompare(a));
-  }, [leaders]);
+  const allTerms = useMemo(() => {
+    const fromLeaders = leaders.map((l) => l.term);
+    const fromRows = termRows.map((t) => t.term);
+    return [...new Set([...fromRows, ...fromLeaders])].sort((a, b) => b.localeCompare(a));
+  }, [leaders, termRows]);
 
-  const currentTerm = activeTerm ?? terms[0] ?? "2026-2027";
-  const termLeaders = leaders.filter((l) => l.term === currentTerm);
+  const currentTermName = termRows.find((t) => t.is_current)?.term ?? allTerms[0] ?? "2026-2027";
+  const pastTerms = allTerms.filter((t) => t !== currentTermName);
+
+  const selectedTerm =
+    view === "current" ? currentTermName : activeTerm && pastTerms.includes(activeTerm) ? activeTerm : pastTerms[0];
+
+  const termMeta = termRows.find((t) => t.term === selectedTerm);
+  const termLeaders = leaders.filter((l) => l.term === selectedTerm);
   const featured = termLeaders.slice(0, 2);
   const rest = termLeaders.slice(2);
 
@@ -128,31 +153,64 @@ const Leadership = () => {
           <h1 className="font-serif text-3xl font-bold tracking-tight text-foreground md:text-5xl">{hero.title}</h1>
           <p className="mx-auto mt-3 max-w-2xl text-sm text-muted-foreground md:text-base">{hero.subtitle}</p>
           <p className="mt-5 inline-block rounded-full border border-primary/30 bg-card px-4 py-1.5 text-sm font-semibold text-primary">
-            Spiritual Year {formatTerm(currentTerm)}
+            Spiritual Year {selectedTerm ? formatTerm(selectedTerm) : "—"}
           </p>
         </div>
       </section>
 
-      {terms.length > 1 && (
-        <div className="border-b border-border/60 bg-card/60 backdrop-blur">
-          <div className="container mx-auto flex gap-2 overflow-x-auto px-4 py-3">
-            {terms.map((term) => (
-              <Button
-                key={term}
-                size="sm"
-                variant={term === currentTerm ? "default" : "outline"}
-                className="shrink-0 rounded-full"
-                onClick={() => setActiveTerm(term)}
-              >
-                {formatTerm(term)}
-              </Button>
-            ))}
+      <div className="sticky top-0 z-20 border-b border-border/60 bg-card/80 backdrop-blur">
+        <div className="container mx-auto flex flex-wrap items-center gap-2 px-4 py-3">
+          <div className="inline-flex rounded-full border border-border/60 bg-background p-1">
+            <button
+              type="button"
+              onClick={() => setView("current")}
+              className={cn(
+                "rounded-full px-4 py-1.5 text-xs font-semibold transition-colors md:text-sm",
+                view === "current" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              Current Leaders
+            </button>
+            <button
+              type="button"
+              onClick={() => setView("past")}
+              disabled={pastTerms.length === 0}
+              className={cn(
+                "rounded-full px-4 py-1.5 text-xs font-semibold transition-colors disabled:opacity-40 md:text-sm",
+                view === "past" ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              Past Leaders
+            </button>
           </div>
+
+          {view === "past" && pastTerms.length > 0 && (
+            <div className="flex gap-2 overflow-x-auto">
+              {pastTerms.map((term) => (
+                <Button
+                  key={term}
+                  size="sm"
+                  variant={term === selectedTerm ? "default" : "outline"}
+                  className="shrink-0 rounded-full"
+                  onClick={() => setActiveTerm(term)}
+                >
+                  {formatTerm(term)}
+                </Button>
+              ))}
+            </div>
+          )}
         </div>
-      )}
+      </div>
+
 
       <main className="container mx-auto px-4 py-10 md:py-16">
+        {termMeta?.scripture && (
+          <p className="mb-8 text-center font-serif text-sm italic text-muted-foreground md:text-base">
+            “{termMeta.label ?? "Executive Committee"}” — {termMeta.scripture}
+          </p>
+        )}
         {loading ? (
+
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="aspect-[4/5] animate-pulse rounded-lg bg-muted" />
@@ -188,9 +246,31 @@ const Leadership = () => {
                 </div>
               </AnimatedSection>
             )}
+
+            {termMeta?.poster_url && (
+              <AnimatedSection>
+                <div className="mx-auto max-w-2xl text-center">
+                  <h2 className="mb-4 font-serif text-lg font-semibold text-foreground md:text-xl">
+                    Official Executive Committee Record
+                  </h2>
+                  <Card className="overflow-hidden border border-border/60 bg-card shadow-sm">
+                    <img
+                      src={termMeta.poster_url}
+                      alt={`Official MKUCU Executive Committee poster for the Spiritual Year ${formatTerm(
+                        termMeta.term,
+                      )}`}
+                      className="h-auto w-full"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </Card>
+                </div>
+              </AnimatedSection>
+            )}
           </div>
         )}
       </main>
+
 
       <Footer />
     </div>

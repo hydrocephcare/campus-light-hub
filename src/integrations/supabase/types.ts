@@ -723,6 +723,104 @@ export type Database = {
         }
         Relationships: []
       }
+      mission_media: {
+        Row: {
+          caption: string | null
+          created_at: string
+          id: string
+          media_type: string
+          media_url: string
+          mission_id: string
+          sort_order: number
+          thumbnail_url: string | null
+        }
+        Insert: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          media_type?: string
+          media_url: string
+          mission_id: string
+          sort_order?: number
+          thumbnail_url?: string | null
+        }
+        Update: {
+          caption?: string | null
+          created_at?: string
+          id?: string
+          media_type?: string
+          media_url?: string
+          mission_id?: string
+          sort_order?: number
+          thumbnail_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mission_media_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      missions: {
+        Row: {
+          cover_image: string | null
+          created_at: string
+          description: string | null
+          end_date: string | null
+          highlights: string[] | null
+          id: string
+          is_featured: boolean
+          location: string | null
+          slug: string
+          sort_order: number
+          start_date: string | null
+          status: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+          youtube_playlist_url: string | null
+        }
+        Insert: {
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          highlights?: string[] | null
+          id?: string
+          is_featured?: boolean
+          location?: string | null
+          slug: string
+          sort_order?: number
+          start_date?: string | null
+          status?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+          youtube_playlist_url?: string | null
+        }
+        Update: {
+          cover_image?: string | null
+          created_at?: string
+          description?: string | null
+          end_date?: string | null
+          highlights?: string[] | null
+          id?: string
+          is_featured?: boolean
+          location?: string | null
+          slug?: string
+          sort_order?: number
+          start_date?: string | null
+          status?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+          youtube_playlist_url?: string | null
+        }
+        Relationships: []
+      }
       notifications: {
         Row: {
           created_at: string | null

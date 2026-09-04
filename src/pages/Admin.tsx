@@ -8,7 +8,7 @@ import {
   UsersRound, HandHelping, Menu, X, LayoutDashboard, MessageCircleHeart,
   MessageCircle, Image, ChevronRight, ClipboardList, HomeIcon, HelpCircle,
   Vote, BellRing, Presentation, Settings, Search, Shield, LogOut, Clock, Loader2
-} from "lucide-react";
+, Globe2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 
@@ -29,6 +29,7 @@ const HeroSlidesManager = lazy(() => import("@/components/admin/HeroSlidesManage
 const PrayerRequestsManager = lazy(() => import("@/components/admin/PrayerRequestsManager").then(m => ({ default: m.PrayerRequestsManager })));
 const CommentsManager = lazy(() => import("@/components/admin/CommentsManager").then(m => ({ default: m.CommentsManager })));
 const GalleryManager = lazy(() => import("@/components/admin/GalleryManager").then(m => ({ default: m.GalleryManager })));
+const MissionsManager = lazy(() => import("@/components/admin/MissionsManager").then(m => ({ default: m.MissionsManager })));
 const NotificationsManager = lazy(() => import("@/components/admin/NotificationsManager").then(m => ({ default: m.NotificationsManager })));
 const SiteSettingsManager = lazy(() => import("@/components/admin/SiteSettingsManager").then(m => ({ default: m.SiteSettingsManager })));
 const GuestsManager = lazy(() => import("@/components/admin/GuestsManager").then(m => ({ default: m.GuestsManager })));
@@ -45,6 +46,7 @@ const managerComponents = {
   activities: WeeklyActivitiesManager,
   events: EventsManager,
   gallery: GalleryManager,
+  missions: MissionsManager,
   announcements: AnnouncementsManager,
   sermons: SermonsManager,
   blog: BlogPostsManager,
@@ -80,6 +82,7 @@ const allMenuItems = [
   { id: "activities", label: "Weekly Activities", icon: Calendar },
   { id: "events", label: "Events", icon: CalendarDays },
   { id: "gallery", label: "Gallery", icon: Image },
+  { id: "missions", label: "Missions", icon: Globe2 },
   { id: "announcements", label: "Announcements", icon: Megaphone },
   { id: "sermons", label: "Sermons", icon: Video },
   { id: "blog", label: "Blog", icon: FileText },

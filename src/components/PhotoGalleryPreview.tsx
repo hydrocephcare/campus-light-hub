@@ -26,6 +26,7 @@ export const PhotoGalleryPreview = () => {
       const { data } = await supabase
         .from("media_gallery")
         .select("id, media_url, title, category, media_kind").neq("category", "Unverified Archive")
+        .lt("sort_order", 1000)
         .order("created_at", { ascending: false })
         .limit(40);
       const live = (data || []).filter((item) => resolveMediaKind(item) === "photo");

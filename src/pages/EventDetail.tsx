@@ -92,6 +92,7 @@ const EventDetail = () => {
               .from("media_gallery")
               .select("id,title,media_url,sort_order")
               .eq("event_id", record.id)
+              .lt("sort_order", 1000)
               .order("sort_order", { ascending: true }),
             (supabase as any)
               .from("archive_videos")

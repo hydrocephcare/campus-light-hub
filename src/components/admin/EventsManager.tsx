@@ -191,17 +191,24 @@ export const EventsManager = () => {
     setEditingId(null);
     setFormData({
       title: "",
+      slug: "",
       description: "",
+      theme: "",
+      scripture: "",
+      event_type: "Service",
       event_date: "",
       start_time: "",
       end_time: "",
       location: "",
       category: "General",
       registration_link: "",
+      drive_folder_url: "",
       image_url: "",
       is_featured: false,
+      is_published: true,
     });
   };
+
 
   return (
     <div className="space-y-4">

@@ -226,7 +226,16 @@ const About = () => {
                     ))}
                   </div>
                 )}
+                <div className="mt-10 text-center">
+                  <Link
+                    to="/leadership"
+                    className="inline-flex items-center gap-2 rounded-full border border-primary/30 bg-primary/10 px-5 py-2.5 text-sm font-semibold text-primary transition-colors hover:bg-primary/20"
+                  >
+                    View Executive Committee 2026–2027
+                  </Link>
+                </div>
               </div>
+
             </div>
           </section>
         </AnimatedSection>

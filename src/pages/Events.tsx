@@ -192,7 +192,7 @@ const Events = () => {
                         </div>
                         <div className="flex gap-2">
                           <Button asChild className="flex-1 rounded-full" size="sm">
-                            <Link to={`/events/${event.id}`}>
+                            <Link to={eventPath(event)}>
                               View details <ArrowRight className="w-4 h-4 ml-1" />
                             </Link>
                           </Button>

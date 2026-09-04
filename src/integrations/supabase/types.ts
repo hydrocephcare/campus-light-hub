@@ -89,6 +89,66 @@ export type Database = {
         }
         Relationships: []
       }
+      archive_videos: {
+        Row: {
+          created_at: string
+          event_id: string | null
+          id: string
+          is_verified: boolean
+          mission_id: string | null
+          notes: string | null
+          sort_order: number
+          title: string | null
+          updated_at: string
+          video_date: string | null
+          youtube_id: string
+          youtube_url: string
+        }
+        Insert: {
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          is_verified?: boolean
+          mission_id?: string | null
+          notes?: string | null
+          sort_order?: number
+          title?: string | null
+          updated_at?: string
+          video_date?: string | null
+          youtube_id: string
+          youtube_url: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string | null
+          id?: string
+          is_verified?: boolean
+          mission_id?: string | null
+          notes?: string | null
+          sort_order?: number
+          title?: string | null
+          updated_at?: string
+          video_date?: string | null
+          youtube_id?: string
+          youtube_url?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "archive_videos_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "archive_videos_mission_id_fkey"
+            columns: ["mission_id"]
+            isOneToOne: false
+            referencedRelation: "missions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       blog_posts: {
         Row: {
           author_id: string | null
@@ -362,14 +422,20 @@ export type Database = {
           category: string | null
           created_at: string | null
           description: string | null
+          drive_folder_url: string | null
           end_time: string | null
           event_date: string
+          event_type: string
           id: string
           image_url: string | null
           is_featured: boolean | null
+          is_published: boolean
           location: string
           registration_link: string | null
+          scripture: string | null
+          slug: string | null
           start_time: string
+          theme: string | null
           title: string
           updated_at: string | null
         }
@@ -377,14 +443,20 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           description?: string | null
+          drive_folder_url?: string | null
           end_time?: string | null
           event_date: string
+          event_type?: string
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          is_published?: boolean
           location: string
           registration_link?: string | null
+          scripture?: string | null
+          slug?: string | null
           start_time: string
+          theme?: string | null
           title: string
           updated_at?: string | null
         }
@@ -392,14 +464,20 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           description?: string | null
+          drive_folder_url?: string | null
           end_time?: string | null
           event_date?: string
+          event_type?: string
           id?: string
           image_url?: string | null
           is_featured?: boolean | null
+          is_published?: boolean
           location?: string
           registration_link?: string | null
+          scripture?: string | null
+          slug?: string | null
           start_time?: string
+          theme?: string | null
           title?: string
           updated_at?: string | null
         }
@@ -650,11 +728,15 @@ export type Database = {
           category: string | null
           created_at: string | null
           description: string | null
+          drive_file_id: string | null
+          event_id: string | null
           id: string
           is_featured: boolean | null
           media_kind: string
           media_type: string
           media_url: string
+          sort_order: number
+          source_url: string | null
           title: string
           updated_at: string | null
         }
@@ -662,11 +744,15 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           description?: string | null
+          drive_file_id?: string | null
+          event_id?: string | null
           id?: string
           is_featured?: boolean | null
           media_kind?: string
           media_type: string
           media_url: string
+          sort_order?: number
+          source_url?: string | null
           title: string
           updated_at?: string | null
         }
@@ -674,15 +760,27 @@ export type Database = {
           category?: string | null
           created_at?: string | null
           description?: string | null
+          drive_file_id?: string | null
+          event_id?: string | null
           id?: string
           is_featured?: boolean | null
           media_kind?: string
           media_type?: string
           media_url?: string
+          sort_order?: number
+          source_url?: string | null
           title?: string
           updated_at?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "media_gallery_event_id_fkey"
+            columns: ["event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       ministries: {
         Row: {

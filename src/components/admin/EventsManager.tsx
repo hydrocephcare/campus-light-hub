@@ -4,33 +4,64 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Calendar, MapPin, Clock } from "lucide-react";
+import { Pencil, Trash2, Plus, Calendar, MapPin, Clock, Video } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { ImageUpload } from "./ImageUpload";
 
 type Event = Tables<"events">;
 
+interface ArchiveVideo {
+  id: string;
+  youtube_id: string;
+  youtube_url: string;
+  title: string | null;
+  event_id: string | null;
+  is_verified: boolean;
+  notes: string | null;
+}
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const EVENT_TYPES = ["Service", "Sunday Service", "Special Service", "Worship Night", "Kesha", "Mission", "Conference", "Archive", "Unverified"];
+
 export const EventsManager = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [videos, setVideos] = useState<ArchiveVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
+    slug: "",
     description: "",
+    theme: "",
+    scripture: "",
+    event_type: "Service",
     event_date: "",
     start_time: "",
     end_time: "",
     location: "",
     category: "General",
     registration_link: "",
+    drive_folder_url: "",
     image_url: "",
     is_featured: false,
+    is_published: true,
   });
 
   useEffect(() => {
     fetchEvents();
+    fetchVideos();
   }, []);
 
   const fetchEvents = async () => {
@@ -47,6 +78,35 @@ export const EventsManager = () => {
     setEvents(data || []);
   };
 
+  const fetchVideos = async () => {
+    const { data } = await (supabase as any)
+      .from("archive_videos")
+      .select("id,youtube_id,youtube_url,title,event_id,is_verified,notes")
+      .order("sort_order", { ascending: true });
+    setVideos((data as ArchiveVideo[]) || []);
+  };
+
+  const assignVideo = async (videoId: string, eventId: string) => {
+    const { error } = await (supabase as any)
+      .from("archive_videos")
+      .update({ event_id: eventId === "none" ? null : eventId, is_verified: eventId !== "none" })
+      .eq("id", videoId);
+    if (error) {
+      toast.error("Could not update recording");
+      return;
+    }
+    toast.success("Recording updated");
+    fetchVideos();
+  };
+
+  const deleteVideo = async (videoId: string) => {
+    if (!confirm("Remove this recording from the archive?")) return;
+    await (supabase as any).from("archive_videos").delete().eq("id", videoId);
+    toast.success("Recording removed");
+    fetchVideos();
+  };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -54,6 +114,10 @@ export const EventsManager = () => {
     try {
       const dataToSubmit = {
         ...formData,
+        slug: (formData.slug ? slugify(formData.slug) : slugify(formData.title)) || null,
+        theme: formData.theme || null,
+        scripture: formData.scripture || null,
+        drive_folder_url: formData.drive_folder_url || null,
         image_url: formData.image_url || null,
       };
 
@@ -87,17 +151,24 @@ export const EventsManager = () => {
     setEditingId(event.id);
     setFormData({
       title: event.title,
+      slug: event.slug || "",
       description: event.description || "",
+      theme: event.theme || "",
+      scripture: event.scripture || "",
+      event_type: event.event_type || "Service",
       event_date: event.event_date,
       start_time: event.start_time,
       end_time: event.end_time || "",
       location: event.location,
       category: event.category || "General",
       registration_link: event.registration_link || "",
+      drive_folder_url: event.drive_folder_url || "",
       image_url: event.image_url || "",
       is_featured: event.is_featured ?? false,
+      is_published: event.is_published ?? true,
     });
   };
+
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this event?")) return;
@@ -120,17 +191,24 @@ export const EventsManager = () => {
     setEditingId(null);
     setFormData({
       title: "",
+      slug: "",
       description: "",
+      theme: "",
+      scripture: "",
+      event_type: "Service",
       event_date: "",
       start_time: "",
       end_time: "",
       location: "",
       category: "General",
       registration_link: "",
+      drive_folder_url: "",
       image_url: "",
       is_featured: false,
+      is_published: true,
     });
   };
+
 
   return (
     <div className="space-y-4">
@@ -216,13 +294,60 @@ export const EventsManager = () => {
               />
             </div>
 
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label htmlFor="theme" className="text-xs">Theme</Label>
+                <Input
+                  id="theme"
+                  value={formData.theme}
+                  onChange={(e) => setFormData({ ...formData, theme: e.target.value })}
+                  placeholder="e.g., Jesus Glorified"
+                  className="h-9 text-sm"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="scripture" className="text-xs">Scripture</Label>
+                <Input
+                  id="scripture"
+                  value={formData.scripture}
+                  onChange={(e) => setFormData({ ...formData, scripture: e.target.value })}
+                  placeholder="e.g., John 17:1"
+                  className="h-9 text-sm"
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-3">
+              <div className="space-y-2">
+                <Label className="text-xs">Event Type</Label>
+                <Select value={formData.event_type} onValueChange={(v) => setFormData({ ...formData, event_type: v })}>
+                  <SelectTrigger className="h-9 text-sm"><SelectValue /></SelectTrigger>
+                  <SelectContent>
+                    {EVENT_TYPES.map((t) => (
+                      <SelectItem key={t} value={t}>{t}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="slug" className="text-xs">Link slug</Label>
+                <Input
+                  id="slug"
+                  value={formData.slug}
+                  onChange={(e) => setFormData({ ...formData, slug: e.target.value })}
+                  placeholder="auto from title"
+                  className="h-9 text-sm"
+                />
+              </div>
+            </div>
+
             <div className="space-y-2">
               <Label htmlFor="description" className="text-xs">Description</Label>
               <Textarea
                 id="description"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                rows={2}
+                rows={3}
                 className="text-sm resize-none"
               />
             </div>
@@ -246,6 +371,37 @@ export const EventsManager = () => {
               />
             </div>
 
+            <div className="space-y-2">
+              <Label htmlFor="drive_folder_url" className="text-xs">Photo source folder (Google Drive)</Label>
+              <Input
+                id="drive_folder_url"
+                type="url"
+                value={formData.drive_folder_url}
+                onChange={(e) => setFormData({ ...formData, drive_folder_url: e.target.value })}
+                placeholder="https://drive.google.com/drive/folders/..."
+                className="h-9 text-sm"
+              />
+            </div>
+
+            <div className="flex flex-wrap gap-6 pt-1">
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="is_published"
+                  checked={formData.is_published}
+                  onCheckedChange={(v) => setFormData({ ...formData, is_published: v })}
+                />
+                <Label htmlFor="is_published" className="text-xs">Published on site</Label>
+              </div>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="is_featured"
+                  checked={formData.is_featured}
+                  onCheckedChange={(v) => setFormData({ ...formData, is_featured: v })}
+                />
+                <Label htmlFor="is_featured" className="text-xs">Featured</Label>
+              </div>
+            </div>
+
             <div className="flex gap-2 pt-2">
               <Button type="submit" disabled={loading} size="sm">
                 {loading ? "Saving..." : editingId ? "Update" : "Create"}
@@ -256,6 +412,7 @@ export const EventsManager = () => {
                 </Button>
               )}
             </div>
+
           </form>
         </CardContent>
       </Card>
@@ -273,7 +430,13 @@ export const EventsManager = () => {
               {events.map((event) => (
                 <div key={event.id} className="flex items-start justify-between gap-3 p-3 bg-muted/50 rounded-lg">
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-foreground truncate">{event.title}</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium text-sm text-foreground truncate">{event.title}</h4>
+                      {event.is_published === false && (
+                        <Badge variant="outline" className="text-[10px]">Unpublished</Badge>
+                      )}
+                    </div>
+
                     <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
@@ -303,6 +466,72 @@ export const EventsManager = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Livestream / recording archive */}
+      <Card className="border-0 shadow-sm">
+        <CardHeader className="pb-3">
+          <div className="flex items-center gap-2">
+            <Video className="h-4 w-4 text-primary" />
+            <div>
+              <CardTitle className="text-base">Recordings ({videos.length})</CardTitle>
+              <CardDescription className="text-xs">
+                Attach each YouTube livestream to the event it belongs to. Unattached recordings stay hidden from the public pages.
+              </CardDescription>
+            </div>
+          </div>
+        </CardHeader>
+        <CardContent className="p-3 pt-0">
+          {videos.length === 0 ? (
+            <p className="text-sm text-muted-foreground text-center py-6">No recordings yet</p>
+          ) : (
+            <div className="space-y-2">
+              {videos.map((v) => (
+                <div key={v.id} className="space-y-2 rounded-lg bg-muted/50 p-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <p className="truncate text-sm font-medium text-foreground">{v.title || v.youtube_id}</p>
+                      <a
+                        href={v.youtube_url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary underline break-all"
+                      >
+                        {v.youtube_url}
+                      </a>
+                      {v.notes && <p className="mt-1 text-xs text-muted-foreground">{v.notes}</p>}
+                    </div>
+                    <div className="flex flex-shrink-0 items-center gap-2">
+                      {!v.event_id && <Badge variant="outline" className="text-[10px]">Unclassified</Badge>}
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => deleteVideo(v.id)}
+                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                  <Select value={v.event_id || "none"} onValueChange={(val) => assignVideo(v.id, val)}>
+                    <SelectTrigger className="h-9 text-sm">
+                      <SelectValue placeholder="Attach to event" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="none">Not attached</SelectItem>
+                      {events.map((e) => (
+                        <SelectItem key={e.id} value={e.id}>
+                          {e.title} · {new Date(e.event_date).toLocaleDateString()}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              ))}
+            </div>
+          )}
+        </CardContent>
+      </Card>
     </div>
+
   );
 };

@@ -29,7 +29,11 @@ interface Event {
   image_url: string | null;
   registration_link: string | null;
   is_featured: boolean | null;
+  slug?: string | null;
+  theme?: string | null;
 }
+
+const eventPath = (event: Event) => `/events/${event.slug || event.id}`;
 
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -41,12 +45,10 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
-      const threeMonthsAgo = new Date();
-      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
       const { data, error } = await supabase
         .from("events")
-        .select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured")
-        .gte("event_date", threeMonthsAgo.toISOString().split("T")[0])
+        .select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured,slug,theme")
+        .eq("is_published", true)
         .order("event_date", { ascending: true });
       if (error) throw error;
       const merged = new Map(staticEvents.map((event) => [event.id, event]));
@@ -59,6 +61,7 @@ const Events = () => {
       setLoading(false);
     }
   };
+
 
   useSEO({
     title: "Upcoming Events",
@@ -189,7 +192,7 @@ const Events = () => {
                         </div>
                         <div className="flex gap-2">
                           <Button asChild className="flex-1 rounded-full" size="sm">
-                            <Link to={`/events/${event.id}`}>
+                            <Link to={eventPath(event)}>
                               View details <ArrowRight className="w-4 h-4 ml-1" />
                             </Link>
                           </Button>
@@ -211,27 +214,46 @@ const Events = () => {
           </section>
         </AnimatedSection>
 
-        {/* Past Events */}
+        {/* Archive of past gatherings */}
         {pastEvents.length > 0 && (
           <section className="py-12 md:py-16 bg-muted/30">
             <div className="container mx-auto px-4">
-              <h2 className="text-2xl font-serif font-bold text-muted-foreground mb-6">Past Events</h2>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3 max-w-7xl mx-auto">
-                {pastEvents.slice(0, 8).map((event) => (
-                  <Card key={event.id} className="overflow-hidden opacity-70 hover:opacity-100 transition-opacity">
-                    <div className="aspect-square overflow-hidden bg-muted p-2">
-                      <img src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 700, quality: 82 })} alt={event.title} className="w-full h-full object-contain" loading="lazy" decoding="async" />
-                    </div>
-                    <div className="p-3">
-                      <h4 className="font-medium text-sm text-muted-foreground line-clamp-1">{event.title}</h4>
-                      <p className="text-xs text-muted-foreground">{new Date(event.event_date).toLocaleDateString()}</p>
-                    </div>
-                  </Card>
+              <div className="max-w-7xl mx-auto mb-6">
+                <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">Archive</h2>
+                <p className="text-sm text-muted-foreground mt-1">
+                  Services, worship nights and keshas we have already held — open any of them for the pictorial and livestream recordings.
+                </p>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
+                {pastEvents.slice(0, 12).map((event) => (
+                  <Link key={event.id} to={eventPath(event)} className="group">
+                    <Card className="overflow-hidden h-full bg-card hover:shadow-lg transition-shadow">
+                      <div className="aspect-[16/10] overflow-hidden bg-muted">
+                        <img
+                          src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 700, quality: 72 })}
+                          alt={event.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          loading="lazy"
+                          decoding="async"
+                        />
+                      </div>
+                      <div className="p-4">
+                        <p className="text-xs text-muted-foreground">
+                          {new Date(event.event_date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                        </p>
+                        <h4 className="font-serif font-semibold text-card-foreground mt-1 line-clamp-2 group-hover:text-primary transition-colors">
+                          {event.title}
+                        </h4>
+                        {event.theme && <p className="text-xs text-primary mt-1 line-clamp-1">{event.theme}</p>}
+                      </div>
+                    </Card>
+                  </Link>
                 ))}
               </div>
             </div>
           </section>
         )}
+
 
         {/* CTA */}
         <section className="py-16 bg-gradient-to-br from-foreground to-foreground/90 text-background">

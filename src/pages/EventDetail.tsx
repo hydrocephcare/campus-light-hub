@@ -1,6 +1,20 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { ArrowLeft, Calendar, CheckCircle, Clock, MapPin, Share2, Tag, UserPlus } from "lucide-react";
+import {
+  ArrowLeft,
+  BookOpen,
+  Calendar,
+  Camera,
+  CheckCircle,
+  Clock,
+  MapPin,
+  Play,
+  Share2,
+  Sparkles,
+  Tag,
+  UserPlus,
+  X,
+} from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -15,6 +29,7 @@ import { getEventImage } from "@/lib/eventImages";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { useSEO } from "@/hooks/useSEO";
 import { shareItem } from "@/lib/shareLinks";
+import { videoEmbedUrl } from "@/lib/missions";
 
 interface EventRecord {
   id: string;
@@ -27,11 +42,35 @@ interface EventRecord {
   category: string | null;
   image_url: string | null;
   registration_link?: string | null;
+  theme?: string | null;
+  scripture?: string | null;
+  event_type?: string | null;
+  slug?: string | null;
+  is_published?: boolean | null;
 }
+
+interface EventPhoto {
+  id: string;
+  title: string;
+  media_url: string;
+  sort_order: number;
+}
+
+interface EventVideo {
+  id: string;
+  youtube_id: string;
+  youtube_url: string;
+  title: string | null;
+}
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<EventRecord | null>(null);
+  const [photos, setPhotos] = useState<EventPhoto[]>([]);
+  const [videos, setVideos] = useState<EventVideo[]>([]);
+  const [lightbox, setLightbox] = useState<EventPhoto | null>(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: "", phone: "", email: "" });
   const [submitting, setSubmitting] = useState(false);
@@ -42,8 +81,27 @@ const EventDetail = () => {
     const load = async () => {
       const fallback = staticEvents.find((e) => e.id === id) || null;
       try {
-        const { data } = await supabase.from("events").select("*").eq("id", id).maybeSingle();
-        setEvent((data as EventRecord) || fallback);
+        const column = UUID_RE.test(id) ? "id" : "slug";
+        const { data } = await supabase.from("events").select("*").eq(column, id).maybeSingle();
+        const record = (data as EventRecord) || fallback;
+        setEvent(record);
+
+        if (record?.id && UUID_RE.test(record.id)) {
+          const [{ data: photoRows }, { data: videoRows }] = await Promise.all([
+            supabase
+              .from("media_gallery")
+              .select("id,title,media_url,sort_order")
+              .eq("event_id", record.id)
+              .order("sort_order", { ascending: true }),
+            (supabase as any)
+              .from("archive_videos")
+              .select("id,youtube_id,youtube_url,title")
+              .eq("event_id", record.id)
+              .order("sort_order", { ascending: true }),
+          ]);
+          setPhotos((photoRows as EventPhoto[]) || []);
+          setVideos((videoRows as EventVideo[]) || []);
+        }
       } catch {
         setEvent(fallback);
       } finally {
@@ -58,6 +116,7 @@ const EventDetail = () => {
   useSEO({
     title: event?.title || "Event",
     description:
+      event?.theme ||
       event?.description ||
       (event ? `${new Date(event.event_date).toDateString()} · ${event.start_time} · ${event.location}` : "MKU Christian Union event"),
     image,
@@ -88,7 +147,7 @@ const EventDetail = () => {
     );
   }
 
-  if (!event) {
+  if (!event || event.is_published === false) {
     return (
       <div className="min-h-screen bg-background">
         <Header />
@@ -109,6 +168,7 @@ const EventDetail = () => {
     month: "long",
     year: "numeric",
   });
+  const isPast = event.event_date < new Date().toISOString().split("T")[0];
 
   return (
     <div className="min-h-screen bg-background overflow-x-hidden">
@@ -129,7 +189,7 @@ const EventDetail = () => {
                 <img
                   src={optimizedImageUrl(image, { width: 1200, quality: 78 })}
                   alt={event.title}
-                  className="h-full w-full rounded-xl object-contain"
+                  className="mx-auto max-h-[60vh] w-full rounded-xl object-contain"
                 />
               </div>
 
@@ -140,9 +200,25 @@ const EventDetail = () => {
                   </Badge>
                 )}
                 <Badge variant="outline">{dateLabel}</Badge>
+                {isPast && <Badge variant="secondary">Archive</Badge>}
               </div>
 
               <h1 className="mt-4 font-serif text-3xl font-bold leading-tight text-foreground md:text-4xl">{event.title}</h1>
+
+              {(event.theme || event.scripture) && (
+                <Card className="mt-4 border-primary/20 bg-primary/5 p-4">
+                  {event.theme && (
+                    <p className="flex items-start gap-2 font-serif text-lg font-semibold text-primary">
+                      <Sparkles className="mt-1 h-4 w-4 flex-shrink-0" /> {event.theme}
+                    </p>
+                  )}
+                  {event.scripture && (
+                    <p className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+                      <BookOpen className="h-4 w-4 text-primary" /> {event.scripture}
+                    </p>
+                  )}
+                </Card>
+              )}
 
               {event.description && (
                 <p className="mt-4 whitespace-pre-line text-base leading-relaxed text-muted-foreground">{event.description}</p>
@@ -181,7 +257,24 @@ const EventDetail = () => {
 
             <div className="lg:sticky lg:top-24 lg:self-start">
               <Card className="border-border bg-card p-6">
-                {registered ? (
+                {isPast ? (
+                  <div className="py-4 text-center">
+                    <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
+                      <Camera className="h-7 w-7 text-primary" />
+                    </div>
+                    <h2 className="font-serif text-xl font-bold text-card-foreground">This gathering has passed</h2>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      {photos.length > 0 || videos.length > 0
+                        ? `Relive it below — ${photos.length} photo${photos.length === 1 ? "" : "s"}${
+                            videos.length ? ` and ${videos.length} recording${videos.length === 1 ? "" : "s"}` : ""
+                          }.`
+                        : "Media from this gathering is being archived."}
+                    </p>
+                    <Link to="/events" className="mt-5 inline-block">
+                      <Button variant="outline">See upcoming events</Button>
+                    </Link>
+                  </div>
+                ) : registered ? (
                   <div className="py-6 text-center">
                     <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
                       <CheckCircle className="h-7 w-7 text-primary" />
@@ -223,7 +316,87 @@ const EventDetail = () => {
             </div>
           </div>
         </section>
+
+        {/* Recordings */}
+        {videos.length > 0 && (
+          <section className="border-t border-border bg-muted/30 py-12">
+            <div className="container mx-auto max-w-6xl px-4">
+              <h2 className="mb-6 flex items-center gap-2 font-serif text-2xl font-bold text-foreground">
+                <Play className="h-5 w-5 text-primary" /> Watch the recordings
+              </h2>
+              <div className="grid gap-5 md:grid-cols-2">
+                {videos.map((v) => (
+                  <div key={v.id} className="overflow-hidden rounded-xl border border-border bg-card">
+                    <div className="aspect-video w-full bg-black">
+                      <iframe
+                        src={videoEmbedUrl(v.youtube_url)}
+                        title={v.title || event.title}
+                        className="h-full w-full"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        allowFullScreen
+                        loading="lazy"
+                      />
+                    </div>
+                    {v.title && <p className="p-4 text-sm font-medium text-card-foreground">{v.title}</p>}
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Pictorial */}
+        {photos.length > 0 && (
+          <section className="border-t border-border py-12">
+            <div className="container mx-auto max-w-6xl px-4">
+              <h2 className="mb-6 flex items-center gap-2 font-serif text-2xl font-bold text-foreground">
+                <Camera className="h-5 w-5 text-primary" /> Pictorial ({photos.length})
+              </h2>
+              <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
+                {photos.map((p) => (
+                  <button
+                    key={p.id}
+                    type="button"
+                    onClick={() => setLightbox(p)}
+                    className="group aspect-[4/3] overflow-hidden rounded-lg border border-border bg-muted"
+                  >
+                    <img
+                      src={optimizedImageUrl(p.media_url, { width: 700, quality: 70 })}
+                      alt={p.title}
+                      className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </button>
+                ))}
+              </div>
+            </div>
+          </section>
+        )}
       </main>
+
+      {lightbox && (
+        <div
+          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 p-4 backdrop-blur"
+          onClick={() => setLightbox(null)}
+        >
+          <button
+            type="button"
+            aria-label="Close"
+            className="absolute right-4 top-4 rounded-full bg-card p-2 text-card-foreground shadow"
+            onClick={() => setLightbox(null)}
+          >
+            <X className="h-5 w-5" />
+          </button>
+          <img
+            src={lightbox.media_url}
+            alt={lightbox.title}
+            className="max-h-[88vh] max-w-full rounded-lg object-contain"
+            onClick={(e) => e.stopPropagation()}
+          />
+        </div>
+      )}
+
       <Footer />
     </div>
   );

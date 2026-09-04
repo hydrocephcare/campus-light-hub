@@ -28,7 +28,7 @@ export const GalleryPreview = () => {
     const fetchPosters = async () => {
       const { data } = await supabase
         .from("media_gallery")
-        .select("id, media_url, title, category, media_kind, created_at")
+        .select("id, media_url, title, category, media_kind, created_at").neq("category", "Unverified Archive")
         .order("created_at", { ascending: false })
         .limit(40);
       const live = (data || []).filter((item) => resolveMediaKind(item) === "poster");

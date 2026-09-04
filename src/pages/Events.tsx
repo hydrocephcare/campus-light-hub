@@ -29,7 +29,11 @@ interface Event {
   image_url: string | null;
   registration_link: string | null;
   is_featured: boolean | null;
+  slug?: string | null;
+  theme?: string | null;
 }
+
+const eventPath = (event: Event) => `/events/${event.slug || event.id}`;
 
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -41,12 +45,10 @@ const Events = () => {
 
   const fetchEvents = async () => {
     try {
-      const threeMonthsAgo = new Date();
-      threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
       const { data, error } = await supabase
         .from("events")
-        .select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured")
-        .gte("event_date", threeMonthsAgo.toISOString().split("T")[0])
+        .select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured,slug,theme")
+        .eq("is_published", true)
         .order("event_date", { ascending: true });
       if (error) throw error;
       const merged = new Map(staticEvents.map((event) => [event.id, event]));
@@ -59,6 +61,7 @@ const Events = () => {
       setLoading(false);
     }
   };
+
 
   useSEO({
     title: "Upcoming Events",

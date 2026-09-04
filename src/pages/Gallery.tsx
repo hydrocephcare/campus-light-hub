@@ -74,6 +74,7 @@ const Gallery = () => {
         .from("media_gallery")
         .select("id,title,description,media_url,media_type,category,media_kind,is_featured,created_at")
         .neq("category", "Unverified Archive")
+        .lt("sort_order", 1000)
         .order("created_at", { ascending: false })
         .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
       if (error) throw error;

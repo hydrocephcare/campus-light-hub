@@ -150,7 +150,7 @@ const MissionDetail = () => {
       <Header />
 
       {/* Hero */}
-      <section className="relative min-h-[62vh] overflow-hidden pt-28 pb-14 md:pt-36">
+      <section className="relative min-h-[440px] overflow-hidden pt-28 pb-14 md:min-h-[540px] md:pt-36">
         <div className="absolute inset-0">
           {mission.cover_image && (
             <img
@@ -159,7 +159,7 @@ const MissionDetail = () => {
               className="h-full w-full object-cover"
             />
           )}
-          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/85 to-background/40" />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/80 to-background/30" />
         </div>
         <div className="container relative mx-auto px-4">
           <Link

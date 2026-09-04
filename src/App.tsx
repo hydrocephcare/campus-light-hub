@@ -28,6 +28,7 @@ const Missions = lazyWithRetry(() => import("./pages/Missions"));
 const MissionDetail = lazyWithRetry(() => import("./pages/MissionDetail"));
 const Ministries = lazyWithRetry(() => import("./pages/Ministries"));
 const Visitors = lazyWithRetry(() => import("./pages/Visitors"));
+const Leadership = lazyWithRetry(() => import("./pages/Leadership"));
 const Login = lazyWithRetry(() => import("./pages/Login"));
 const Signup = lazyWithRetry(() => import("./pages/Signup"));
 const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
@@ -78,6 +79,7 @@ const App = () => (
             <Routes>
               <Route path="/" element={<Index />} />
               <Route path="/about" element={<About />} />
+              <Route path="/leadership" element={<Leadership />} />
               <Route path="/events" element={<Events />} />
               <Route path="/events/:id" element={<EventDetail />} />
               <Route path="/media" element={<Media />} />

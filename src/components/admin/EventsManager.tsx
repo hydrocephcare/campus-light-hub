@@ -114,6 +114,10 @@ export const EventsManager = () => {
     try {
       const dataToSubmit = {
         ...formData,
+        slug: (formData.slug ? slugify(formData.slug) : slugify(formData.title)) || null,
+        theme: formData.theme || null,
+        scripture: formData.scripture || null,
+        drive_folder_url: formData.drive_folder_url || null,
         image_url: formData.image_url || null,
       };
 
@@ -147,17 +151,24 @@ export const EventsManager = () => {
     setEditingId(event.id);
     setFormData({
       title: event.title,
+      slug: event.slug || "",
       description: event.description || "",
+      theme: event.theme || "",
+      scripture: event.scripture || "",
+      event_type: event.event_type || "Service",
       event_date: event.event_date,
       start_time: event.start_time,
       end_time: event.end_time || "",
       location: event.location,
       category: event.category || "General",
       registration_link: event.registration_link || "",
+      drive_folder_url: event.drive_folder_url || "",
       image_url: event.image_url || "",
       is_featured: event.is_featured ?? false,
+      is_published: event.is_published ?? true,
     });
   };
+
 
   const handleDelete = async (id: string) => {
     if (!confirm("Delete this event?")) return;

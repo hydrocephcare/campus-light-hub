@@ -729,6 +729,45 @@ export type Database = {
         }
         Relationships: []
       }
+      leadership_terms: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          is_current: boolean
+          label: string | null
+          notes: string | null
+          poster_url: string | null
+          scripture: string | null
+          term: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_current?: boolean
+          label?: string | null
+          notes?: string | null
+          poster_url?: string | null
+          scripture?: string | null
+          term: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          is_current?: boolean
+          label?: string | null
+          notes?: string | null
+          poster_url?: string | null
+          scripture?: string | null
+          term?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       media_gallery: {
         Row: {
           category: string | null

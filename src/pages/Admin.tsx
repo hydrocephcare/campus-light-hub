@@ -8,7 +8,7 @@ import {
   UsersRound, HandHelping, Menu, X, LayoutDashboard, MessageCircleHeart,
   MessageCircle, Image, ChevronRight, ClipboardList, HomeIcon, HelpCircle,
   Vote, BellRing, Presentation, Settings, Search, Shield, LogOut, Clock, Loader2
-} from "lucide-react";
+, Globe2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { cn } from "@/lib/utils";
 

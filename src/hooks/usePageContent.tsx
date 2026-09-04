@@ -13,6 +13,7 @@ export type PageContentMap = Record<string, PageHero>;
 export const PAGE_KEYS = [
   { key: "home", label: "Home" },
   { key: "about", label: "About" },
+  { key: "leadership", label: "Leadership" },
   { key: "events", label: "Events" },
   { key: "media", label: "Media / Sermons" },
   { key: "blog", label: "Faith Stories" },

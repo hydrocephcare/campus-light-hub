@@ -53,6 +53,7 @@ const navGroups = [
   {
     label: "Engage",
     items: [
+      { to: "/leadership", label: "Leadership", icon: Users, desc: "Executive Committee 2026–2027" },
       { to: "/elections", label: "Elections", icon: Vote, desc: "Vote for leaders" },
       { to: "/volunteer", label: "Volunteer", icon: HandHelping, desc: "Serve with us" },
     ],

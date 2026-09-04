@@ -4,7 +4,7 @@ import {
   Home, Info, UserPlus, Calendar, CalendarDays, Church, Mail, 
   Video, FileText, Image, Vote, HandHelping, Menu, X, Youtube, 
   Phone, ChevronDown, ChevronRight, ExternalLink, Megaphone
-, Globe2 } from "lucide-react";
+, Globe2, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { ThemeToggle } from "@/components/ThemeToggle";

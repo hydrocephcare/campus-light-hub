@@ -430,7 +430,13 @@ export const EventsManager = () => {
               {events.map((event) => (
                 <div key={event.id} className="flex items-start justify-between gap-3 p-3 bg-muted/50 rounded-lg">
                   <div className="flex-1 min-w-0">
-                    <h4 className="font-medium text-sm text-foreground truncate">{event.title}</h4>
+                    <div className="flex items-center gap-2">
+                      <h4 className="font-medium text-sm text-foreground truncate">{event.title}</h4>
+                      {event.is_published === false && (
+                        <Badge variant="outline" className="text-[10px]">Unpublished</Badge>
+                      )}
+                    </div>
+
                     <div className="flex flex-wrap gap-x-3 gap-y-1 mt-1 text-xs text-muted-foreground">
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />

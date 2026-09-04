@@ -246,9 +246,31 @@ const Leadership = () => {
                 </div>
               </AnimatedSection>
             )}
+
+            {termMeta?.poster_url && (
+              <AnimatedSection>
+                <div className="mx-auto max-w-2xl text-center">
+                  <h2 className="mb-4 font-serif text-lg font-semibold text-foreground md:text-xl">
+                    Official Executive Committee Record
+                  </h2>
+                  <Card className="overflow-hidden border border-border/60 bg-card shadow-sm">
+                    <img
+                      src={termMeta.poster_url}
+                      alt={`Official MKUCU Executive Committee poster for the Spiritual Year ${formatTerm(
+                        termMeta.term,
+                      )}`}
+                      className="h-auto w-full"
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  </Card>
+                </div>
+              </AnimatedSection>
+            )}
           </div>
         )}
       </main>
+
 
       <Footer />
     </div>

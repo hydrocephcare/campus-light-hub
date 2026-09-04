@@ -204,7 +204,13 @@ const Leadership = () => {
 
 
       <main className="container mx-auto px-4 py-10 md:py-16">
+        {termMeta?.scripture && (
+          <p className="mb-8 text-center font-serif text-sm italic text-muted-foreground md:text-base">
+            “{termMeta.label ?? "Executive Committee"}” — {termMeta.scripture}
+          </p>
+        )}
         {loading ? (
+
           <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
             {Array.from({ length: 8 }).map((_, i) => (
               <div key={i} className="aspect-[4/5] animate-pulse rounded-lg bg-muted" />

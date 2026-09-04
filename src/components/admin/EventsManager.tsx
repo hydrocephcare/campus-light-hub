@@ -4,33 +4,64 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { Badge } from "@/components/ui/badge";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { toast } from "sonner";
-import { Pencil, Trash2, Plus, Calendar, MapPin, Clock } from "lucide-react";
+import { Pencil, Trash2, Plus, Calendar, MapPin, Clock, Video } from "lucide-react";
 import { Tables } from "@/integrations/supabase/types";
 import { ImageUpload } from "./ImageUpload";
 
 type Event = Tables<"events">;
 
+interface ArchiveVideo {
+  id: string;
+  youtube_id: string;
+  youtube_url: string;
+  title: string | null;
+  event_id: string | null;
+  is_verified: boolean;
+  notes: string | null;
+}
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+const EVENT_TYPES = ["Service", "Sunday Service", "Special Service", "Worship Night", "Kesha", "Mission", "Conference", "Archive", "Unverified"];
+
 export const EventsManager = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [videos, setVideos] = useState<ArchiveVideo[]>([]);
   const [loading, setLoading] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
   const [formData, setFormData] = useState({
     title: "",
+    slug: "",
     description: "",
+    theme: "",
+    scripture: "",
+    event_type: "Service",
     event_date: "",
     start_time: "",
     end_time: "",
     location: "",
     category: "General",
     registration_link: "",
+    drive_folder_url: "",
     image_url: "",
     is_featured: false,
+    is_published: true,
   });
 
   useEffect(() => {
     fetchEvents();
+    fetchVideos();
   }, []);
 
   const fetchEvents = async () => {
@@ -46,6 +77,35 @@ export const EventsManager = () => {
 
     setEvents(data || []);
   };
+
+  const fetchVideos = async () => {
+    const { data } = await (supabase as any)
+      .from("archive_videos")
+      .select("id,youtube_id,youtube_url,title,event_id,is_verified,notes")
+      .order("sort_order", { ascending: true });
+    setVideos((data as ArchiveVideo[]) || []);
+  };
+
+  const assignVideo = async (videoId: string, eventId: string) => {
+    const { error } = await (supabase as any)
+      .from("archive_videos")
+      .update({ event_id: eventId === "none" ? null : eventId, is_verified: eventId !== "none" })
+      .eq("id", videoId);
+    if (error) {
+      toast.error("Could not update recording");
+      return;
+    }
+    toast.success("Recording updated");
+    fetchVideos();
+  };
+
+  const deleteVideo = async (videoId: string) => {
+    if (!confirm("Remove this recording from the archive?")) return;
+    await (supabase as any).from("archive_videos").delete().eq("id", videoId);
+    toast.success("Recording removed");
+    fetchVideos();
+  };
+
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

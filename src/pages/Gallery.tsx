@@ -36,6 +36,13 @@ const TAB_COPY: Record<MediaKind, { label: string; noun: string; nounPlural: str
   photo: { label: "Photos", noun: "photo", nounPlural: "photos", empty: "No photos yet" },
 };
 
+const CATEGORY_LABELS: Record<string, string> = {
+  all: "All",
+  "Unverified Archive": "Archive Collection",
+};
+
+const categoryLabel = (cat: string) => CATEGORY_LABELS[cat] || cat;
+
 const Gallery = () => {
   const location = useLocation();
   const [items, setItems] = useState<GalleryItem[]>([]);
@@ -73,9 +80,8 @@ const Gallery = () => {
       const { data, error } = await supabase
         .from("media_gallery")
         .select("id,title,description,media_url,media_type,category,media_kind,is_featured,created_at")
-        .neq("category", "Unverified Archive")
-        .lt("sort_order", 1000)
         .order("created_at", { ascending: false })
+        .order("sort_order", { ascending: true })
         .range(page * PAGE_SIZE, page * PAGE_SIZE + PAGE_SIZE - 1);
       if (error) throw error;
       setItems((current) => {
@@ -284,7 +290,7 @@ const Gallery = () => {
                         : "bg-muted/60 text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    {cat}
+                    {categoryLabel(cat)}
                   </button>
                 ))}
               </div>

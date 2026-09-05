@@ -20,6 +20,11 @@ export function optimizedImageUrl(src: string | null | undefined, options: Image
       return url.toString();
     }
 
+    if (url.hostname.includes("googleusercontent.com")) {
+      // Drive-hosted photos: request a right-sized rendition instead of the full frame.
+      return `${url.origin}${url.pathname.split("=")[0]}=w${width}`;
+    }
+
     if (url.hostname.includes("images.unsplash.com")) {
       url.searchParams.set("auto", "format");
       url.searchParams.set("fit", "crop");

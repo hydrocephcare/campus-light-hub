@@ -17,6 +17,7 @@ const EventDetail = lazyWithRetry(() => import("./pages/EventDetail"));
 const Media = lazyWithRetry(() => import("./pages/Media"));
 const Blog = lazyWithRetry(() => import("./pages/Blog"));
 const BlogPost = lazyWithRetry(() => import("./pages/BlogPost"));
+const Notifications = lazyWithRetry(() => import("./pages/Notifications"));
 const Contact = lazyWithRetry(() => import("./pages/Contact"));
 const Volunteer = lazyWithRetry(() => import("./pages/Volunteer"));
 const Gallery = lazyWithRetry(() => import("./pages/Gallery"));
@@ -85,6 +86,7 @@ const App = () => (
               <Route path="/media" element={<Media />} />
               <Route path="/blog" element={<Blog />} />
               <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/notifications" element={<Notifications />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/volunteer" element={<Volunteer />} />
               <Route path="/gallery" element={<Gallery />} />

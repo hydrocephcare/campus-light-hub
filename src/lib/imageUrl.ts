@@ -38,3 +38,12 @@ export function optimizedImageUrl(src: string | null | undefined, options: Image
 
   return src;
 }
+/** Grid thumbnail — small, cheap, and reused by the lightbox for an instant first paint. */
+export function galleryThumbUrl(src: string | null | undefined, poster = false): string {
+  return optimizedImageUrl(src, { width: 480, quality: 62, resize: poster ? "contain" : "cover" });
+}
+
+/** Full-screen viewer rendition — sized for phones/laptops, not for print. */
+export function galleryFullUrl(src: string | null | undefined): string {
+  return optimizedImageUrl(src, { width: 1200, quality: 76, resize: "contain" });
+}

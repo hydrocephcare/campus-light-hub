@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { useSEO } from "@/hooks/useSEO";
 import { MediaLightbox } from "@/components/MediaLightbox";
+import { galleryThumbUrl } from "@/lib/imageUrl";
 import {
   Mission,
   MissionMedia,
@@ -238,7 +239,7 @@ const MissionDetail = () => {
                   className="group relative aspect-[4/5] overflow-hidden rounded-lg bg-muted"
                 >
                   <img
-                    src={optimizedImageUrl(p.thumbnail_url || p.media_url, { width: 500, quality: 66 })}
+                    src={galleryThumbUrl(p.thumbnail_url || p.media_url)}
                     alt={p.caption || mission.title}
                     className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                     loading="lazy"
@@ -290,7 +291,7 @@ const MissionDetail = () => {
       </main>
 
       <MediaLightbox
-        items={photos.map((p) => ({ id: p.id, url: p.media_url, title: p.caption || mission.title }))}
+        items={photos.map((p) => ({ id: p.id, url: p.media_url, thumbUrl: galleryThumbUrl(p.thumbnail_url || p.media_url), title: p.caption || mission.title }))}
         index={lightbox}
         onIndexChange={setLightbox}
         onClose={closeLightbox}

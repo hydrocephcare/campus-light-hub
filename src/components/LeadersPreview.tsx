@@ -10,6 +10,7 @@ interface Leader {
   name: string;
   position: string;
   image_url: string | null;
+  term?: string;
 }
 
 export const LeadersPreview = () => {

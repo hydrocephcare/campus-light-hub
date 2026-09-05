@@ -22,6 +22,8 @@ interface Event {
   category: string | null;
   image_url: string | null;
   registration_link: string | null;
+  theme?: string | null;
+  scripture?: string | null;
 }
 
 const localDateKey = () => {
@@ -44,10 +46,13 @@ const canonicalizeCurrentSundayService = (event: Event): Event => {
     ...event,
     title: "Sunday Service",
     description:
-      "Join us for Sunday Service with Pastor Muange Kiseku at CC Hall. Service begins at 7:00 AM on 6 September 2026.",
+      "Come expectant and ready to hear from the Lord and be refreshed. We will also pray for our country, Kenya.",
     start_time: "7:00 AM",
+    end_time: "12:45 PM",
     location: "CC Hall",
     category: "Sunday Service",
+    theme: "Manifestation of the Glory of God",
+    scripture: "Isaiah 60:1",
   };
 };
 
@@ -127,19 +132,25 @@ export const UpcomingEvents = () => {
               </div>
               <div className="p-4">
                 <h3 className="text-sm font-bold text-card-foreground group-hover:text-primary transition-colors line-clamp-1 mb-2">{event.title}</h3>
+                {event.theme && (
+                  <p className="mb-2 text-xs font-semibold text-primary">{event.theme}</p>
+                )}
+                {event.scripture && (
+                  <p className="mb-2 text-xs text-muted-foreground">{event.scripture}</p>
+                )}
                 <div className="space-y-1.5 mb-3">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3 text-primary flex-shrink-0" />
                     <span>{new Date(`${event.event_date}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                     <Clock className="w-3 h-3 text-primary flex-shrink-0 ml-1" />
-                    <span>{event.start_time}</span>
+                    <span>{event.start_time}{event.end_time ? ` – ${event.end_time}` : ""}</span>
                   </div>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <MapPin className="w-3 h-3 text-primary flex-shrink-0" />
                     <span className="line-clamp-1">{event.location}</span>
                   </div>
                   {event.description && (
-                    <p className="pt-1 text-xs leading-5 text-muted-foreground line-clamp-2">{event.description}</p>
+                    <p className="pt-1 text-xs leading-5 text-muted-foreground line-clamp-3">{event.description}</p>
                   )}
                 </div>
                 <div className="flex gap-2">

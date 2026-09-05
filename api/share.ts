@@ -39,8 +39,13 @@ async function getRow(table, filter) {
   }
 }
 
+function isPreviewCrawler(req) {
+  const ua = String(req.headers?.['user-agent'] || '').toLowerCase();
+  return /whatsapp|facebookexternalhit|facebot|twitterbot|linkedinbot|slackbot|discordbot|telegrambot|skypeuripreview|googlebot|bingbot|pinterestbot/.test(ua);
+}
+
 function sendHtml(res, title, description, image, target) {
-  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(target)}"><meta property="og:site_name" content="MKU Christian Union"><meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(target)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}"><meta http-equiv="refresh" content="0;url=${esc(target)}"></head><body><h1>${esc(title)}</h1><p>${esc(description)}</p><p><a href="${esc(target)}">Continue to MKU Christian Union</a></p></body></html>`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(target)}"><meta property="og:site_name" content="MKU Christian Union"><meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(target)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}"></head><body></body></html>`;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
   return res.status(200).send(html);
@@ -119,7 +124,13 @@ export default async function handler(req, res) {
       }
     }
   } catch {
-    // Always return valid Open Graph HTML rather than crashing.
+    // Keep valid fallback metadata.
+  }
+
+  // Social crawlers get Open Graph HTML. Human visitors never see this preview page.
+  if (!isPreviewCrawler(req)) {
+    res.setHeader('Cache-Control', 'no-store');
+    return res.redirect(302, target);
   }
 
   return sendHtml(res, title, description, image, target);

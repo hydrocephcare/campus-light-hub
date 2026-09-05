@@ -4,14 +4,15 @@ import { Header } from "@/components/Header";
 import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Megaphone, X, ChevronLeft, ChevronRight, Loader2, Image as ImageIcon, CalendarDays, Camera } from "lucide-react";
+import { Megaphone, Loader2, Image as ImageIcon, CalendarDays, Camera } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useSEO } from "@/hooks/useSEO";
-import { optimizedImageUrl } from "@/lib/imageUrl";
 import { GalleryPhoto } from "@/components/GalleryPhoto";
+import { MediaLightbox } from "@/components/MediaLightbox";
 import { staticGalleryItems } from "@/data/staticSiteContent";
 import { resolveMediaKind, MediaKind } from "@/lib/mediaKind";
+
 
 interface GalleryItem {
   id: string;

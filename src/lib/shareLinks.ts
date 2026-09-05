@@ -2,12 +2,13 @@
 // metadata to WhatsApp/Facebook/X and immediately redirects human visitors to
 // the corresponding public MKUCU page.
 const SITE = "https://mku-cu-project.vercel.app";
+const SHARE_VERSION = "3";
 
 export type ShareKind = "event" | "post" | "photo" | "page";
 
 export function shareUrl(kind: ShareKind, key: string): string {
   const cleanKey = key.replace(/^\//, "");
-  return `${SITE}/share/${kind}/${encodeURIComponent(cleanKey)}`;
+  return `${SITE}/share/${kind}/${encodeURIComponent(cleanKey)}?v=${SHARE_VERSION}`;
 }
 
 export async function shareItem(opts: {

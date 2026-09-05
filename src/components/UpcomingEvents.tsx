@@ -24,6 +24,33 @@ interface Event {
   registration_link: string | null;
 }
 
+const localDateKey = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const canonicalizeCurrentSundayService = (event: Event): Event => {
+  const isCurrentService =
+    event.event_date === "2026-09-06" &&
+    event.title.toLowerCase().includes("sunday") &&
+    event.title.toLowerCase().includes("service");
+
+  if (!isCurrentService) return event;
+
+  return {
+    ...event,
+    title: "Sunday Service",
+    description:
+      "Join us for Sunday Service with Pastor Muange Kiseku at CC Hall. Service begins at 7:00 AM on 6 September 2026.",
+    start_time: "7:00 AM",
+    location: "CC Hall",
+    category: "Sunday Service",
+  };
+};
+
 export const UpcomingEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
@@ -31,21 +58,33 @@ export const UpcomingEvents = () => {
   useEffect(() => {
     const fetchEvents = async () => {
       try {
+        const today = localDateKey();
         const { data, error } = await supabase
           .from("events")
           .select("*")
-          .gte("event_date", new Date().toISOString().split('T')[0])
+          .gte("event_date", today)
           .order("event_date", { ascending: true })
           .limit(3);
         if (error) throw error;
-        const today = new Date().toISOString().split("T")[0];
-        const merged = new Map(staticEvents.filter((event) => event.event_date >= today).map((event) => [event.id, event]));
-        (data || []).forEach((event) => merged.set(event.id, event));
+
+        const merged = new Map(
+          staticEvents
+            .filter((event) => event.event_date >= today)
+            .map((event) => [event.id, canonicalizeCurrentSundayService(event as Event)]),
+        );
+        (data || []).forEach((event) =>
+          merged.set(event.id, canonicalizeCurrentSundayService(event as Event)),
+        );
         setEvents([...merged.values()].sort((a, b) => a.event_date.localeCompare(b.event_date)).slice(0, 3));
       } catch (error) {
         console.error("Error fetching events:", error);
-        const today = new Date().toISOString().split("T")[0];
-        setEvents(staticEvents.filter((event) => event.event_date >= today).slice(0, 3));
+        const today = localDateKey();
+        setEvents(
+          staticEvents
+            .filter((event) => event.event_date >= today)
+            .map((event) => canonicalizeCurrentSundayService(event as Event))
+            .slice(0, 3),
+        );
       } finally {
         setLoading(false);
       }
@@ -72,7 +111,11 @@ export const UpcomingEvents = () => {
             <Card key={event.id} className="overflow-hidden hover:shadow-lg transition-all duration-300 group border-border bg-card">
               <div className="relative aspect-square overflow-hidden bg-[#f5f1ed] p-2">
                 <img
-                  src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 520, quality: 66 })}
+                  src={optimizedImageUrl(getEventImage(event.category, event.image_url), {
+                    width: 720,
+                    quality: 76,
+                    resize: "contain",
+                  })}
                   alt={event.title}
                   className="w-full h-full object-contain"
                   loading="lazy"
@@ -87,7 +130,7 @@ export const UpcomingEvents = () => {
                 <div className="space-y-1.5 mb-3">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="w-3 h-3 text-primary flex-shrink-0" />
-                    <span>{new Date(event.event_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
+                    <span>{new Date(`${event.event_date}T12:00:00`).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}</span>
                     <Clock className="w-3 h-3 text-primary flex-shrink-0 ml-1" />
                     <span>{event.start_time}</span>
                   </div>
@@ -95,6 +138,9 @@ export const UpcomingEvents = () => {
                     <MapPin className="w-3 h-3 text-primary flex-shrink-0" />
                     <span className="line-clamp-1">{event.location}</span>
                   </div>
+                  {event.description && (
+                    <p className="pt-1 text-xs leading-5 text-muted-foreground line-clamp-2">{event.description}</p>
+                  )}
                 </div>
                 <div className="flex gap-2">
                   <Button asChild size="sm" className="flex-1 text-xs h-9 rounded-full">
@@ -112,7 +158,7 @@ export const UpcomingEvents = () => {
                         kind: "event",
                         key: event.id,
                         title: event.title,
-                        text: `${event.title} — ${new Date(event.event_date).toLocaleDateString()} at ${event.location}`,
+                        text: `${event.title} — ${new Date(`${event.event_date}T12:00:00`).toLocaleDateString()} at ${event.location}`,
                         onCopied: () => toast.success("Event link copied!"),
                       })
                     }

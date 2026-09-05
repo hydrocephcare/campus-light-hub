@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Play } from "lucide-react";
-import { optimizedImageUrl } from "@/lib/imageUrl";
+import { galleryThumbUrl } from "@/lib/imageUrl";
 import { resolveMediaKind } from "@/lib/mediaKind";
 
 export interface GalleryPhotoItem {
@@ -46,19 +46,16 @@ export const GalleryPhoto = ({ item, onOpen, priority = false }: Props) => {
         <>
           {!loaded && <div className="absolute inset-0 animate-pulse bg-muted" />}
           <img
-            src={optimizedImageUrl(item.media_url, {
-              width: 600,
-              quality: 72,
-              resize: poster ? "contain" : "cover",
-            })}
+            src={galleryThumbUrl(item.media_url, poster)}
             alt={item.title || "MKU Christian Union media"}
             onLoad={() => setLoaded(true)}
-            className={`h-full w-full transition-all duration-500 ease-out ${
+            className={`h-full w-full transition-opacity duration-200 ease-out ${
               poster ? "object-contain p-1" : "object-cover"
-            } ${loaded ? "opacity-100" : "opacity-0"} group-hover:scale-[1.02]`}
+            } ${loaded ? "opacity-100" : "opacity-0"}`}
             loading={priority ? "eager" : "lazy"}
             decoding="async"
-            {...({ fetchpriority: priority ? "high" : "low" } as any)}
+            {...({ fetchpriority: priority ? "high" : "auto" } as any)}
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw"
           />
         </>
       )}

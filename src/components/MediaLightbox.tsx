@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { ChevronLeft, ChevronRight, X, MoveHorizontal } from "lucide-react";
-import { optimizedImageUrl } from "@/lib/imageUrl";
+import { galleryFullUrl, galleryThumbUrl } from "@/lib/imageUrl";
 
 export interface LightboxItem {
   id: string;
@@ -9,6 +9,8 @@ export interface LightboxItem {
   subtitle?: string | null;
   meta?: string | null;
   isVideo?: boolean;
+  /** Small rendition already cached by the grid — painted instantly under the full image. */
+  thumbUrl?: string | null;
 }
 
 interface Props {
@@ -31,6 +33,7 @@ export const MediaLightbox = ({ items, index, onIndexChange, onClose }: Props) =
   const [drag, setDrag] = useState(0);
   const [animating, setAnimating] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [fullReady, setFullReady] = useState(false);
   const pointer = useRef<{ id: number; x: number; y: number; t: number; axis: "" | "x" | "y" } | null>(null);
 
   const step = useCallback(
@@ -71,12 +74,17 @@ export const MediaLightbox = ({ items, index, onIndexChange, onClose }: Props) =
 
   // Preload neighbours so swipes feel instant.
   useEffect(() => {
+    setFullReady(false);
+  }, [index]);
+
+  useEffect(() => {
     if (index === null) return;
-    [1, -1].forEach((d) => {
+    [1, -1, 2, -2, 3, -3].forEach((d) => {
       const it = items[(index + d + items.length) % items.length];
       if (it && !it.isVideo) {
         const img = new Image();
-        img.src = optimizedImageUrl(it.url, { width: 1400, quality: 78, resize: "contain" });
+        img.decoding = "async";
+        img.src = galleryFullUrl(it.url);
       }
     });
   }, [index, items]);
@@ -184,13 +192,30 @@ export const MediaLightbox = ({ items, index, onIndexChange, onClose }: Props) =
           {item.isVideo ? (
             <video src={item.url} controls className="max-h-[70vh] max-w-full rounded-lg" />
           ) : (
-            <img
-              key={item.id}
-              src={optimizedImageUrl(item.url, { width: 1600, quality: 82, resize: "contain" })}
-              alt={item.title || "MKU Christian Union media"}
-              draggable={false}
-              className="max-h-[70vh] max-w-full select-none rounded-lg object-contain"
-            />
+            <div className="relative flex max-h-[70vh] items-center justify-center">
+              {/* Cached thumbnail shows immediately, so the screen is never black. */}
+              <img
+                key={`${item.id}-thumb`}
+                src={item.thumbUrl || galleryThumbUrl(item.url)}
+                alt=""
+                aria-hidden="true"
+                draggable={false}
+                className={`max-h-[70vh] max-w-full select-none rounded-lg object-contain blur-[6px] transition-opacity duration-150 ${
+                  fullReady ? "opacity-0" : "opacity-100"
+                }`}
+              />
+              <img
+                key={item.id}
+                src={galleryFullUrl(item.url)}
+                alt={item.title || "MKU Christian Union media"}
+                draggable={false}
+                decoding="async"
+                onLoad={() => setFullReady(true)}
+                className={`absolute inset-0 m-auto max-h-[70vh] max-w-full select-none rounded-lg object-contain transition-opacity duration-150 ${
+                  fullReady ? "opacity-100" : "opacity-0"
+                }`}
+              />
+            </div>
           )}
 
           {/* Caption travels with the image so the pair stays centred */}

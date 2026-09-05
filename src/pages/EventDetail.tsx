@@ -66,6 +66,29 @@ interface EventVideo {
 
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
+const canonicalizeCurrentSundayService = (event: EventRecord | null): EventRecord | null => {
+  if (!event) return event;
+  const isCurrentService =
+    event.event_date === "2026-09-06" &&
+    event.title.toLowerCase().includes("sunday") &&
+    event.title.toLowerCase().includes("service");
+
+  if (!isCurrentService) return event;
+
+  return {
+    ...event,
+    title: "Sunday Service",
+    description:
+      "Ministering: Pastor Muange Kiseku. Come expectant and ready to listen to the Lord and be refreshed. We will also be praying for our country, Kenya.",
+    start_time: "7:00 AM",
+    end_time: "12:45 PM",
+    location: "CC Hall",
+    category: "Sunday Service",
+    theme: "Manifestation of the Glory of God",
+    scripture: "Isaiah 60:1",
+  };
+};
+
 const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
   const [event, setEvent] = useState<EventRecord | null>(null);
@@ -84,7 +107,7 @@ const EventDetail = () => {
       try {
         const column = UUID_RE.test(id) ? "id" : "slug";
         const { data } = await supabase.from("events").select("*").eq(column, id).maybeSingle();
-        const record = (data as EventRecord) || fallback;
+        const record = canonicalizeCurrentSundayService(((data as EventRecord) || fallback) as EventRecord | null);
         setEvent(record);
 
         if (record?.id && UUID_RE.test(record.id)) {
@@ -105,7 +128,7 @@ const EventDetail = () => {
           setVideos((videoRows as EventVideo[]) || []);
         }
       } catch {
-        setEvent(fallback);
+        setEvent(canonicalizeCurrentSundayService(fallback as EventRecord | null));
       } finally {
         setLoading(false);
       }
@@ -164,7 +187,7 @@ const EventDetail = () => {
     );
   }
 
-  const dateLabel = new Date(event.event_date).toLocaleDateString("en-GB", {
+  const dateLabel = new Date(`${event.event_date}T12:00:00`).toLocaleDateString("en-GB", {
     weekday: "long",
     day: "numeric",
     month: "long",
@@ -189,9 +212,9 @@ const EventDetail = () => {
             <div>
               <div className="overflow-hidden rounded-2xl border border-border bg-muted p-2">
                 <img
-                  src={optimizedImageUrl(image, { width: 1200, quality: 78 })}
+                  src={optimizedImageUrl(image, { width: 1200, quality: 78, resize: "contain" })}
                   alt={event.title}
-                  className="mx-auto max-h-[60vh] w-full rounded-xl object-contain"
+                  className="mx-auto max-h-[70vh] w-full rounded-xl object-contain"
                 />
               </div>
 
@@ -248,7 +271,7 @@ const EventDetail = () => {
                     kind: "event",
                     key: event.id,
                     title: event.title,
-                    text: `${event.title} — ${dateLabel} at ${event.location}`,
+                    text: `${event.title} — ${event.theme || "MKU CU"} · ${event.scripture || ""} · ${dateLabel}, ${event.start_time}${event.end_time ? `–${event.end_time}` : ""} at ${event.location}`,
                     onCopied: () => toast.success("Event link copied"),
                   })
                 }
@@ -319,7 +342,6 @@ const EventDetail = () => {
           </div>
         </section>
 
-        {/* Recordings */}
         {videos.length > 0 && (
           <section className="border-t border-border bg-muted/30 py-12">
             <div className="container mx-auto max-w-6xl px-4">
@@ -347,7 +369,6 @@ const EventDetail = () => {
           </section>
         )}
 
-        {/* Pictorial */}
         {photos.length > 0 && (
           <section className="border-t border-border py-12">
             <div className="container mx-auto max-w-6xl px-4">

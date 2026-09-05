@@ -19,6 +19,26 @@ interface Announcement {
   contact_link: string | null;
 }
 
+const currentSundayService: Announcement = {
+  id: "static-sunday-service-2026-09-06",
+  title: "Sunday Service — 6 September 2026",
+  description: "Join the MKU Christian Union family for Sunday Service with Pastor Muange Kiseku. Come ready to worship, fellowship and serve together.",
+  announcement_date: "2026-09-06",
+  start_time: "7:00 AM",
+  end_time: null,
+  location: "CC Hall",
+  category: "Sunday Service",
+  priority: "high",
+  contact_link: null,
+};
+
+const mergeAnnouncements = (source: Announcement[]) => {
+  const merged = new Map<string, Announcement>();
+  merged.set(currentSundayService.id, currentSundayService);
+  for (const item of source) merged.set(item.id, item);
+  return [...merged.values()].slice(0, 3);
+};
+
 export const ChurchAnnouncements = () => {
   const [announcements, setAnnouncements] = useState<Announcement[]>([]);
   const [loading, setLoading] = useState(true);
@@ -38,10 +58,10 @@ export const ChurchAnnouncements = () => {
         .limit(3);
 
       if (error) throw error;
-      setAnnouncements(data && data.length > 0 ? data : staticAnnouncements);
+      setAnnouncements(mergeAnnouncements((data && data.length > 0 ? data : staticAnnouncements) as Announcement[]));
     } catch (error) {
       console.error("Error fetching announcements:", error);
-      setAnnouncements(staticAnnouncements);
+      setAnnouncements(mergeAnnouncements(staticAnnouncements as Announcement[]));
     } finally {
       setLoading(false);
     }
@@ -105,8 +125,8 @@ export const ChurchAnnouncements = () => {
                     <div className="flex items-center gap-1">
                       <Calendar className="w-3 h-3" />
                       <span>
-                        {new Date(announcement.announcement_date).toLocaleDateString('en-US', { 
-                          month: 'short', 
+                        {new Date(announcement.announcement_date).toLocaleDateString('en-US', {
+                          month: 'short',
                           day: 'numeric'
                         })}
                       </span>

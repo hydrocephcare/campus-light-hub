@@ -32,10 +32,10 @@ export const LatestSermons = () => {
           .order("sermon_date", { ascending: false })
           .limit(3);
         if (error) throw error;
-      setSermons(data && data.length > 0 ? data : staticSermons.slice(0, 3));
+        setSermons(data && data.length > 0 ? data : staticSermons.slice(0, 3));
       } catch (error) {
-      console.error("Error fetching sermons:", error);
-      setSermons(staticSermons.slice(0, 3));
+        console.error("Error fetching sermons:", error);
+        setSermons(staticSermons.slice(0, 3));
       } finally {
         setLoading(false);
       }
@@ -74,10 +74,11 @@ export const LatestSermons = () => {
                   <iframe
                     width="100%"
                     height="100%"
-                    src={`https://www.youtube.com/embed/${sermon.youtube_id}?autoplay=1`}
+                    src={`https://www.youtube-nocookie.com/embed/${sermon.youtube_id}?autoplay=1&rel=0&playsinline=1`}
                     title={sermon.title}
-                    frameBorder="0"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    loading="lazy"
+                    referrerPolicy="strict-origin-when-cross-origin"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                     allowFullScreen
                     className="absolute inset-0"
                   />
@@ -92,6 +93,7 @@ export const LatestSermons = () => {
                       alt={sermon.title}
                       className="w-full h-full object-cover"
                       loading="lazy"
+                      decoding="async"
                     />
                     <div className="absolute inset-0 bg-black/30 group-hover/thumb:bg-black/40 transition-colors flex items-center justify-center">
                       <div className="w-14 h-14 md:w-16 md:h-16 bg-accent rounded-full flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform">
@@ -121,7 +123,7 @@ export const LatestSermons = () => {
               Visit Our YouTube Channel
             </Button>
           </a>
-          <p className="text-xs md:text-sm text-muted-foreground">Subscribe to never miss a message</p>
+          <p className="text-xs md:text-sm text-muted-foreground">Videos play directly on this site; subscribe on YouTube to get upload alerts.</p>
         </div>
       </div>
     </section>

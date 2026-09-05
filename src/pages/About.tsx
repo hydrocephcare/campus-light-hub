@@ -44,11 +44,19 @@ const About = () => {
 
   const fetchLeaders = async () => {
     try {
-      const { data, error } = await supabase
+      const { data: current } = await supabase
+        .from("leadership_terms")
+        .select("term")
+        .eq("is_current", true)
+        .maybeSingle();
+
+      let query = supabase
         .from("leaders")
         .select("*")
-        .eq("is_active", true)
-        .order("display_order", { ascending: true });
+        .eq("is_active", true);
+      if (current?.term) query = query.eq("term", current.term);
+
+      const { data, error } = await query.order("display_order", { ascending: true });
       if (error) throw error;
       setLeaders(data || []);
     } catch (error) {

@@ -1,6 +1,6 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 
-const SITE = 'https://mkucuu.lovable.app';
+const SITE = 'https://mku-cu-project.vercel.app';
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://qxrllmbyznsnfzdkupbt.supabase.co';
 const ANON = process.env.VITE_SUPABASE_PUBLISHABLE_KEY || '';
 

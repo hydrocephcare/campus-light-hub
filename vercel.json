@@ -21,6 +21,7 @@
     { "source": "/share/event/:key", "destination": "/api/share?kind=event&key=:key" },
     { "source": "/share/post/:key", "destination": "/api/share?kind=post&key=:key" },
     { "source": "/share/photo/:key", "destination": "/api/share?kind=photo&key=:key" },
+    { "source": "/share/page/:key", "destination": "/api/share?kind=page&key=:key" },
     { "source": "/(.*)", "destination": "/" }
   ]
 }

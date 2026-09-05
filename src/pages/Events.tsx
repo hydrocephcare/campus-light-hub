@@ -4,7 +4,7 @@ import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, ArrowRight, Share2, CalendarDays } from "lucide-react";
+import { Calendar, Clock, MapPin, ArrowRight, Share2, CalendarDays, BookOpen } from "lucide-react";
 import { useState, useEffect } from "react";
 import { COMMUNITY_LINK } from "@/lib/communityLink";
 import { supabase } from "@/integrations/supabase/client";
@@ -31,15 +31,46 @@ interface Event {
   is_featured: boolean | null;
   slug?: string | null;
   theme?: string | null;
+  scripture?: string | null;
 }
 
 const eventPath = (event: Event) => `/events/${event.slug || event.id}`;
+
+const localDateKey = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const canonicalizeCurrentSundayService = (event: Event): Event => {
+  const isCurrentService =
+    event.event_date === "2026-09-06" &&
+    event.title.toLowerCase().includes("sunday") &&
+    event.title.toLowerCase().includes("service");
+
+  if (!isCurrentService) return event;
+
+  return {
+    ...event,
+    title: "Sunday Service",
+    description:
+      "Ministering: Pastor Muange Kiseku. Come expectant and ready to listen to the Lord and be refreshed. We will also pray for our country, Kenya.",
+    start_time: "7:00 AM",
+    end_time: "12:45 PM",
+    location: "CC Hall",
+    category: "Sunday Service",
+    theme: "Manifestation of the Glory of God",
+    scripture: "Isaiah 60:1",
+  };
+};
 
 const Events = () => {
   const [events, setEvents] = useState<Event[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
-  const today = new Date().toISOString().split("T")[0];
+  const today = localDateKey();
 
   useEffect(() => { fetchEvents(); }, []);
 
@@ -47,21 +78,20 @@ const Events = () => {
     try {
       const { data, error } = await supabase
         .from("events")
-        .select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured,slug,theme")
+        .select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured,slug,theme,scripture")
         .eq("is_published", true)
         .order("event_date", { ascending: true });
       if (error) throw error;
-      const merged = new Map(staticEvents.map((event) => [event.id, event]));
-      (data || []).forEach((event) => merged.set(event.id, event));
+      const merged = new Map(staticEvents.map((event) => [event.id, canonicalizeCurrentSundayService(event as Event)]));
+      (data || []).forEach((event) => merged.set(event.id, canonicalizeCurrentSundayService(event as Event)));
       setEvents([...merged.values()].sort((a, b) => a.event_date.localeCompare(b.event_date)));
     } catch (error) {
       toast.error("Failed to load events");
-      setEvents([...staticEvents].sort((a, b) => a.event_date.localeCompare(b.event_date)));
+      setEvents([...staticEvents].map((event) => canonicalizeCurrentSundayService(event as Event)).sort((a, b) => a.event_date.localeCompare(b.event_date)));
     } finally {
       setLoading(false);
     }
   };
-
 
   useSEO({
     title: "Upcoming Events",
@@ -75,13 +105,12 @@ const Events = () => {
   const categories = ["all", ...new Set(upcomingEvents.map(e => e.category).filter(Boolean))];
   const filteredEvents = filter === "all" ? upcomingEvents : upcomingEvents.filter(e => e.category === filter);
 
-  // Uses the link-preview endpoint so shared events carry their own poster.
   const shareEvent = (event: Event) => {
     shareItem({
       kind: "event",
       key: event.id,
       title: event.title,
-      text: `${event.title} - ${new Date(event.event_date).toLocaleDateString()} at ${event.location}`,
+      text: `${event.title} — ${event.theme || "MKU CU"} · ${event.scripture || ""} · ${event.start_time}${event.end_time ? `–${event.end_time}` : ""} at ${event.location}`,
       onCopied: () => toast.success("Event link copied!"),
     });
   };
@@ -97,11 +126,10 @@ const Events = () => {
     <div className="min-h-screen bg-background overflow-x-hidden">
       <Header />
       <main>
-        {/* Hero with featured event */}
         <section className="relative min-h-[55vh] md:min-h-[65vh] flex items-end overflow-hidden">
           <div className="absolute inset-0">
             <img
-              src={optimizedImageUrl(featuredEvent ? getEventImage(featuredEvent.category, featuredEvent.image_url) : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=60", { width: 1600, quality: 70 })}
+              src={optimizedImageUrl(featuredEvent ? getEventImage(featuredEvent.category, featuredEvent.image_url) : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=60", { width: 1600, quality: 70, resize: "contain" })}
               alt="Events"
               className="w-full h-full object-contain bg-[#17120f]"
             />
@@ -120,7 +148,6 @@ const Events = () => {
           </div>
         </section>
 
-        {/* Category Filter */}
         {categories.length > 2 && (
           <section className="py-4 border-b border-border bg-muted/30">
             <div className="container mx-auto px-4">
@@ -141,7 +168,6 @@ const Events = () => {
           </section>
         )}
 
-        {/* Events Grid */}
         <AnimatedSection animation="fade-up">
           <section className="py-12 md:py-16">
             <div className="container mx-auto px-4">
@@ -153,7 +179,7 @@ const Events = () => {
                     <Card key={event.id} id={event.id} className="overflow-hidden group hover:shadow-xl transition-all duration-300 bg-card">
                       <div className="aspect-square overflow-hidden relative bg-[#f5f1ed] p-2">
                         <img
-                          src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 720, quality: 68 })}
+                          src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 720, quality: 72, resize: "contain" })}
                           alt={event.title}
                           className="w-full h-full object-contain"
                           loading="lazy"
@@ -173,13 +199,19 @@ const Events = () => {
                         <h3 className="text-lg md:text-xl font-bold mb-2 text-card-foreground group-hover:text-primary transition-colors line-clamp-2">
                           {event.title}
                         </h3>
+                        {event.theme && <p className="text-sm font-semibold text-primary mb-1">{event.theme}</p>}
+                        {event.scripture && (
+                          <p className="mb-2 flex items-center gap-1 text-xs text-muted-foreground">
+                            <BookOpen className="h-3 w-3" /> {event.scripture}
+                          </p>
+                        )}
                         {event.description && (
-                          <p className="text-sm text-muted-foreground mb-3 line-clamp-2">{event.description}</p>
+                          <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{event.description}</p>
                         )}
                         <div className="space-y-1.5 mb-4">
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Calendar className="w-4 h-4 text-primary flex-shrink-0" />
-                            <span>{new Date(event.event_date).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
+                            <span>{new Date(`${event.event_date}T12:00:00`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
                           </div>
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
                             <Clock className="w-4 h-4 text-primary flex-shrink-0" />
@@ -214,7 +246,6 @@ const Events = () => {
           </section>
         </AnimatedSection>
 
-        {/* Archive of past gatherings */}
         {pastEvents.length > 0 && (
           <section className="py-12 md:py-16 bg-muted/30">
             <div className="container mx-auto px-4">
@@ -228,23 +259,24 @@ const Events = () => {
                 {pastEvents.slice(0, 12).map((event) => (
                   <Link key={event.id} to={eventPath(event)} className="group">
                     <Card className="overflow-hidden h-full bg-card hover:shadow-lg transition-shadow">
-                      <div className="aspect-[16/10] overflow-hidden bg-muted">
+                      <div className="aspect-square overflow-hidden bg-[#f5f1ed] p-2">
                         <img
-                          src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 700, quality: 72 })}
+                          src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 700, quality: 72, resize: "contain" })}
                           alt={event.title}
-                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                          className="w-full h-full object-contain"
                           loading="lazy"
                           decoding="async"
                         />
                       </div>
                       <div className="p-4">
                         <p className="text-xs text-muted-foreground">
-                          {new Date(event.event_date).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                          {new Date(`${event.event_date}T12:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
                         </p>
                         <h4 className="font-serif font-semibold text-card-foreground mt-1 line-clamp-2 group-hover:text-primary transition-colors">
                           {event.title}
                         </h4>
                         {event.theme && <p className="text-xs text-primary mt-1 line-clamp-1">{event.theme}</p>}
+                        {event.scripture && <p className="text-xs text-muted-foreground mt-1">{event.scripture}</p>}
                       </div>
                     </Card>
                   </Link>
@@ -254,8 +286,6 @@ const Events = () => {
           </section>
         )}
 
-
-        {/* CTA */}
         <section className="py-16 bg-gradient-to-br from-foreground to-foreground/90 text-background">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">Never Miss an Event</h2>

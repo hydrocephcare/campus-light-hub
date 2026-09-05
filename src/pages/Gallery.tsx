@@ -388,74 +388,13 @@ const Gallery = () => {
         </section>
 
         {/* Lightbox */}
-        {selectedIndex !== null && flatItems[selectedIndex] && (
-          <div
-            className="fixed inset-0 z-50 bg-black/95 flex items-start justify-center overflow-y-auto sm:items-center sm:overflow-hidden"
-            onClick={closeLightbox}
-          >
-            <button
-              onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
-              className="fixed top-3 right-3 md:top-4 md:right-4 text-white/80 hover:text-white z-20 p-2 bg-black/40 rounded-full"
-              aria-label="Close"
-            >
-              <X className="w-6 h-6 md:w-7 md:h-7" />
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); prevImage(); }}
-              className="fixed left-2 md:left-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2 z-20 bg-black/40 rounded-full"
-              aria-label="Previous"
-            >
-              <ChevronLeft className="w-7 h-7 md:w-9 md:h-9" />
-            </button>
-            <button
-              onClick={(e) => { e.stopPropagation(); nextImage(); }}
-              className="fixed right-2 md:right-6 top-1/2 -translate-y-1/2 text-white/80 hover:text-white p-2 z-20 bg-black/40 rounded-full"
-              aria-label="Next"
-            >
-              <ChevronRight className="w-7 h-7 md:w-9 md:h-9" />
-            </button>
-            <div
-              className="w-full max-w-7xl px-0 pt-14 pb-8 sm:px-12 sm:py-0"
-              onClick={(e) => e.stopPropagation()}
-            >
-              <div className="flex w-full items-start justify-center overflow-hidden sm:h-[80vh] sm:items-center sm:rounded-lg">
-                {flatItems[selectedIndex].media_type === "video" ? (
-                  <video
-                    src={flatItems[selectedIndex].media_url}
-                    controls
-                    className="w-full h-auto sm:h-full sm:w-auto sm:max-h-full sm:max-w-full"
-                  />
-                ) : (
-                  <img
-                    src={optimizedImageUrl(flatItems[selectedIndex].media_url, { width: 1600, quality: 82, resize: "contain" })}
-                    alt={flatItems[selectedIndex].title}
-                    className="w-full h-auto object-contain sm:h-full sm:w-auto sm:max-h-full sm:max-w-full"
-                  />
-                )}
-              </div>
-              <div className="text-center mt-3 sm:mt-4 px-4 max-w-3xl mx-auto">
-                {flatItems[selectedIndex].title && (
-                  <h3 className="text-white text-lg font-semibold">{flatItems[selectedIndex].title}</h3>
-                )}
-                {flatItems[selectedIndex].description && (
-                  <p className="text-white/70 mt-1 text-sm leading-relaxed">
-                    {flatItems[selectedIndex].description}
-                  </p>
-                )}
-                <p className="text-white/40 text-xs mt-2">
-                  {new Date(flatItems[selectedIndex].created_at).toLocaleDateString(undefined, {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
-                  {" · "}
-                  {selectedIndex + 1} / {flatItems.length}
-                </p>
-              </div>
-            </div>
-          </div>
-        )}
+        <MediaLightbox
+          items={lightboxItems}
+          index={selectedIndex}
+          onIndexChange={setSelectedIndex}
+          onClose={closeLightbox}
+        />
+
       </main>
       <Footer />
     </div>

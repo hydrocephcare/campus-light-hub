@@ -12,6 +12,7 @@ import { GalleryPhoto } from "@/components/GalleryPhoto";
 import { MediaLightbox } from "@/components/MediaLightbox";
 import { staticGalleryItems } from "@/data/staticSiteContent";
 import { resolveMediaKind, MediaKind } from "@/lib/mediaKind";
+import { galleryThumbUrl } from "@/lib/imageUrl";
 
 interface GalleryItem {
   id: string;
@@ -211,6 +212,7 @@ const Gallery = () => {
       flatItems.map((it) => ({
         id: it.id,
         url: it.media_url,
+        thumbUrl: galleryThumbUrl(it.media_url, resolveMediaKind(it) === "poster"),
         title: it.title,
         subtitle: it.description,
         isVideo: it.media_type === "video",

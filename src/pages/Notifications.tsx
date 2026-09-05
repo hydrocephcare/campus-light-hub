@@ -8,6 +8,7 @@ import { Card } from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { formatDistanceToNow } from "date-fns";
 import { useSEO } from "@/hooks/useSEO";
+import { mergeSiteNotifications } from "@/data/siteNotifications";
 
 interface Notification {
   id: string;
@@ -63,9 +64,10 @@ const Notifications = () => {
           .limit(100);
 
         if (error) throw error;
-        setNotifications((data as Notification[]) || []);
+        setNotifications(mergeSiteNotifications((data as Notification[]) || []) as Notification[]);
       } catch (error) {
         console.error("Error fetching notifications:", error);
+        setNotifications(mergeSiteNotifications([]) as Notification[]);
       } finally {
         setLoading(false);
       }

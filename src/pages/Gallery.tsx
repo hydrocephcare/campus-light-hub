@@ -182,43 +182,25 @@ const Gallery = () => {
     if (idx >= 0) setSelectedIndex(idx);
   };
   const closeLightbox = () => setSelectedIndex(null);
-  const nextImage = () => {
-    if (selectedIndex !== null) setSelectedIndex((selectedIndex + 1) % flatItems.length);
-  };
-  const prevImage = () => {
-    if (selectedIndex !== null) setSelectedIndex((selectedIndex - 1 + flatItems.length) % flatItems.length);
-  };
 
-  useEffect(() => {
-    if (selectedIndex === null) return;
-    [selectedIndex + 1, selectedIndex - 1].forEach((i) => {
-      const it = flatItems[(i + flatItems.length) % flatItems.length];
-      if (it && it.media_type !== "video") {
-        const img = new Image();
-        img.src = optimizedImageUrl(it.media_url, { width: 1400, quality: 78, resize: "contain" });
-      }
-    });
-  }, [selectedIndex, flatItems]);
+  const lightboxItems = useMemo(
+    () =>
+      flatItems.map((it) => ({
+        id: it.id,
+        url: it.media_url,
+        title: it.title,
+        subtitle: it.description,
+        isVideo: it.media_type === "video",
+        meta: new Date(it.created_at).toLocaleDateString(undefined, {
+          weekday: "long",
+          month: "long",
+          day: "numeric",
+          year: "numeric",
+        }),
+      })),
+    [flatItems]
+  );
 
-  useEffect(() => {
-    const handleKey = (e: KeyboardEvent) => {
-      if (selectedIndex === null) return;
-      if (e.key === "ArrowRight") nextImage();
-      if (e.key === "ArrowLeft") prevImage();
-      if (e.key === "Escape") closeLightbox();
-    };
-    window.addEventListener("keydown", handleKey);
-    return () => window.removeEventListener("keydown", handleKey);
-  }, [selectedIndex, flatItems.length]);
-
-  useEffect(() => {
-    if (selectedIndex === null) return;
-    const previousOverflow = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    return () => {
-      document.body.style.overflow = previousOverflow;
-    };
-  }, [selectedIndex]);
 
   const hero = usePageHero(tab === "poster" ? "gallery" : "photos", {
     badge: tab === "poster" ? "Notice Board" : "Photo Gallery",

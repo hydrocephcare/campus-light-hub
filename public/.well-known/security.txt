@@ -1,0 +1,4 @@
+Contact: mailto:mkucuthika@gmail.com
+Canonical: https://mku-cu-project.vercel.app/.well-known/security.txt
+Preferred-Languages: en
+Policy: https://mku-cu-project.vercel.app/contact

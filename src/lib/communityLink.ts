@@ -1,2 +1,2 @@
-/** Official MKU CU WhatsApp community group — all "join / chat with us" CTAs point here. */
-export const COMMUNITY_LINK = "https://chat.whatsapp.com/I0O4FU8BFMo59CwKnnVB29";
+/** Primary MKU CU contact used by public "join / chat with us" calls to action. */
+export const COMMUNITY_LINK = "https://wa.me/254115475543?text=Hello%20MKU%20CU%2C%20I%20would%20like%20to%20join%20or%20learn%20more%20about%20the%20Christian%20Union.";

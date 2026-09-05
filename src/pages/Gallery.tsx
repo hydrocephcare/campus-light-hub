@@ -36,6 +36,13 @@ const TAB_COPY: Record<MediaKind, { label: string; noun: string; nounPlural: str
   photo: { label: "Photos", noun: "photo", nounPlural: "photos", empty: "No photos yet" },
 };
 
+const CATEGORY_LABELS: Record<string, string> = {
+  all: "All",
+  "Unverified Archive": "Archive Collection",
+};
+
+const categoryLabel = (cat: string) => CATEGORY_LABELS[cat] || cat;
+
 const Gallery = () => {
   const location = useLocation();
   const [items, setItems] = useState<GalleryItem[]>([]);

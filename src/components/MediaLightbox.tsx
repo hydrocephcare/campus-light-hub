@@ -175,35 +175,36 @@ export const MediaLightbox = ({ items, index, onIndexChange, onClose }: Props) =
         style={{ touchAction: "pan-y" }}
       >
         <div
-          className="flex max-h-full w-full items-center justify-center"
+          className="flex max-h-full w-full flex-col items-center justify-center gap-3"
           style={{
             transform: `translate3d(${drag}px,0,0)`,
             transition: animating ? "transform 150ms ease-out" : "none",
           }}
         >
           {item.isVideo ? (
-            <video src={item.url} controls className="max-h-[78vh] max-w-full rounded-lg" />
+            <video src={item.url} controls className="max-h-[70vh] max-w-full rounded-lg" />
           ) : (
             <img
               key={item.id}
               src={optimizedImageUrl(item.url, { width: 1600, quality: 82, resize: "contain" })}
               alt={item.title || "MKU Christian Union media"}
               draggable={false}
-              className="max-h-[78vh] max-w-full select-none rounded-lg object-contain"
+              className="max-h-[70vh] max-w-full select-none rounded-lg object-contain"
             />
           )}
+
+          {/* Caption travels with the image so the pair stays centred */}
+          <div className="px-4 text-center">
+            {item.title && <h3 className="text-base font-semibold text-white md:text-lg">{item.title}</h3>}
+            {item.subtitle && <p className="mx-auto mt-1 max-w-2xl text-sm text-white/70">{item.subtitle}</p>}
+            <p className="mt-1.5 text-xs text-white/50">
+              {item.meta ? `${item.meta} · ` : ""}
+              {index + 1} / {items.length}
+            </p>
+          </div>
         </div>
       </div>
 
-      {/* Caption */}
-      <div className="relative z-20 px-4 pb-6 text-center" onClick={(e) => e.stopPropagation()}>
-        {item.title && <h3 className="text-base font-semibold text-white md:text-lg">{item.title}</h3>}
-        {item.subtitle && <p className="mx-auto mt-1 max-w-2xl text-sm text-white/70">{item.subtitle}</p>}
-        <p className="mt-2 text-xs text-white/50">
-          {item.meta ? `${item.meta} · ` : ""}
-          {index + 1} / {items.length}
-        </p>
-      </div>
 
       {/* One-time swipe hint */}
       {showHint && items.length > 1 && (

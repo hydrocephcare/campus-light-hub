@@ -13,7 +13,6 @@ import {
   Sparkles,
   Tag,
   UserPlus,
-  X,
 } from "lucide-react";
 import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
@@ -28,6 +27,7 @@ import { staticEvents } from "@/data/staticSiteContent";
 import { getEventImage } from "@/lib/eventImages";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { useSEO } from "@/hooks/useSEO";
+import { MediaLightbox } from "@/components/MediaLightbox";
 import { shareItem } from "@/lib/shareLinks";
 import { videoEmbedUrl } from "@/lib/missions";
 
@@ -70,7 +70,7 @@ const EventDetail = () => {
   const [event, setEvent] = useState<EventRecord | null>(null);
   const [photos, setPhotos] = useState<EventPhoto[]>([]);
   const [videos, setVideos] = useState<EventVideo[]>([]);
-  const [lightbox, setLightbox] = useState<EventPhoto | null>(null);
+  const [lightbox, setLightbox] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({ name: "", phone: "", email: "" });
   const [submitting, setSubmitting] = useState(false);
@@ -358,7 +358,7 @@ const EventDetail = () => {
                   <button
                     key={p.id}
                     type="button"
-                    onClick={() => setLightbox(p)}
+                    onClick={() => setLightbox(photos.findIndex((x) => x.id === p.id))}
                     className="group aspect-[4/3] overflow-hidden rounded-lg border border-border bg-muted"
                   >
                     <img
@@ -376,27 +376,12 @@ const EventDetail = () => {
         )}
       </main>
 
-      {lightbox && (
-        <div
-          className="fixed inset-0 z-[100] flex items-center justify-center bg-background/95 p-4 backdrop-blur"
-          onClick={() => setLightbox(null)}
-        >
-          <button
-            type="button"
-            aria-label="Close"
-            className="absolute right-4 top-4 rounded-full bg-card p-2 text-card-foreground shadow"
-            onClick={() => setLightbox(null)}
-          >
-            <X className="h-5 w-5" />
-          </button>
-          <img
-            src={lightbox.media_url}
-            alt={lightbox.title}
-            className="max-h-[88vh] max-w-full rounded-lg object-contain"
-            onClick={(e) => e.stopPropagation()}
-          />
-        </div>
-      )}
+      <MediaLightbox
+        items={photos.map((p) => ({ id: p.id, url: p.media_url, title: p.title, subtitle: p.description }))}
+        index={lightbox}
+        onIndexChange={setLightbox}
+        onClose={() => setLightbox(null)}
+      />
 
       <Footer />
     </div>

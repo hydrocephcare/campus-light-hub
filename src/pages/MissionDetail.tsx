@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { useSEO } from "@/hooks/useSEO";
+import { MediaLightbox } from "@/components/MediaLightbox";
 import {
   Mission,
   MissionMedia,
@@ -18,14 +19,11 @@ import {
 import {
   ArrowLeft,
   Camera,
-  ChevronLeft,
-  ChevronRight,
   Loader2,
   MapPin,
   Play,
   Share2,
   Video,
-  X,
 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -82,26 +80,6 @@ const MissionDetail = () => {
   }, [slug]);
 
   const closeLightbox = useCallback(() => setLightbox(null), []);
-  const step = useCallback(
-    (dir: number) =>
-      setLightbox((i) => (i === null ? null : (i + dir + photos.length) % photos.length)),
-    [photos.length]
-  );
-
-  useEffect(() => {
-    if (lightbox === null) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") closeLightbox();
-      if (e.key === "ArrowRight") step(1);
-      if (e.key === "ArrowLeft") step(-1);
-    };
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [lightbox, closeLightbox, step]);
 
   const share = async () => {
     const url = `${window.location.origin}/missions/${slug}`;
@@ -311,40 +289,12 @@ const MissionDetail = () => {
         )}
       </main>
 
-      {/* Lightbox */}
-      {lightbox !== null && photos[lightbox] && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4">
-          <button
-            onClick={closeLightbox}
-            className="absolute right-4 top-4 rounded-full bg-white/10 p-2 text-white hover:bg-white/20"
-            aria-label="Close"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          <button
-            onClick={() => step(-1)}
-            className="absolute left-2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 md:left-6"
-            aria-label="Previous"
-          >
-            <ChevronLeft className="h-6 w-6" />
-          </button>
-          <img
-            src={photos[lightbox].media_url}
-            alt={photos[lightbox].caption || mission.title}
-            className="max-h-[85vh] max-w-full rounded-lg object-contain"
-          />
-          <button
-            onClick={() => step(1)}
-            className="absolute right-2 rounded-full bg-white/10 p-2 text-white hover:bg-white/20 md:right-6"
-            aria-label="Next"
-          >
-            <ChevronRight className="h-6 w-6" />
-          </button>
-          <p className="absolute bottom-5 text-xs text-white/70">
-            {lightbox + 1} / {photos.length}
-          </p>
-        </div>
-      )}
+      <MediaLightbox
+        items={photos.map((p) => ({ id: p.id, url: p.media_url, title: p.caption || mission.title }))}
+        index={lightbox}
+        onIndexChange={setLightbox}
+        onClose={closeLightbox}
+      />
 
       <Footer />
     </div>

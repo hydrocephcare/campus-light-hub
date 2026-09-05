@@ -1,13 +1,13 @@
-// Share links point at a small public endpoint that serves real Open Graph tags
-// (title + the item's own image) to link-preview crawlers, then instantly
-// redirects people to the matching page on the site.
-
-const FUNCTIONS_BASE = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/share`;
+// Public branded share-preview endpoint. It returns server-rendered Open Graph
+// metadata to WhatsApp/Facebook/X and immediately redirects human visitors to
+// the corresponding public MKUCU page.
+const SITE = "https://mkucuu.lovable.app";
 
 export type ShareKind = "event" | "post" | "photo" | "page";
 
 export function shareUrl(kind: ShareKind, key: string): string {
-  return `${FUNCTIONS_BASE}/${kind}/${encodeURIComponent(key)}`;
+  if (kind === "page") return `${SITE}/${key.replace(/^\//, "")}`;
+  return `${SITE}/share/${kind}/${encodeURIComponent(key)}`;
 }
 
 export async function shareItem(opts: {
@@ -18,14 +18,15 @@ export async function shareItem(opts: {
   onCopied?: () => void;
 }) {
   const url = shareUrl(opts.kind, opts.key);
+  const text = (opts.text || opts.title).replace(/\s+/g, " ").trim();
   if (typeof navigator !== "undefined" && navigator.share) {
     try {
-      await navigator.share({ title: opts.title, text: opts.text || opts.title, url });
+      await navigator.share({ title: opts.title, text, url });
       return;
-    } catch {
-      /* user cancelled — fall through to copy */
+    } catch (error) {
+      if ((error as DOMException)?.name === "AbortError") return;
     }
   }
-  await navigator.clipboard.writeText(url);
+  await navigator.clipboard.writeText(`${text}\n${url}`);
   opts.onCopied?.();
 }

@@ -183,16 +183,16 @@ export const MediaLightbox = ({ items, index, onIndexChange, onClose }: Props) =
         style={{ touchAction: "pan-y" }}
       >
         <div
-          className="flex max-h-full w-full flex-col items-center justify-center gap-3"
+          className="flex h-full min-h-0 w-full flex-col items-center justify-center gap-3"
           style={{
             transform: `translate3d(${drag}px,0,0)`,
             transition: animating ? "transform 150ms ease-out" : "none",
           }}
         >
           {item.isVideo ? (
-            <video src={item.url} controls className="max-h-[70vh] max-w-full rounded-lg" />
+            <video src={item.url} controls className="h-full min-h-0 w-full object-contain sm:max-h-[82vh] sm:max-w-[calc(100vw-8rem)]" />
           ) : (
-            <div className="relative flex max-h-[70vh] items-center justify-center">
+            <div className="relative min-h-0 w-full flex-1">
               {/* Cached thumbnail shows immediately, so the screen is never black. */}
               <img
                 key={`${item.id}-thumb`}
@@ -200,7 +200,7 @@ export const MediaLightbox = ({ items, index, onIndexChange, onClose }: Props) =
                 alt=""
                 aria-hidden="true"
                 draggable={false}
-                className={`max-h-[70vh] max-w-full select-none rounded-lg object-contain blur-[6px] transition-opacity duration-150 ${
+                className={`absolute inset-0 h-full w-full select-none object-contain blur-[6px] transition-opacity duration-150 ${
                   fullReady ? "opacity-0" : "opacity-100"
                 }`}
               />
@@ -211,7 +211,7 @@ export const MediaLightbox = ({ items, index, onIndexChange, onClose }: Props) =
                 draggable={false}
                 decoding="async"
                 onLoad={() => setFullReady(true)}
-                className={`absolute inset-0 m-auto max-h-[70vh] max-w-full select-none rounded-lg object-contain transition-opacity duration-150 ${
+                className={`absolute inset-0 h-full w-full select-none object-contain transition-opacity duration-150 ${
                   fullReady ? "opacity-100" : "opacity-0"
                 }`}
               />

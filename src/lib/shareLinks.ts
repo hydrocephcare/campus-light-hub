@@ -1,7 +1,7 @@
 // Public branded share-preview endpoint. It returns server-rendered Open Graph
 // metadata to WhatsApp/Facebook/X and immediately redirects human visitors to
 // the corresponding public MKUCU page.
-const SITE = "https://mkucuu.lovable.app";
+const SITE = "https://mku-cu-project.vercel.app";
 
 export type ShareKind = "event" | "post" | "photo" | "page";
 

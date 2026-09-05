@@ -1,4 +1,4 @@
-import { Megaphone, Calendar, Clock, MapPin, Info } from "lucide-react";
+import { Megaphone, Calendar, Clock, MapPin, Info, BookOpen } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,8 @@ interface Announcement {
   priority: string | null;
   contact_link: string | null;
   image_url?: string | null;
+  theme?: string | null;
+  scripture?: string | null;
 }
 
 const localDateKey = () => {
@@ -32,15 +34,18 @@ const localDateKey = () => {
 const currentSundayService: Announcement = {
   id: "static-sunday-service-2026-09-06",
   title: "Sunday Service — 6 September 2026",
-  description: "Join us for Sunday Service with Pastor Muange Kiseku. Service begins at 7:00 AM at CC Hall.",
+  description:
+    "Come expectant and ready to listen to the Lord and be refreshed. We will also pray for our country, Kenya.",
   announcement_date: "2026-09-06",
   start_time: "7:00 AM",
-  end_time: null,
+  end_time: "12:45 PM",
   location: "CC Hall",
   category: "Sunday Service",
   priority: "high",
   contact_link: null,
   image_url: null,
+  theme: "Manifestation of the Glory of God",
+  scripture: "Isaiah 60:1",
 };
 
 const mergeAnnouncements = (source: Announcement[], serviceImage: string | null) => {
@@ -173,6 +178,15 @@ export const ChurchAnnouncements = () => {
                       )}
                     </div>
 
+                    {announcement.theme && (
+                      <p className="mb-1 text-sm font-semibold text-primary">{announcement.theme}</p>
+                    )}
+                    {announcement.scripture && (
+                      <p className="mb-2 flex items-center gap-1 text-xs text-muted-foreground">
+                        <BookOpen className="h-3 w-3" /> {announcement.scripture}
+                      </p>
+                    )}
+
                     <p className="text-xs text-muted-foreground mb-2">
                       {announcement.description}
                     </p>
@@ -190,7 +204,9 @@ export const ChurchAnnouncements = () => {
                       {announcement.start_time && (
                         <div className="flex items-center gap-1">
                           <Clock className="w-3 h-3" />
-                          <span>{announcement.start_time}</span>
+                          <span>
+                            {announcement.start_time}{announcement.end_time ? ` – ${announcement.end_time}` : ""}
+                          </span>
                         </div>
                       )}
                       {announcement.location && (

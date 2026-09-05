@@ -6,8 +6,8 @@ const SITE = "https://mku-cu-project.vercel.app";
 export type ShareKind = "event" | "post" | "photo" | "page";
 
 export function shareUrl(kind: ShareKind, key: string): string {
-  if (kind === "page") return `${SITE}/${key.replace(/^\//, "")}`;
-  return `${SITE}/share/${kind}/${encodeURIComponent(key)}`;
+  const cleanKey = key.replace(/^\//, "");
+  return `${SITE}/share/${kind}/${encodeURIComponent(cleanKey)}`;
 }
 
 export async function shareItem(opts: {

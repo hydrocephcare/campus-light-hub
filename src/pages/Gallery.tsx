@@ -290,7 +290,7 @@ const Gallery = () => {
                         : "bg-muted/60 text-muted-foreground hover:text-foreground"
                     }`}
                   >
-                    {cat}
+                    {categoryLabel(cat)}
                   </button>
                 ))}
               </div>

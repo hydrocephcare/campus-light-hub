@@ -11,6 +11,15 @@ export function optimizedImageUrl(src: string | null | undefined, options: Image
   try {
     const url = new URL(src, window.location.origin);
 
+    if (url.hostname.includes("res.cloudinary.com") && url.pathname.includes("/upload/")) {
+      // Cloudinary delivery: inject on-the-fly resizing/format transformations.
+      const crop = resize === "contain" ? "c_limit" : "c_fill";
+      const transform = `f_auto,q_${quality},w_${width},${crop}`;
+      if (/\/upload\/(f_auto|q_|w_|c_)/.test(url.pathname)) return url.toString();
+      url.pathname = url.pathname.replace("/upload/", `/upload/${transform}/`);
+      return url.toString();
+    }
+
     if (url.pathname.includes("/storage/v1/object/public/")) {
       url.pathname = url.pathname.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/");
       url.searchParams.set("width", String(width));

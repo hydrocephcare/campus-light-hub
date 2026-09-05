@@ -3,8 +3,8 @@ import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Play, Youtube, Loader2, Video, TrendingUp, Clock, Music, BookOpen } from "lucide-react";
-import { useState, useEffect } from "react";
+import { Play, Youtube, Loader2, Video, Clock } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useSEO } from "@/hooks/useSEO";
 import { staticSermons } from "@/data/staticSiteContent";
@@ -26,17 +26,25 @@ const Media = () => {
   const [loading, setLoading] = useState(true);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState("All");
+  const playerRef = useRef<HTMLElement | null>(null);
 
   useSEO({
     title: "Sermons & Teachings — Media",
     description: "Watch sermons, worship sessions, and teachings from MKU Christian Union on YouTube.",
-    image: "https://images.unsplash.com/photo-1510915361894-db8b60106cb1?auto=format&fit=crop&w=1200&q=80",
-    url: "https://mkucuu.lovable.app/media",
+    url: "https://mku-cu-project.vercel.app/media",
   });
 
   useEffect(() => {
     fetchSermons();
   }, []);
+
+  useEffect(() => {
+    if (!playingId) return;
+    const frame = requestAnimationFrame(() => {
+      playerRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [playingId]);
 
   const fetchSermons = async () => {
     try {
@@ -64,11 +72,12 @@ const Media = () => {
     subtitle: "Watch sermons, worship sessions, and teachings from MKU Christian Union",
   });
 
+  const playInsideSite = (id: string) => setPlayingId(id);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
       <main>
-        {/* Hero with Featured Video */}
         <section className="relative min-h-[50vh] md:min-h-[60vh] flex items-end overflow-hidden">
           <div className="absolute inset-0">
             {featured ? (
@@ -76,6 +85,8 @@ const Media = () => {
                 src={`https://img.youtube.com/vi/${featured.youtube_id}/maxresdefault.jpg`}
                 alt={featured.title}
                 className="w-full h-full object-cover"
+                fetchPriority="high"
+                decoding="async"
                 onError={(e) => {
                   e.currentTarget.src = `https://img.youtube.com/vi/${featured.youtube_id}/hqdefault.jpg`;
                 }}
@@ -98,7 +109,7 @@ const Media = () => {
             <div className="flex flex-wrap gap-3">
               {featured && (
                 <Button
-                  onClick={() => window.open(featured.youtube_url, "_blank", "noopener,noreferrer")}
+                  onClick={() => playInsideSite(featured.id)}
                   size="lg"
                   className="bg-red-600 hover:bg-red-700 text-white gap-2"
                 >
@@ -116,7 +127,6 @@ const Media = () => {
           </div>
         </section>
 
-        {/* Category Filters */}
         <section className="py-4 bg-muted/30 border-b border-border">
           <div className="container mx-auto px-4">
             <div className="flex gap-2 overflow-x-auto scrollbar-hide">
@@ -137,27 +147,29 @@ const Media = () => {
           </div>
         </section>
 
-        {/* Video Playing Modal */}
         {playingId && (() => {
           const sermon = sermons.find(s => s.id === playingId);
           if (!sermon) return null;
           return (
-            <section className="py-8 bg-foreground">
+            <section ref={playerRef} className="scroll-mt-20 py-8 bg-foreground">
               <div className="container mx-auto px-4">
                 <div className="max-w-4xl mx-auto">
-                  <div className="aspect-video rounded-xl overflow-hidden shadow-2xl">
+                  <div className="aspect-video rounded-xl overflow-hidden shadow-2xl bg-black">
                     <iframe
-                      src={`https://www.youtube.com/embed/${sermon.youtube_id}?autoplay=1`}
+                      src={`https://www.youtube-nocookie.com/embed/${sermon.youtube_id}?autoplay=1&rel=0&playsinline=1`}
                       title={sermon.title}
                       className="w-full h-full"
-                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                      loading="lazy"
+                      referrerPolicy="strict-origin-when-cross-origin"
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                       allowFullScreen
                     />
                   </div>
-                  <div className="mt-4 flex items-start justify-between">
+                  <div className="mt-4 flex items-start justify-between gap-4">
                     <div>
                       <h2 className="text-lg md:text-xl font-bold text-background">{sermon.title}</h2>
                       {sermon.speaker && <p className="text-sm text-background/70 mt-1">{sermon.speaker}</p>}
+                      {sermon.description && <p className="text-sm text-background/70 mt-2 line-clamp-2">{sermon.description}</p>}
                     </div>
                     <Button
                       variant="ghost"
@@ -174,7 +186,6 @@ const Media = () => {
           );
         })()}
 
-        {/* Videos Grid */}
         <section className="py-12 md:py-16">
           <div className="container mx-auto px-4">
             {loading ? (
@@ -194,7 +205,7 @@ const Media = () => {
                   <Card
                     key={sermon.id}
                     className="overflow-hidden group cursor-pointer hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-                    onClick={() => window.open(sermon.youtube_url, "_blank", "noopener,noreferrer")}
+                    onClick={() => playInsideSite(sermon.id)}
                   >
                     <div className="relative aspect-video overflow-hidden bg-muted">
                       <img
@@ -202,6 +213,7 @@ const Media = () => {
                         alt={sermon.title}
                         className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                         loading="lazy"
+                        decoding="async"
                         onError={(e) => {
                           e.currentTarget.src = `https://img.youtube.com/vi/${sermon.youtube_id}/hqdefault.jpg`;
                         }}
@@ -241,12 +253,11 @@ const Media = () => {
           </div>
         </section>
 
-        {/* CTA */}
         <section className="py-14 bg-gradient-to-br from-foreground to-foreground/90 text-background">
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-2xl md:text-3xl font-serif font-bold mb-4">Never Miss a Sermon</h2>
             <p className="text-background/70 mb-6 max-w-xl mx-auto">
-              Subscribe to our YouTube channel and get notified whenever we go live or upload new content.
+              Watch messages directly here on the MKU CU website. You can still subscribe to the channel for upload notifications.
             </p>
             <a href="https://youtube.com/@mkucuthikatv" target="_blank" rel="noopener noreferrer">
               <Button size="lg" className="bg-red-600 hover:bg-red-700 text-white gap-2">

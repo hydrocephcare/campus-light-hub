@@ -19,10 +19,21 @@ export const LeadersPreview = () => {
   useEffect(() => {
     const fetchLeaders = async () => {
       try {
-        const { data, error } = await supabase
+        // Only the current spiritual year's executive committee belongs on the homepage.
+        const { data: current } = await supabase
+          .from('leadership_terms')
+          .select('term')
+          .eq('is_current', true)
+          .maybeSingle();
+
+        let query = supabase
           .from('leaders')
-          .select('id, name, position, image_url')
-          .eq('is_active', true)
+          .select('id, name, position, image_url, term')
+          .eq('is_active', true);
+        if (current?.term) query = query.eq('term', current.term);
+
+        const { data, error } = await query
+          .order('term', { ascending: false })
           .order('display_order', { ascending: true })
           .limit(4);
         if (error) throw error;
@@ -76,7 +87,7 @@ export const LeadersPreview = () => {
         </div>
 
         <div className="text-center mt-8">
-          <Link to="/about">
+          <Link to="/leadership">
             <Button variant="outline" className="group border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground">
               View All Leaders
               <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />

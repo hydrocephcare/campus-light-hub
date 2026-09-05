@@ -8,6 +8,7 @@ import { lazyWithRetry } from "@/lib/lazyWithRetry";
 import { ThemeProvider } from "@/hooks/use-theme";
 import { AuthProvider } from "@/hooks/useAuth";
 import { PWAInstallPrompt } from "@/components/PWAInstallPrompt";
+import { ScrollRevealManager } from "@/components/ScrollRevealManager";
 
 // Lazy load pages for better performance (with chunk-error auto-recovery)
 const Index = lazyWithRetry(() => import("./pages/Index"));
@@ -76,6 +77,7 @@ const App = () => (
         <Sonner />
         <PWAInstallPrompt />
         <BrowserRouter>
+          <ScrollRevealManager />
           <Suspense fallback={<PageLoader />}>
             <Routes>
               <Route path="/" element={<Index />} />

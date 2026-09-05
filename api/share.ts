@@ -13,6 +13,19 @@ const abs = (v) => {
   return /^https?:\/\//i.test(String(v)) ? String(v) : `${SITE}${String(v).startsWith('/') ? '' : '/'}${v}`;
 };
 
+const BUILT_IN_POSTS = {
+  'new-to-mku-welcome-to-mku-christian-union': {
+    title: 'New to MKU? Welcome to MKU Christian Union',
+    description: 'Starting university can feel like stepping into a completely new world. For first-year students, visitors and anyone looking for a Christian community at Mount Kenya University, MKU Christian Union is a place to worship, grow, serve and find fellowship.',
+    image: 'https://res.cloudinary.com/l4wbzpfr/image/upload/v1788632618/mkucu/blog/new-to-mku-welcome-to-mku-christian-union.jpg'
+  },
+  'manifesting-the-presence-of-the-lord': {
+    title: 'Manifesting the Presence of the Lord',
+    description: 'Pst. Kiseku Muange’s Semester Premier message challenged students to pursue God’s presence, discover their assignment, build people, develop their gifts, and remain faithful beyond the excitement of a new beginning.',
+    image: `${SITE}/images/blog/manifesting-the-presence-of-the-lord.jpg`
+  }
+};
+
 async function getRow(table, filter) {
   try {
     const r = await fetch(`${SUPABASE_URL}/rest/v1/${table}?${filter}`, {
@@ -27,7 +40,7 @@ async function getRow(table, filter) {
 }
 
 function sendHtml(res, title, description, image, target) {
-  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(target)}"><meta property="og:site_name" content="MKU Christian Union"><meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(target)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}"><meta http-equiv="refresh" content="0;url=${esc(target)}"></head><body><a href="${esc(target)}">Continue to ${esc(title)}</a></body></html>`;
+  const html = `<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>${esc(title)}</title><meta name="description" content="${esc(description)}"><link rel="canonical" href="${esc(target)}"><meta property="og:site_name" content="MKU Christian Union"><meta property="og:type" content="article"><meta property="og:title" content="${esc(title)}"><meta property="og:description" content="${esc(description)}"><meta property="og:url" content="${esc(target)}"><meta property="og:image" content="${esc(image)}"><meta property="og:image:secure_url" content="${esc(image)}"><meta property="og:image:width" content="1200"><meta property="og:image:height" content="630"><meta name="twitter:card" content="summary_large_image"><meta name="twitter:title" content="${esc(title)}"><meta name="twitter:description" content="${esc(description)}"><meta name="twitter:image" content="${esc(image)}"><meta http-equiv="refresh" content="0;url=${esc(target)}"></head><body><h1>${esc(title)}</h1><p>${esc(description)}</p><p><a href="${esc(target)}">Continue to MKU Christian Union</a></p></body></html>`;
   res.setHeader('Content-Type', 'text/html; charset=utf-8');
   res.setHeader('Cache-Control', 'public, s-maxage=60, stale-while-revalidate=300');
   return res.status(200).send(html);
@@ -65,19 +78,17 @@ export default async function handler(req, res) {
         image = abs(row.image_url);
       }
     } else if (kind === 'post' && key) {
-      const row = await getRow('blog_posts', `slug=eq.${encodeURIComponent(key)}&is_published=eq.true&select=*`);
       target = `${SITE}/blog/${encodeURIComponent(key)}`;
+      const builtIn = BUILT_IN_POSTS[key];
+      const row = await getRow('blog_posts', `slug=eq.${encodeURIComponent(key)}&is_published=eq.true&select=*`);
       if (row) {
         title = row.title || 'MKU Christian Union';
         description = row.excerpt || String(row.content || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(0, 260);
         image = abs(row.featured_image);
-      } else if (key === 'new-to-mku-welcome-to-mku-christian-union') {
-        title = 'New to MKU? Welcome to MKU Christian Union';
-        description = 'A warm welcome to students joining Mount Kenya University and an introduction to fellowship, community and spiritual life in MKU Christian Union.';
-      } else if (key === 'manifesting-the-presence-of-the-lord') {
-        title = 'Manifesting the Presence of the Lord';
-        description = 'Reflections and key lessons from the MKU Christian Union Semester Premier Sunday Service.';
-        image = `${SITE}/images/blog/manifesting-the-presence-of-the-lord.jpg`;
+      } else if (builtIn) {
+        title = builtIn.title;
+        description = builtIn.description;
+        image = abs(builtIn.image);
       }
     } else if (kind === 'photo' && key) {
       const row = await getRow('media_gallery', `id=eq.${encodeURIComponent(key)}&select=*`);
@@ -94,10 +105,13 @@ export default async function handler(req, res) {
         events: ['Events | MKU Christian Union', 'Discover upcoming gatherings, services, missions and archived events from MKU Christian Union.'],
         gallery: ['Gallery | MKU Christian Union', 'Photos and memories from worship, fellowship, missions and ministry life at MKU Christian Union.'],
         blog: ['The Journal | MKU Christian Union', 'Read sermons, reflections, testimonies and stories from MKU Christian Union.'],
-        leaders: ['Leaders | MKU Christian Union', 'Meet the leaders serving the Mount Kenya University Christian Union community.'],
+        leadership: ['Leadership | MKU Christian Union', 'Meet the leaders serving the Mount Kenya University Christian Union community.'],
         ministries: ['Ministries | MKU Christian Union', 'Explore the ministries serving and equipping students at MKU Christian Union.'],
         missions: ['Missions | MKU Christian Union', 'Follow MKU Christian Union missions, outreach and gospel work beyond campus.'],
-        sermons: ['Sermons | MKU Christian Union', 'Listen to and revisit teaching from MKU Christian Union gatherings.']
+        media: ['Media | MKU Christian Union', 'Watch, listen and explore media from MKU Christian Union gatherings and ministry life.'],
+        schedule: ['Schedule | MKU Christian Union', 'View the latest MKU Christian Union weekly activities and service schedule.'],
+        about: ['About | MKU Christian Union', 'Learn about the vision, mission and community of Mount Kenya University Christian Union.'],
+        contact: ['Contact | MKU Christian Union', 'Connect with Mount Kenya University Christian Union.']
       }[clean];
       if (meta) {
         title = meta[0];

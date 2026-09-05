@@ -1,4 +1,5 @@
 import sermonPost from "./manifesting-the-presence-of-the-lord.json";
+import welcomePost from "./welcome-to-mku-cu.json";
 
 export interface PublishedBlogPost {
   id: string;
@@ -15,6 +16,11 @@ export interface PublishedBlogPost {
 }
 
 export const builtInBlogPosts: PublishedBlogPost[] = [
+  {
+    ...welcomePost,
+    id: `built-in:${welcomePost.slug}`,
+    created_at: welcomePost.published_at,
+  },
   {
     ...sermonPost,
     id: `built-in:${sermonPost.slug}`,

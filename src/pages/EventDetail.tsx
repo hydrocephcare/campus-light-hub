@@ -377,7 +377,7 @@ const EventDetail = () => {
       </main>
 
       <MediaLightbox
-        items={photos.map((p) => ({ id: p.id, url: p.media_url, title: p.title, subtitle: p.description }))}
+        items={photos.map((p) => ({ id: p.id, url: p.media_url, title: p.title, }))}
         index={lightbox}
         onIndexChange={setLightbox}
         onClose={() => setLightbox(null)}

@@ -28,6 +28,7 @@ import { getEventImage } from "@/lib/eventImages";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { useSEO } from "@/hooks/useSEO";
 import { MediaLightbox } from "@/components/MediaLightbox";
+import { galleryThumbUrl } from "@/lib/imageUrl";
 import { shareItem } from "@/lib/shareLinks";
 import { videoEmbedUrl } from "@/lib/missions";
 
@@ -362,7 +363,7 @@ const EventDetail = () => {
                     className="group aspect-[4/3] overflow-hidden rounded-lg border border-border bg-muted"
                   >
                     <img
-                      src={optimizedImageUrl(p.media_url, { width: 700, quality: 70 })}
+                      src={galleryThumbUrl(p.media_url)}
                       alt={p.title}
                       className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
                       loading="lazy"
@@ -377,7 +378,7 @@ const EventDetail = () => {
       </main>
 
       <MediaLightbox
-        items={photos.map((p) => ({ id: p.id, url: p.media_url, title: p.title, }))}
+        items={photos.map((p) => ({ id: p.id, url: p.media_url, thumbUrl: galleryThumbUrl(p.media_url), title: p.title }))}
         index={lightbox}
         onIndexChange={setLightbox}
         onClose={() => setLightbox(null)}

@@ -1,4 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
+import { findBuiltInBlogPost } from '../src/data/blogPosts';
 
 const SITE = 'https://mku-cu-project.vercel.app';
 const SUPABASE_URL = process.env.VITE_SUPABASE_URL || 'https://qxrllmbyznsnfzdkupbt.supabase.co';
@@ -16,6 +17,17 @@ async function get(table:string, filter:string) {
   return Array.isArray(rows) ? rows[0] || null : null;
 }
 
+const PAGE_META: Record<string,{title:string;description:string;image?:string}> = {
+  '': { title:'MKU Christian Union', description:'A vibrant community of students growing in the knowledge of God.' },
+  events: { title:'Events | MKU Christian Union', description:'Discover upcoming gatherings, services, missions and archived events from MKU Christian Union.' },
+  gallery: { title:'Gallery | MKU Christian Union', description:'Photos and memories from worship, fellowship, missions and ministry life at MKU Christian Union.' },
+  blog: { title:'The Journal | MKU Christian Union', description:'Read sermons, reflections, testimonies and stories from MKU Christian Union.' },
+  leaders: { title:'Leaders | MKU Christian Union', description:'Meet the leaders serving the Mount Kenya University Christian Union community.' },
+  ministries: { title:'Ministries | MKU Christian Union', description:'Explore the ministries serving and equipping students at MKU Christian Union.' },
+  missions: { title:'Missions | MKU Christian Union', description:'Follow MKU Christian Union missions, outreach and gospel work beyond campus.' },
+  sermons: { title:'Sermons | MKU Christian Union', description:'Listen to and revisit teaching from MKU Christian Union gatherings.' },
+};
+
 export default async function handler(req:VercelRequest,res:VercelResponse) {
   const kind = String(req.query.kind || '');
   const key = String(req.query.key || '');
@@ -29,18 +41,28 @@ export default async function handler(req:VercelRequest,res:VercelResponse) {
       const row=await get('events',`id=eq.${encodeURIComponent(key)}&select=*`);
       target=`${SITE}/events/${encodeURIComponent(key)}`;
       if(row){
+        const isCurrentSunday = row.event_date === '2026-09-06' && String(row.title || '').toLowerCase().includes('sunday service');
         const date=new Date(`${row.event_date}T12:00:00`).toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric'});
+        const start = isCurrentSunday ? '7:00 AM' : (row.start_time || '');
+        const end = isCurrentSunday ? '12:45 PM' : (row.end_time || '');
+        const location = isCurrentSunday ? 'CC Hall' : (row.location || '');
+        const theme = isCurrentSunday ? 'Manifestation of the Glory of God' : row.theme;
+        const scripture = isCurrentSunday ? 'Isaiah 60:1' : row.scripture;
+        const body = isCurrentSunday
+          ? 'Ministering: Pastor Muange Kiseku. Come expectant and ready to listen to the Lord and be refreshed. We will also be praying for our country, Kenya.'
+          : row.description;
         title=row.title || 'MKU Christian Union Event';
-        description=[row.theme,row.scripture,`${date} · ${row.start_time||''}${row.end_time?` – ${row.end_time}`:''} · ${row.location||''}`,row.description]
-          .filter(Boolean).join(' — ').slice(0,300);
+        description=[theme, scripture, body, `${date} · ${start}${end?` – ${end}`:''} · ${location}`]
+          .filter(Boolean).join(' — ').slice(0,320);
         image=abs(row.image_url);
       }
     } else if(kind==='post' && key){
-      const row=await get('blog_posts',`slug=eq.${encodeURIComponent(key)}&is_published=eq.true&select=*`);
+      const remote=await get('blog_posts',`slug=eq.${encodeURIComponent(key)}&is_published=eq.true&select=*`);
+      const row = remote || findBuiltInBlogPost(key);
       target=`${SITE}/blog/${encodeURIComponent(key)}`;
       if(row){
         title=row.title || 'MKU Christian Union';
-        description=row.excerpt || String(row.content||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,240);
+        description=row.excerpt || String(row.content||'').replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,260);
         image=abs(row.featured_image);
       }
     } else if(kind==='photo' && key){
@@ -51,6 +73,13 @@ export default async function handler(req:VercelRequest,res:VercelResponse) {
         description=row.description || 'From the MKU Christian Union gallery.';
         image=abs(row.media_url);
       }
+    } else if(kind==='page') {
+      const clean = key.replace(/^\//,'');
+      target = clean ? `${SITE}/${clean}` : SITE;
+      const meta = PAGE_META[clean] || { title:`${clean ? clean.replace(/-/g,' ') : 'MKU Christian Union'} | MKU Christian Union`, description:'Mount Kenya University Christian Union — growing in faith, fellowship, service and mission.' };
+      title = meta.title;
+      description = meta.description;
+      image = abs(meta.image);
     }
   } catch {}
 

@@ -1,7 +1,11 @@
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 
-const REVEAL_SELECTOR = "main section, main article, main [data-scroll-reveal]";
+// Reveal page sections and explicit reveal targets only.
+// Do not attach the reveal class to an entire <article>: long articles can be
+// taller than the viewport, making an intersection-ratio threshold impossible
+// to reach and leaving the whole article permanently at opacity: 0.
+const REVEAL_SELECTOR = "main section, main [data-scroll-reveal]";
 
 export const ScrollRevealManager = () => {
   const location = useLocation();

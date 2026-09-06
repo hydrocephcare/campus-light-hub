@@ -23,6 +23,11 @@ const BUILT_IN_POSTS = {
     title: 'Manifesting the Presence of the Lord',
     description: 'Pst. Kiseku Muange’s Semester Premier message challenged students to pursue God’s presence, discover their assignment, build people, develop their gifts, and remain faithful beyond the excitement of a new beginning.',
     image: `${SITE}/images/blog/manifesting-the-presence-of-the-lord.jpg`
+  },
+  'manifestation-of-the-glory-of-god': {
+    title: 'Manifestation of the Glory of God',
+    description: 'Pst. Kiseku Muange’s Sunday Service message from Isaiah 60:1: the Word brings light, light brings revelation, revelation brings transformation, and Christ in us becomes the manifestation of God’s glory.',
+    image: 'https://res.cloudinary.com/l4wbzpfr/image/upload/mkucu/gallery/16ebf665-6936-4e38-b5fb-2c55d8a34224_bxfqhx'
   }
 };
 
@@ -127,7 +132,6 @@ export default async function handler(req, res) {
     // Keep valid fallback metadata.
   }
 
-  // Social crawlers get Open Graph HTML. Human visitors never see this preview page.
   if (!isPreviewCrawler(req)) {
     res.setHeader('Cache-Control', 'no-store');
     return res.redirect(302, target);

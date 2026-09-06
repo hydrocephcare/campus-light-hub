@@ -13,6 +13,7 @@ import { Footer } from "@/components/Footer";
 import { Toaster } from "@/components/ui/sonner";
 import { SEOHead } from "@/components/SEOHead";
 
+// Lazy load below-fold heavy sections
 const EventCalendarPopup = lazy(() => import("@/components/EventCalendarPopup").then(m => ({ default: m.EventCalendarPopup })));
 const VisionMission = lazy(() => import("@/components/VisionMission").then(m => ({ default: m.VisionMission })));
 const LeadersPreview = lazy(() => import("@/components/LeadersPreview").then(m => ({ default: m.LeadersPreview })));
@@ -37,11 +38,11 @@ const Index = () => {
       <Header />
       <main>
         <EnhancedHeroSlider />
-
+        
         <AnimatedSection animation="fade-up">
           <DailyVerse />
         </AnimatedSection>
-
+        
         <AnimatedSection animation="fade-up" delay={100}>
           <QuickActions />
         </AnimatedSection>
@@ -49,11 +50,11 @@ const Index = () => {
         <Suspense fallback={<SectionFallback />}>
           <GalleryPreview />
         </Suspense>
-
+        
         <AnimatedSection animation="scale">
           <EnhancedStatsCounter />
         </AnimatedSection>
-
+        
         <AnimatedSection animation="fade-up">
           <ServiceTimes />
         </AnimatedSection>
@@ -61,13 +62,7 @@ const Index = () => {
         <AnimatedSection animation="fade-up">
           <SchedulePreview />
         </AnimatedSection>
-
-        <Suspense fallback={<SectionFallback />}>
-          <AnimatedSection animation="fade-up">
-            <EventCalendarPopup />
-          </AnimatedSection>
-        </Suspense>
-
+        
         <AnimatedSection animation="fade-up">
           <UpcomingEvents />
         </AnimatedSection>
@@ -88,43 +83,48 @@ const Index = () => {
           </AnimatedSection>
         </Suspense>
 
+        {/* Below-fold lazy-loaded sections */}
         <Suspense fallback={<SectionFallback />}>
+          <AnimatedSection animation="fade-up">
+            <EventCalendarPopup />
+          </AnimatedSection>
+          
           <AnimatedSection animation="fade-up">
             <VisionMission />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <LeadersPreview />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <MinistriesPreview />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <CampusFellowships />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <LatestSermons />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <PrayerRequestForm />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <GivingSection />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <GuestForm />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <LatestBlogPost />
           </AnimatedSection>
-
+          
           <AnimatedSection animation="fade-up">
             <ConnectWithUs />
           </AnimatedSection>

@@ -38,8 +38,10 @@ export const builtInBlogPosts: PublishedBlogPost[] = [
 export const mergePublishedBlogPosts = <T extends PublishedBlogPost>(remotePosts: T[]) => {
   const posts = new Map<string, PublishedBlogPost>();
 
-  for (const post of builtInBlogPosts) posts.set(post.slug, post);
+  // Remote posts are loaded first. Built-in editorial posts intentionally win on
+  // matching slugs so an incomplete/empty CMS row cannot hide a published article.
   for (const post of remotePosts) posts.set(post.slug, post);
+  for (const post of builtInBlogPosts) posts.set(post.slug, post);
 
   return [...posts.values()].sort((a, b) =>
     (b.published_at || b.created_at || "").localeCompare(a.published_at || a.created_at || ""),

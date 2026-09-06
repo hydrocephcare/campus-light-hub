@@ -1,306 +1,34 @@
+import { Calendar, Clock, MapPin, ArrowRight, Share2, CalendarDays } from "lucide-react";
+import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
 import { Header } from "@/components/Header";
-import { usePageHero } from "@/hooks/usePageContent";
 import { Footer } from "@/components/Footer";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, MapPin, ArrowRight, Share2, CalendarDays, BookOpen } from "lucide-react";
-import { useState, useEffect } from "react";
-import { COMMUNITY_LINK } from "@/lib/communityLink";
+import { AnimatedSection } from "@/components/AnimatedSection";
+import { usePageHero } from "@/hooks/usePageContent";
+import { useSEO } from "@/hooks/useSEO";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
-import { AnimatedSection } from "@/components/AnimatedSection";
-import { useSEO } from "@/hooks/useSEO";
 import { getEventImage } from "@/lib/eventImages";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { staticEvents } from "@/data/staticSiteContent";
-import { Link } from "react-router-dom";
+import { semesterCalendar2026 } from "@/data/semesterCalendar2026";
 import { shareItem } from "@/lib/shareLinks";
 
-interface Event {
-  id: string;
-  title: string;
-  description: string | null;
-  event_date: string;
-  start_time: string;
-  end_time: string | null;
-  location: string;
-  category: string | null;
-  image_url: string | null;
-  registration_link: string | null;
-  is_featured: boolean | null;
-  slug?: string | null;
-  theme?: string | null;
-  scripture?: string | null;
+interface Event { id:string; title:string; description:string|null; event_date:string; start_time:string; end_time:string|null; location:string; category:string|null; image_url:string|null; registration_link:string|null; is_featured:boolean|null; slug?:string|null; theme?:string|null; scripture?:string|null; }
+const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
+const eventPath=(e:Event)=>`/events/${e.slug||e.id}`;
+const currentService=(e:Event):Event=>e.event_date==="2026-09-06"&&/sunday service/i.test(e.title)?{...e,title:"Sunday Service",description:"Come expectant and ready to listen to the Lord and be refreshed. We will also pray for our country, Kenya.",start_time:"7:00 AM",end_time:"12:45 PM",location:"CC Hall",category:"Sunday Service",theme:"Manifestation of the Glory of God",scripture:"Isaiah 60:1"}:e;
+
+export default function Events(){
+ const [db,setDb]=useState<Event[]>([]),[loading,setLoading]=useState(true),[filter,setFilter]=useState("all"); const today=todayKey();
+ useEffect(()=>{(async()=>{try{const {data,error}=await supabase.from("events").select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured,slug,theme,scripture").eq("is_published",true).order("event_date");if(error)throw error;setDb((data||[]) as Event[])}catch{toast.error("Using the official semester calendar while live events reconnect.")}finally{setLoading(false)}})()},[]);
+ const events=useMemo(()=>{const map=new Map<string,Event>();[...staticEvents,...semesterCalendar2026].forEach(x=>map.set(x.id,currentService(x as Event)));db.forEach(x=>{const duplicate=[...map.entries()].find(([,v])=>v.event_date===x.event_date&&v.title.toLowerCase()===x.title.toLowerCase());if(duplicate)map.delete(duplicate[0]);map.set(x.id,currentService(x))});return [...map.values()].sort((a,b)=>a.event_date.localeCompare(b.event_date))},[db]);
+ const upcoming=events.filter(e=>e.event_date>=today),past=events.filter(e=>e.event_date<today).reverse(); const cats=["all",...new Set(upcoming.map(e=>e.category).filter(Boolean) as string[])]; const shown=filter==="all"?upcoming:upcoming.filter(e=>e.category===filter); const featured=upcoming.find(e=>e.is_featured)||upcoming[0];
+ const hero=usePageHero("events",{title:"2026/2027 Semester Events",subtitle:"Official MKU Christian Union Semester One calendar · September–December 2026"});
+ useSEO({title:"2026/2027 Semester Events",description:"Official MKU Christian Union Semester One events and gatherings for September–December 2026."});
+ const cards=(items:Event[])=><div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">{items.map(e=><Card key={e.id} className="overflow-hidden group bg-card"><div className="aspect-square bg-muted overflow-hidden"><img src={optimizedImageUrl(getEventImage(e.category,e.image_url),{width:720,quality:76,resize:"contain"})} alt={e.title} className="w-full h-full object-contain" loading="lazy" decoding="async"/></div><div className="p-5"><div className="flex justify-between gap-2 mb-3"><Badge variant="secondary">{e.category||"Event"}</Badge><span className="text-xs text-muted-foreground">{new Date(`${e.event_date}T12:00:00`).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"})}</span></div><h3 className="font-serif text-xl font-bold mb-2">{e.title}</h3>{e.theme&&<p className="font-semibold text-primary text-sm">{e.theme}</p>}{e.scripture&&<p className="text-sm italic text-muted-foreground">{e.scripture}</p>}<p className="text-sm text-muted-foreground my-3 line-clamp-3">{e.description}</p><div className="space-y-1 text-sm text-muted-foreground"><p className="flex gap-2"><Clock className="w-4 h-4"/>{e.start_time}{e.end_time?` – ${e.end_time}`:""}</p><p className="flex gap-2"><MapPin className="w-4 h-4"/>{e.location}</p></div><div className="flex gap-2 mt-4"><Button asChild size="sm" className="flex-1"><Link to={eventPath(e)}>Details <ArrowRight className="w-4 h-4 ml-1"/></Link></Button><Button size="icon" variant="outline" onClick={()=>shareItem({kind:"event",key:e.id,title:e.title,text:`${e.title} · ${e.event_date} · ${e.start_time} · ${e.location}`,onCopied:()=>toast.success("Event link copied!")})}><Share2 className="w-4 h-4"/></Button></div></div></Card>)}</div>;
+ return <div className="min-h-screen bg-background"><Header/><main><section className="relative min-h-[52vh] flex items-end overflow-hidden"><img src={optimizedImageUrl(getEventImage(featured?.category,featured?.image_url),{width:1600,quality:70,resize:"cover"})} alt="MKUCU events" className="absolute inset-0 w-full h-full object-cover"/><div className="absolute inset-0 bg-black/55"/><div className="container mx-auto px-4 relative pb-12 text-white"><Badge className="mb-4"><CalendarDays className="w-3 h-3 mr-1"/>{upcoming.length} Upcoming</Badge><h1 className="text-4xl md:text-6xl font-serif font-bold">{hero.title}</h1><p className="mt-3 text-lg text-white/85">{hero.subtitle}</p></div></section><section className="py-4 border-b"><div className="container mx-auto px-4 flex overflow-x-auto gap-2">{cats.map(c=><Button key={c} size="sm" variant={filter===c?"default":"outline"} onClick={()=>setFilter(c)} className="capitalize flex-shrink-0">{c}</Button>)}</div></section><AnimatedSection animation="fade-up"><section className="py-12"><div className="container mx-auto px-4">{loading&&<p className="text-center mb-6 text-muted-foreground">Loading live updates…</p>}{shown.length?cards(shown):<p className="text-center">No upcoming events in this category.</p>}</div></section></AnimatedSection>{past.length>0&&<section className="py-12 bg-muted/30"><div className="container mx-auto px-4"><h2 className="text-3xl font-serif font-bold mb-8">Event Archive</h2>{cards(past.slice(0,18))}</div></section>}</main><Footer/></div>
 }
-
-const eventPath = (event: Event) => `/events/${event.slug || event.id}`;
-
-const localDateKey = () => {
-  const now = new Date();
-  const year = now.getFullYear();
-  const month = String(now.getMonth() + 1).padStart(2, "0");
-  const day = String(now.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
-};
-
-const canonicalizeCurrentSundayService = (event: Event): Event => {
-  const isCurrentService =
-    event.event_date === "2026-09-06" &&
-    event.title.toLowerCase().includes("sunday") &&
-    event.title.toLowerCase().includes("service");
-
-  if (!isCurrentService) return event;
-
-  return {
-    ...event,
-    title: "Sunday Service",
-    description:
-      "Ministering: Pastor Muange Kiseku. Come expectant and ready to listen to the Lord and be refreshed. We will also pray for our country, Kenya.",
-    start_time: "7:00 AM",
-    end_time: "12:45 PM",
-    location: "CC Hall",
-    category: "Sunday Service",
-    theme: "Manifestation of the Glory of God",
-    scripture: "Isaiah 60:1",
-  };
-};
-
-const Events = () => {
-  const [events, setEvents] = useState<Event[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [filter, setFilter] = useState("all");
-  const today = localDateKey();
-
-  useEffect(() => { fetchEvents(); }, []);
-
-  const fetchEvents = async () => {
-    try {
-      const { data, error } = await supabase
-        .from("events")
-        .select("id,title,description,event_date,start_time,end_time,location,category,image_url,registration_link,is_featured,slug,theme,scripture")
-        .eq("is_published", true)
-        .order("event_date", { ascending: true });
-      if (error) throw error;
-      const merged = new Map(staticEvents.map((event) => [event.id, canonicalizeCurrentSundayService(event as Event)]));
-      (data || []).forEach((event) => merged.set(event.id, canonicalizeCurrentSundayService(event as Event)));
-      setEvents([...merged.values()].sort((a, b) => a.event_date.localeCompare(b.event_date)));
-    } catch (error) {
-      toast.error("Failed to load events");
-      setEvents([...staticEvents].map((event) => canonicalizeCurrentSundayService(event as Event)).sort((a, b) => a.event_date.localeCompare(b.event_date)));
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useSEO({
-    title: "Upcoming Events",
-    description: "Join MKU Christian Union for life-changing gatherings, worship services, and fellowship.",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1200&q=80",
-    type: "website",
-  });
-
-  const upcomingEvents = events.filter((e) => e.event_date >= today);
-  const pastEvents = events.filter((e) => e.event_date < today).reverse();
-  const categories = ["all", ...new Set(upcomingEvents.map(e => e.category).filter(Boolean))];
-  const filteredEvents = filter === "all" ? upcomingEvents : upcomingEvents.filter(e => e.category === filter);
-
-  const shareEvent = (event: Event) => {
-    shareItem({
-      kind: "event",
-      key: event.id,
-      title: event.title,
-      text: `${event.title} — ${event.theme || "MKU CU"} · ${event.scripture || ""} · ${event.start_time}${event.end_time ? `–${event.end_time}` : ""} at ${event.location}`,
-      onCopied: () => toast.success("Event link copied!"),
-    });
-  };
-
-  const featuredEvent = upcomingEvents.find(e => e.is_featured) || upcomingEvents[0];
-
-  const hero = usePageHero("events", {
-    title: "Events & Gatherings",
-    subtitle: "Join us for life-changing gatherings, worship services, and fellowship opportunities",
-  });
-
-  return (
-    <div className="min-h-screen bg-background overflow-x-hidden">
-      <Header />
-      <main>
-        <section className="relative min-h-[55vh] md:min-h-[65vh] flex items-end overflow-hidden">
-          <div className="absolute inset-0">
-            <img
-              src={optimizedImageUrl(featuredEvent ? getEventImage(featuredEvent.category, featuredEvent.image_url) : "https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1600&q=60", { width: 1600, quality: 70, resize: "contain" })}
-              alt="Events"
-              className="w-full h-full object-contain bg-[#17120f]"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-background via-black/50 to-black/30" />
-          </div>
-          <div className="container mx-auto px-4 relative z-10 pb-10 md:pb-16">
-            <Badge className="bg-secondary/90 text-secondary-foreground mb-4">
-              <CalendarDays className="w-3 h-3 mr-1" /> {upcomingEvents.length} Upcoming
-            </Badge>
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3">
-              {hero.title}
-            </h1>
-            <p className="text-lg md:text-xl text-white/80 max-w-2xl">
-              {hero.subtitle}
-            </p>
-          </div>
-        </section>
-
-        {categories.length > 2 && (
-          <section className="py-4 border-b border-border bg-muted/30">
-            <div className="container mx-auto px-4">
-              <div className="flex overflow-x-auto gap-2 scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0 md:justify-center">
-                {categories.map((cat) => (
-                  <Button
-                    key={cat}
-                    variant={filter === cat ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setFilter(cat)}
-                    className="flex-shrink-0 capitalize"
-                  >
-                    {cat}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        <AnimatedSection animation="fade-up">
-          <section className="py-12 md:py-16">
-            <div className="container mx-auto px-4">
-              {loading ? (
-                <div className="text-center py-12 text-muted-foreground">Loading events...</div>
-              ) : filteredEvents.length > 0 ? (
-                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-                  {filteredEvents.map((event) => (
-                    <Card key={event.id} id={event.id} className="overflow-hidden group hover:shadow-xl transition-all duration-300 bg-card">
-                      <div className="aspect-square overflow-hidden relative bg-[#f5f1ed] p-2">
-                        <img
-                          src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 720, quality: 72, resize: "contain" })}
-                          alt={event.title}
-                          className="w-full h-full object-contain"
-                          loading="lazy"
-                        />
-                        {event.category && (
-                          <Badge className="absolute top-3 left-3 bg-foreground/80 text-background text-xs">
-                            {event.category}
-                          </Badge>
-                        )}
-                        {event.is_featured && (
-                          <Badge className="absolute top-3 right-3 bg-secondary text-secondary-foreground text-xs">
-                            Featured
-                          </Badge>
-                        )}
-                      </div>
-                      <div className="p-5">
-                        <h3 className="text-lg md:text-xl font-bold mb-2 text-card-foreground group-hover:text-primary transition-colors line-clamp-2">
-                          {event.title}
-                        </h3>
-                        {event.theme && <p className="text-sm font-semibold text-primary mb-1">{event.theme}</p>}
-                        {event.scripture && (
-                          <p className="mb-2 flex items-center gap-1 text-xs text-muted-foreground">
-                            <BookOpen className="h-3 w-3" /> {event.scripture}
-                          </p>
-                        )}
-                        {event.description && (
-                          <p className="text-sm text-muted-foreground mb-3 line-clamp-3">{event.description}</p>
-                        )}
-                        <div className="space-y-1.5 mb-4">
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Calendar className="w-4 h-4 text-primary flex-shrink-0" />
-                            <span>{new Date(`${event.event_date}T12:00:00`).toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <Clock className="w-4 h-4 text-primary flex-shrink-0" />
-                            <span>{event.start_time}{event.end_time && ` – ${event.end_time}`}</span>
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <MapPin className="w-4 h-4 text-primary flex-shrink-0" />
-                            <span className="truncate">{event.location}</span>
-                          </div>
-                        </div>
-                        <div className="flex gap-2">
-                          <Button asChild className="flex-1 rounded-full" size="sm">
-                            <Link to={eventPath(event)}>
-                              View details <ArrowRight className="w-4 h-4 ml-1" />
-                            </Link>
-                          </Button>
-                          <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" onClick={() => shareEvent(event)}>
-                            <Share2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-              ) : (
-                <div className="text-center py-16">
-                  <CalendarDays className="w-12 h-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-lg text-muted-foreground">No upcoming events. Check back soon!</p>
-                </div>
-              )}
-            </div>
-          </section>
-        </AnimatedSection>
-
-        {pastEvents.length > 0 && (
-          <section className="py-12 md:py-16 bg-muted/30">
-            <div className="container mx-auto px-4">
-              <div className="max-w-7xl mx-auto mb-6">
-                <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">Archive</h2>
-                <p className="text-sm text-muted-foreground mt-1">
-                  Services, worship nights and keshas we have already held — open any of them for the pictorial and livestream recordings.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-7xl mx-auto">
-                {pastEvents.slice(0, 12).map((event) => (
-                  <Link key={event.id} to={eventPath(event)} className="group">
-                    <Card className="overflow-hidden h-full bg-card hover:shadow-lg transition-shadow">
-                      <div className="aspect-square overflow-hidden bg-[#f5f1ed] p-2">
-                        <img
-                          src={optimizedImageUrl(getEventImage(event.category, event.image_url), { width: 700, quality: 72, resize: "contain" })}
-                          alt={event.title}
-                          className="w-full h-full object-contain"
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      </div>
-                      <div className="p-4">
-                        <p className="text-xs text-muted-foreground">
-                          {new Date(`${event.event_date}T12:00:00`).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
-                        </p>
-                        <h4 className="font-serif font-semibold text-card-foreground mt-1 line-clamp-2 group-hover:text-primary transition-colors">
-                          {event.title}
-                        </h4>
-                        {event.theme && <p className="text-xs text-primary mt-1 line-clamp-1">{event.theme}</p>}
-                        {event.scripture && <p className="text-xs text-muted-foreground mt-1">{event.scripture}</p>}
-                      </div>
-                    </Card>
-                  </Link>
-                ))}
-              </div>
-            </div>
-          </section>
-        )}
-
-        <section className="py-16 bg-gradient-to-br from-foreground to-foreground/90 text-background">
-          <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4">Never Miss an Event</h2>
-            <p className="text-background/70 mb-6 max-w-xl mx-auto">
-              Stay updated with all our upcoming events. Join our WhatsApp community.
-            </p>
-            <a href={COMMUNITY_LINK} target="_blank" rel="noopener noreferrer">
-              <Button size="lg" variant="secondary">Join WhatsApp Group</Button>
-            </a>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </div>
-  );
-};
-
-export default Events;

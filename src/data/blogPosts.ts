@@ -20,6 +20,7 @@ export const builtInBlogPosts: PublishedBlogPost[] = [
   {
     ...glorySermonPost,
     id: `built-in:${glorySermonPost.slug}`,
+    featured_image: "/images/blog/manifesting-the-presence-of-the-lord.jpg",
     created_at: glorySermonPost.published_at,
   },
   {

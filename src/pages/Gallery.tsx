@@ -116,6 +116,7 @@ const Gallery = () => {
    * Static items are kept separate.
    */
   const [byCategory, setByCategory] = useState<Record<string, GalleryItem[]>>({});
+  const [recoveredMeta, setRecoveredMeta] = useState<Record<string, Partial<GalleryItem>>>({});
 
   /**
    * Number of items that should currently be visible in each grid section.
@@ -151,7 +152,51 @@ const Gallery = () => {
     setLightboxSelection(null);
   }, [location.pathname]);
 
-  const staticItems = [...staticGalleryItems, ...cloudinaryGalleryArchive] as GalleryItem[];
+  const baseStaticItems = [...staticGalleryItems, ...cloudinaryGalleryArchive] as GalleryItem[];
+  const staticItems = useMemo(
+    () =>
+      baseStaticItems.map((item: any) => {
+        const meta = recoveredMeta[item.source_id || item.id];
+        return meta
+          ? {
+              ...item,
+              ...meta,
+              media_url: item.media_url,
+              media_type: item.media_type,
+              media_kind: item.media_kind,
+              is_featured: item.is_featured ?? meta.is_featured,
+            }
+          : item;
+      }),
+    [recoveredMeta],
+  );
+
+  // Recover the original gallery taxonomy from Supabase when available. Most
+  // Cloudinary public IDs preserve the original media_gallery UUID, so the
+  // recovered files can regain their real event/category/title metadata.
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const { data, error } = await supabase
+          .from("media_gallery")
+          .select("id,title,description,category,media_kind,is_featured,created_at")
+          .limit(2000);
+        if (error) throw error;
+        if (cancelled) return;
+        const next: Record<string, Partial<GalleryItem>> = {};
+        (data || []).forEach((row: any) => {
+          next[row.id] = row;
+        });
+        setRecoveredMeta(next);
+      } catch (error) {
+        console.error("Could not restore gallery metadata; using Cloudinary fallback collections.", error);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   /**
    * Load category index only.
@@ -641,7 +686,7 @@ const Gallery = () => {
           ? "Official program posters for services, fellowships, missions and special gatherings."
           : "Moments captured across worship, fellowship, missions and campus life.",
       image:
-        "https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=1600&q=70",
+        "https://res.cloudinary.com/l4wbzpfr/image/upload/v1788629860/mkucu/gallery/1788165069840-qs12or_dxtwbr.webp",
     }
   );
 

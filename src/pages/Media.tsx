@@ -22,8 +22,8 @@ interface Sermon {
 }
 
 const Media = () => {
-  const [sermons, setSermons] = useState<Sermon[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [sermons, setSermons] = useState<Sermon[]>(staticSermons as Sermon[]);
+  const [loading, setLoading] = useState(false);
   const [playingId, setPlayingId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState("All");
   const playerRef = useRef<HTMLElement | null>(null);

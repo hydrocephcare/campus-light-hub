@@ -14,7 +14,10 @@ export default defineConfig(() => ({
       includeAssets: ["favicon.ico", "pwa-icon-192.png", "pwa-icon-512.png"],
       workbox: {
         navigateFallbackDenylist: [/^\/~oauth/],
-        globPatterns: ["**/*.{js,css,html,ico,png,svg,jpg,jpeg,webp,woff,woff2}"],
+        // Do not precache HTML/JS/CSS. Vercel should always serve the newest
+        // application shell and chunks after a deployment; stale app-shell caches
+        // were causing old pages and failed dynamic imports.
+        globPatterns: ["**/*.{ico,png,svg,jpg,jpeg,webp,woff,woff2}"],
         cleanupOutdatedCaches: true,
         clientsClaim: true,
         skipWaiting: true,

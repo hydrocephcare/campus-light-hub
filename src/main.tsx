@@ -2,6 +2,33 @@ import { createRoot } from "react-dom/client";
 import App from "./App.tsx";
 import "./index.css";
 
+// One-time recovery from the old PWA strategy that cached HTML, JS chunks and
+// Supabase REST responses. That cache could make the live site look reverted or
+// leave route chunks permanently unavailable after a deployment.
+const CACHE_SCHEMA = "mkucu_cache_schema_v2";
+if (localStorage.getItem("mkucu_cache_schema") !== CACHE_SCHEMA) {
+  localStorage.setItem("mkucu_cache_schema", CACHE_SCHEMA);
+  Promise.resolve().then(async () => {
+    try {
+      if ("caches" in window) {
+        const keys = await caches.keys();
+        await Promise.all(keys.map((key) => caches.delete(key)));
+      }
+      if ("serviceWorker" in navigator) {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        await Promise.all(registrations.map((registration) => registration.unregister()));
+      }
+    } catch {
+      /* cache recovery is best-effort */
+    } finally {
+      if (!sessionStorage.getItem("mkucu_cache_recovered")) {
+        sessionStorage.setItem("mkucu_cache_recovered", "1");
+        window.location.reload();
+      }
+    }
+  });
+}
+
 const nativeFetch = window.fetch.bind(window);
 window.fetch = (input, init = {}) => {
   const url = typeof input === "string" ? input : input instanceof Request ? input.url : String(input);

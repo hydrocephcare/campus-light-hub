@@ -68,8 +68,10 @@ const mergeAnnouncements = (source: Announcement[], serviceImage: string | null)
 };
 
 export const ChurchAnnouncements = () => {
-  const [announcements, setAnnouncements] = useState<Announcement[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [announcements, setAnnouncements] = useState<Announcement[]>(() =>
+    mergeAnnouncements(staticAnnouncements as Announcement[], currentSundayService.image_url || null)
+  );
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchAnnouncements();
@@ -109,16 +111,6 @@ export const ChurchAnnouncements = () => {
       setLoading(false);
     }
   };
-
-  if (loading) {
-    return (
-      <section className="py-10 bg-background">
-        <div className="container mx-auto px-4 text-center text-sm text-muted-foreground">
-          Loading announcements...
-        </div>
-      </section>
-    );
-  }
 
   if (announcements.length === 0) return null;
 

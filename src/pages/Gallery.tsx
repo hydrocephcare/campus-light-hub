@@ -99,7 +99,15 @@ const Gallery = () => {
     });
     return [...counts.values()];
   };
-  const [catalog, setCatalog] = useState<CatalogEntry[]>(buildStaticCatalog);
+  const [catalog, setCatalog] = useState<CatalogEntry[]>(() => {
+    const counts = new Map<string, CatalogEntry>();
+    ([...staticGalleryItems, ...cloudinaryGalleryArchive] as GalleryItem[]).forEach((item) => {
+      const key = item.category || "Other";
+      const existing = counts.get(key);
+      if (!existing) counts.set(key, { key, kind: resolveMediaKind(item), count: 0 });
+    });
+    return [...counts.values()];
+  });
   const [loading, setLoading] = useState(false);
 
   /**
@@ -206,7 +214,12 @@ const Gallery = () => {
       } catch (err) {
         console.error("Live gallery unavailable; using the published site archive.", err);
         if (!cancelled) {
-          setCatalog(buildStaticCatalog());
+          const fallbackCounts = new Map<string, CatalogEntry>();
+          staticItems.forEach((item) => {
+            const key = item.category || "Other";
+            if (!fallbackCounts.has(key)) fallbackCounts.set(key, { key, kind: resolveMediaKind(item), count: 0 });
+          });
+          setCatalog([...fallbackCounts.values()]);
         }
       } finally {
         if (!cancelled) {

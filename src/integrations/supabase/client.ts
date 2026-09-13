@@ -27,7 +27,18 @@ function createSupabaseFetch(supabaseKey: string): typeof fetch {
     }
 
     headers.set('apikey', supabaseKey);
-    return fetch(input, { ...init, headers });
+
+    // Never let a public page hang indefinitely when Supabase is unavailable.
+    // Public-facing pages all have local/static fallbacks, so fail fast and let
+    // those fallbacks render instead of leaving the UI stuck on "Loading...".
+    const request = fetch(input, { ...init, headers });
+    const timeout = new Promise<Response>((_, reject) => {
+      const id = window.setTimeout(() => {
+        window.clearTimeout(id);
+        reject(new Error('Supabase request timed out'));
+      }, 4500);
+    });
+    return Promise.race([request, timeout]);
   };
 }
 

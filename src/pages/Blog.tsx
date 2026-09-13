@@ -28,8 +28,9 @@ const formatDate = (date: string) => new Date(date).toLocaleDateString("en-GB", 
 
 const Blog = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
-  const [loading, setLoading] = useState(true);
+  // Render built-in published articles immediately; live CMS data enhances them when available.
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>(() => mergePublishedBlogPosts([]) as BlogPost[]);
+  const [loading, setLoading] = useState(false);
 
   useSEO({
     title: "The Journal | MKU Christian Union",
@@ -44,12 +45,9 @@ const Blog = () => {
         const { data, error } = await supabase.from("blog_posts").select("*")
           .eq("is_published", true).order("published_at", { ascending: false });
         if (error) throw error;
-        setBlogPosts(mergePublishedBlogPosts(data || []));
+        setBlogPosts(mergePublishedBlogPosts(data || []) as BlogPost[]);
       } catch (error) {
-        console.error("Error fetching blog posts:", error);
-        setBlogPosts(mergePublishedBlogPosts([]));
-      } finally {
-        setLoading(false);
+        console.error("Live blog feed unavailable; keeping published local articles.", error);
       }
     };
     fetchPosts();

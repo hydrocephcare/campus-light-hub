@@ -49,7 +49,7 @@ const Notifications = () => {
   useSEO({
     title: "Notifications | MKU Christian Union",
     description: "Church notices, announcements and updates from MKU Christian Union.",
-    url: "https://mkucuu.lovable.app/notifications",
+    url: "https://mku-cu-project.vercel.app/notifications",
   });
 
   useEffect(() => {

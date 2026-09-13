@@ -187,7 +187,7 @@ const Admin = () => {
     );
   }
 
-  if (!user) return null;
+  if (!user || !isAdmin) return null;
 
   if (!isAdmin) {
     return (

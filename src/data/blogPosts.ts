@@ -1,3 +1,4 @@
+import ariseShinePost from "./arise-shine-it-is-your-season-to-shine.json";
 import glorySermonPost from "./manifestation-of-the-glory-of-god.json";
 import sermonPost from "./manifesting-the-presence-of-the-lord.json";
 import welcomePost from "./welcome-to-mku-cu.json";
@@ -17,6 +18,12 @@ export interface PublishedBlogPost {
 }
 
 export const builtInBlogPosts: PublishedBlogPost[] = [
+  {
+    ...ariseShinePost,
+    id: `built-in:${ariseShinePost.slug}`,
+    featured_image: ariseShinePost.featured_image,
+    created_at: ariseShinePost.published_at,
+  },
   {
     ...glorySermonPost,
     id: `built-in:${glorySermonPost.slug}`,

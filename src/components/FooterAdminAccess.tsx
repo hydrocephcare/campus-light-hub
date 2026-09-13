@@ -12,6 +12,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const GATE_PASSWORD = "Davis";
 
@@ -25,15 +26,23 @@ export const FooterAdminAccess = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (password.trim() === GATE_PASSWORD) {
-      setOpen(false);
-      setPassword("");
-      navigate("/admin");
-    } else {
+    if (password.trim() !== GATE_PASSWORD) {
       toast.error("Incorrect password");
       setPassword("");
+      return;
+    }
+
+    setOpen(false);
+    setPassword("");
+
+    const { data } = await supabase.auth.getSession();
+    if (data.session) {
+      navigate("/admin");
+    } else {
+      toast.info("Sign in to continue to the admin dashboard");
+      navigate("/login");
     }
   };
 

@@ -32,11 +32,10 @@ const localDateKey = () => {
 };
 
 const currentSundayService: Announcement = {
-  id: "static-sunday-service-2026-09-06",
-  title: "Sunday Service — 6 September 2026",
-  description:
-    "Come expectant and ready to listen to the Lord and be refreshed. We will also pray for our country, Kenya.",
-  announcement_date: "2026-09-06",
+  id: "static-sunday-service-2026-09-13",
+  title: "Sunday Service — 13 September 2026",
+  description: "Once again, brothers and sisters in Christ, we invite you to our Sunday service. Come expectant, ready to listen to the Lord and be refreshed.",
+  announcement_date: "2026-09-13",
   start_time: "7:00 AM",
   end_time: "12:45 PM",
   location: "CC Hall",
@@ -89,7 +88,7 @@ export const ChurchAnnouncements = () => {
         supabase
           .from("events")
           .select("image_url")
-          .eq("event_date", "2026-09-06")
+          .eq("event_date", "2026-09-13")
           .ilike("title", "%Sunday%Service%")
           .limit(1)
           .maybeSingle(),

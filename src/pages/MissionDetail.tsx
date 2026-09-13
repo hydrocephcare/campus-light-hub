@@ -17,6 +17,7 @@ import {
   videoEmbedUrl,
   isDirectVideoFile,
 } from "@/lib/missions";
+import { cloudinaryMissionArchive, cloudinaryMissionFallback } from "@/data/cloudinaryMissionArchive";
 import {
   ArrowLeft,
   Camera,
@@ -32,9 +33,10 @@ type Tab = "photos" | "videos";
 
 const MissionDetail = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [mission, setMission] = useState<Mission | null>(null);
-  const [media, setMedia] = useState<MissionMedia[]>([]);
-  const [loading, setLoading] = useState(true);
+  const fallbackMatches = slug === cloudinaryMissionFallback.slug;
+  const [mission, setMission] = useState<Mission | null>(fallbackMatches ? (cloudinaryMissionFallback as Mission) : null);
+  const [media, setMedia] = useState<MissionMedia[]>(fallbackMatches ? (cloudinaryMissionArchive as unknown as MissionMedia[]) : []);
+  const [loading, setLoading] = useState(!fallbackMatches);
   const [tab, setTab] = useState<Tab>("photos");
   const [visible, setVisible] = useState(40);
   const [lightbox, setLightbox] = useState<number | null>(null);
@@ -48,12 +50,12 @@ const MissionDetail = () => {
       mission?.description?.slice(0, 155) ||
       "Photos, videos and stories from an MKU Christian Union mission.",
     image: mission?.cover_image || photos[0]?.media_url || undefined,
-    url: `https://mkucuu.lovable.app/missions/${slug}`,
+    url: `https://mku-cu-project.vercel.app/missions/${slug}`,
   });
 
   useEffect(() => {
     const load = async () => {
-      setLoading(true);
+      if (!fallbackMatches) setLoading(true);
       try {
         const { data: m } = await (supabase as any)
           .from("missions")
@@ -61,7 +63,12 @@ const MissionDetail = () => {
           .eq("slug", slug)
           .maybeSingle();
         if (!m) {
-          setMission(null);
+          if (fallbackMatches) {
+            setMission(cloudinaryMissionFallback as Mission);
+            setMedia(cloudinaryMissionArchive as unknown as MissionMedia[]);
+          } else {
+            setMission(null);
+          }
           return;
         }
         setMission(m as Mission);
@@ -72,13 +79,17 @@ const MissionDetail = () => {
           .order("sort_order", { ascending: true });
         setMedia((mm || []) as MissionMedia[]);
       } catch (e) {
-        console.error("Failed to load mission", e);
+        console.error("Failed to load mission; using Cloudinary fallback where available.", e);
+        if (fallbackMatches) {
+          setMission(cloudinaryMissionFallback as Mission);
+          setMedia(cloudinaryMissionArchive as unknown as MissionMedia[]);
+        }
       } finally {
         setLoading(false);
       }
     };
     load();
-  }, [slug]);
+  }, [slug, fallbackMatches]);
 
   const closeLightbox = useCallback(() => setLightbox(null), []);
 

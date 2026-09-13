@@ -7,6 +7,8 @@ import { CalendarDays, Clock, MapPin, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { format, isSameDay, parseISO } from "date-fns";
 import { Link } from "react-router-dom";
+import { semesterCalendar2026 } from "@/data/semesterCalendar2026";
+import { staticEvents } from "@/data/staticSiteContent";
 
 interface Event {
   id: string;
@@ -36,9 +38,20 @@ export const EventCalendarPopup = () => {
             .select("*")
             .order("event_date", { ascending: true });
           if (error) throw error;
-          setEvents(data || []);
+          const merged = new Map<string, Event>();
+          [...semesterCalendar2026, ...staticEvents].forEach((item: any) => merged.set(item.id, item as Event));
+          (data || []).forEach((item: any) => {
+            const duplicate = [...merged.entries()].find(([, existing]) =>
+              existing.event_date === item.event_date &&
+              existing.title.toLowerCase() === item.title.toLowerCase()
+            );
+            if (duplicate) merged.delete(duplicate[0]);
+            merged.set(item.id, item as Event);
+          });
+          setEvents([...merged.values()].sort((a, b) => a.event_date.localeCompare(b.event_date)));
         } catch (error) {
           console.error("Error fetching events:", error);
+          setEvents([...(semesterCalendar2026 as any), ...(staticEvents as any)].sort((a, b) => a.event_date.localeCompare(b.event_date)));
         }
       };
       fetchEvents();

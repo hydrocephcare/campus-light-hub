@@ -98,7 +98,7 @@ const Leadership = () => {
     title: "MKUCU Leadership — Executive Committee 2026–2027",
     description:
       "Meet the Mount Kenya University Christian Union Executive Committee for the Spiritual Year 2026–2027, and browse past leadership administrations.",
-    url: "https://campus-light-hub.lovable.app/leadership",
+    url: "https://mku-cu-project.vercel.app/leadership",
   });
 
   useEffect(() => {

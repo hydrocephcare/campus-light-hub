@@ -1922,6 +1922,8 @@ export const cloudinaryMissionFallback = {
   description:
     "The MKU Christian Union main mission archive from Meru and Maua, including outreach, ministry and fellowship moments.",
   cover_image: "https://res.cloudinary.com/l4wbzpfr/image/upload/v1788630145/mkucu/missions/1cM1lP98ng6wttFToemNUGaWzWoj2WAw4_w1600_fbx0yn.jpg",
+  youtube_playlist_url: "https://www.youtube.com/@mkucuthikatv",
+  status: "completed",
   is_featured: true,
   highlights: ["Mission training — 1 August 2026", "Theme: Light to All Nations", "Meru & Maua outreach"],
   sort_order: 1,

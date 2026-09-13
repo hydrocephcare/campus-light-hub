@@ -32,7 +32,6 @@ const Ministries = lazyWithRetry(() => import("./pages/Ministries"));
 const Visitors = lazyWithRetry(() => import("./pages/Visitors"));
 const Leadership = lazyWithRetry(() => import("./pages/Leadership"));
 const Login = lazyWithRetry(() => import("./pages/Login"));
-const Signup = lazyWithRetry(() => import("./pages/Signup"));
 const NotFound = lazyWithRetry(() => import("./pages/NotFound"));
 
 // Loading component
@@ -102,7 +101,6 @@ const App = () => (
               <Route path="/ministries" element={<Ministries />} />
               <Route path="/visitors" element={<Visitors />} />
               <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

@@ -69,7 +69,7 @@ const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/
 const canonicalizeCurrentSundayService = (event: EventRecord | null): EventRecord | null => {
   if (!event) return event;
   const isCurrentService =
-    event.event_date === "2026-09-06" &&
+    event.event_date === "2026-09-13" &&
     event.title.toLowerCase().includes("sunday") &&
     event.title.toLowerCase().includes("service");
 
@@ -79,7 +79,7 @@ const canonicalizeCurrentSundayService = (event: EventRecord | null): EventRecor
     ...event,
     title: "Sunday Service",
     description:
-      "Ministering: Pastor Muange Kiseku. Come expectant and ready to listen to the Lord and be refreshed. We will also be praying for our country, Kenya.",
+      "Come expectant and ready to listen to the Lord and be refreshed.",
     start_time: "7:00 AM",
     end_time: "12:45 PM",
     location: "CC Hall",
@@ -91,11 +91,12 @@ const canonicalizeCurrentSundayService = (event: EventRecord | null): EventRecor
 
 const EventDetail = () => {
   const { id } = useParams<{ id: string }>();
-  const [event, setEvent] = useState<EventRecord | null>(null);
+  const staticInitial = id ? (staticEvents.find((e) => e.id === id) as EventRecord | undefined) || null : null;
+  const [event, setEvent] = useState<EventRecord | null>(staticInitial);
   const [photos, setPhotos] = useState<EventPhoto[]>([]);
   const [videos, setVideos] = useState<EventVideo[]>([]);
   const [lightbox, setLightbox] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!staticInitial);
   const [form, setForm] = useState({ name: "", phone: "", email: "" });
   const [submitting, setSubmitting] = useState(false);
   const [registered, setRegistered] = useState(false);
@@ -104,6 +105,7 @@ const EventDetail = () => {
     if (!id) return;
     const load = async () => {
       const fallback = staticEvents.find((e) => e.id === id) || null;
+      if (fallback) { setEvent(canonicalizeCurrentSundayService(fallback as EventRecord)); setLoading(false); }
       try {
         const column = UUID_RE.test(id) ? "id" : "slug";
         const { data } = await supabase.from("events").select("*").eq(column, id).maybeSingle();

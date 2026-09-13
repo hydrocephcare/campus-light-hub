@@ -119,7 +119,7 @@ const AdminDashboard = () => {
 
 const Admin = () => {
   const navigate = useNavigate();
-  const { user, isAdmin, loading: authLoading, signOut, hasDepartmentAccess } = useAuth();
+  const { user, isAdmin, loading: authLoading, signOut } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -152,9 +152,7 @@ const Admin = () => {
     if (!authLoading && !user) navigate("/login", { replace: true });
   }, [authLoading, user, navigate]);
 
-  const menuItems = allMenuItems.filter((item) =>
-    item.id === "dashboard" || isAdmin || hasDepartmentAccess(item.id)
-  );
+  const menuItems = isAdmin ? allMenuItems : [];
 
   const renderContent = () => {
     if (activeTab === "dashboard") return <AdminDashboard />;
@@ -176,7 +174,7 @@ const Admin = () => {
     navigate("/login", { replace: true });
   };
 
-  const roleLabel = isAdmin ? "Admin" : "Content Manager";
+  const roleLabel = "Admin";
 
   if (authLoading) {
     return (
@@ -190,6 +188,25 @@ const Admin = () => {
   }
 
   if (!user) return null;
+
+  if (!isAdmin) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-muted/30 p-4">
+        <Card className="w-full max-w-md">
+          <CardHeader>
+            <CardTitle>Admin access restricted</CardTitle>
+            <CardDescription>
+              This dashboard is reserved for explicitly approved administrators. A normal site account cannot edit church content.
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="flex gap-2">
+            <Button variant="outline" onClick={() => navigate("/")}>Back to site</Button>
+            <Button onClick={handleSignOut}>Sign out</Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-muted/30 touch-manipulation">

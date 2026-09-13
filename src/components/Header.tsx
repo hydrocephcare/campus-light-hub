@@ -17,12 +17,12 @@ import { useSiteSetting } from "@/hooks/useSiteSettings";
 const defaultBranding = {
   site_name: "MKU CU CHURCH",
   tagline: "Living the Knowledge of God",
-  logo_url: "/lovable-uploads/d7e39077-9fab-48b2-a966-23d29d0ec2ff.png",
+  logo_url: "/pwa-icon-512.png",
   youtube_live_url: "https://www.youtube.com/live/2nKqPUZFPCE",
-  whatsapp_community_link: "https://chat.whatsapp.com/I0O4FU8BFMo59CwKnnVB29",
+  whatsapp_community_link: "https://wa.me/254115475543",
 };
 
-const defaultContact = { whatsapp: "https://wa.me/254704021286", phone: "+254 711 201 138", email: "mkucuthika@gmail.com", location: "MKU Main Campus, Thika", map_link: "" };
+const defaultContact = { whatsapp: "https://wa.me/254115475543", phone: "+254 115 475 543", email: "mkucuthika@gmail.com", location: "Mount Kenya University, Thika Campus", map_link: "" };
 
 const navItems = [
   { to: "/", label: "Home", icon: Home },

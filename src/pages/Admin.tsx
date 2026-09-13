@@ -10,6 +10,7 @@ import {
   Vote, BellRing, Presentation, Settings, Search, Shield, LogOut, Clock, Loader2
 , Globe2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { cn } from "@/lib/utils";
 
 const WeeklyActivitiesManager = lazy(() => import("@/components/admin/WeeklyActivitiesManager").then(m => ({ default: m.WeeklyActivitiesManager })));
@@ -118,6 +119,7 @@ const AdminDashboard = () => {
 
 const Admin = () => {
   const navigate = useNavigate();
+  const { user, isAdmin, loading: authLoading, signOut, hasDepartmentAccess } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(() => {
@@ -144,11 +146,15 @@ const Admin = () => {
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
-  // Admin gate password (footer "Admin" button) is the only access control here —
-  // real Supabase login is skipped entirely so the dashboard opens immediately.
+  // The admin dashboard must run with a real Supabase session. Without the
+  // user's JWT, Row Level Security correctly blocks the manager queries.
+  useEffect(() => {
+    if (!authLoading && !user) navigate("/login", { replace: true });
+  }, [authLoading, user, navigate]);
 
-  // Dashboard is always accessible; everyone who reaches this page has full access
-  const menuItems = allMenuItems;
+  const menuItems = allMenuItems.filter((item) =>
+    item.id === "dashboard" || isAdmin || hasDepartmentAccess(item.id)
+  );
 
   const renderContent = () => {
     if (activeTab === "dashboard") return <AdminDashboard />;
@@ -165,12 +171,25 @@ const Admin = () => {
 
   const currentMenuItem = allMenuItems.find(item => item.id === activeTab);
 
-  const handleSignOut = () => {
-    navigate("/");
+  const handleSignOut = async () => {
+    await signOut();
+    navigate("/login", { replace: true });
   };
 
-  // Get user's primary role label for display
-  const roleLabel = "Admin";
+  const roleLabel = isAdmin ? "Admin" : "Content Manager";
+
+  if (authLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-muted/30">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-3 text-primary" />
+          <p className="text-sm text-muted-foreground">Restoring admin session…</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   return (
     <div className="min-h-screen bg-muted/30 touch-manipulation">

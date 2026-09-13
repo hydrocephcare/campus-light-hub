@@ -87,8 +87,19 @@ const Gallery = () => {
     location.pathname === "/photos" ? "photo" : "poster"
   );
 
-  const [catalog, setCatalog] = useState<CatalogEntry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const buildStaticCatalog = () => {
+    const counts = new Map<string, CatalogEntry>();
+    (staticGalleryItems as GalleryItem[]).forEach((item) => {
+      const key = item.category || "Other";
+      const existing = counts.get(key);
+      if (!existing) {
+        counts.set(key, { key, kind: resolveMediaKind(item), count: 0 });
+      }
+    });
+    return [...counts.values()];
+  };
+  const [catalog, setCatalog] = useState<CatalogEntry[]>(buildStaticCatalog);
+  const [loading, setLoading] = useState(false);
 
   /**
    * IMPORTANT:
@@ -192,10 +203,9 @@ const Gallery = () => {
           );
         }
       } catch (err) {
-        console.error("Error loading gallery index:", err);
-
+        console.error("Live gallery unavailable; using the published site archive.", err);
         if (!cancelled) {
-          toast.error("Failed to load gallery");
+          setCatalog(buildStaticCatalog());
         }
       } finally {
         if (!cancelled) {

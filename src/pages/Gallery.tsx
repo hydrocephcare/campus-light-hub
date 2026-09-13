@@ -141,9 +141,8 @@ const Gallery = () => {
       tab === "poster"
         ? "Browse full program posters for services, fellowships, missions and special gatherings at MKU Christian Union."
         : "Photos capturing worship, fellowship, missions and community life at MKU Christian Union.",
-    url: `https://mkucuu.lovable.app${
-      tab === "poster" ? "/gallery" : "/photos"
-    }`,
+    image: "https://res.cloudinary.com/l4wbzpfr/image/upload/v1789286006/IMG-20260912-WA0039.jpg",
+    url: `https://mku-cu-project.vercel.app${tab === "poster" ? "/gallery" : "/photos"}`,
   });
 
   useEffect(() => {

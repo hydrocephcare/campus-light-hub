@@ -17,6 +17,7 @@ import { useSEO } from "@/hooks/useSEO";
 import { GalleryPhoto } from "@/components/GalleryPhoto";
 import { MediaLightbox } from "@/components/MediaLightbox";
 import { staticGalleryItems } from "@/data/staticSiteContent";
+import { cloudinaryGalleryArchive } from "@/data/cloudinaryGalleryArchive";
 import { resolveMediaKind, MediaKind } from "@/lib/mediaKind";
 import { galleryThumbUrl } from "@/lib/imageUrl";
 
@@ -143,7 +144,7 @@ const Gallery = () => {
     setLightboxSelection(null);
   }, [location.pathname]);
 
-  const staticItems = staticGalleryItems as GalleryItem[];
+  const staticItems = [...staticGalleryItems, ...cloudinaryGalleryArchive] as GalleryItem[];
 
   /**
    * Load category index only.

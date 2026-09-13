@@ -145,18 +145,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         return;
       }
 
-      // 1) Hydrate instantly from cache so a refresh never shows "waiting for approval".
+      // Never trust localStorage for authorization. A browser user can edit it.
+      // Cached data may be used only for non-sensitive profile display.
       const cached = readCache(currentUser.id);
-      if (cached) {
-        setProfile(cached.profile);
-        setIsAdmin(cached.isAdmin);
-        setDepartments(cached.departments || []);
-        setLoading(false);
-      }
+      if (cached?.profile) setProfile(cached.profile);
 
-      // Avoid refetching for token refresh events on the same user.
-      if (lastLoadedUserId === currentUser.id && cached) return;
+      // Always revalidate role/department access against Supabase.
+      if (lastLoadedUserId === currentUser.id && !loading) return;
       lastLoadedUserId = currentUser.id;
+      setLoading(true);
 
       // 2) Then revalidate against the backend.
       try {
@@ -171,10 +168,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
         if (!mounted) return;
 
-        // Network failure: keep whatever cache gave us instead of locking the user out.
+        // On network/RLS failure, fail closed. Never preserve cached privileges.
         if (roleRes.error || deptRes.error) {
+          setIsAdmin(false);
+          setDepartments([]);
           setLoading(false);
-          if (!cached) lastLoadedUserId = null; // allow a later retry
+          lastLoadedUserId = null;
           return;
         }
 
@@ -185,10 +184,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         setProfile(nextProfile);
         setIsAdmin(nextIsAdmin);
         setDepartments(nextDepartments);
+        // Cache profile only; privilege fields are deliberately false/empty so
+        // localStorage can never become an authorization source.
         writeCache(currentUser.id, {
           profile: nextProfile,
-          isAdmin: nextIsAdmin,
-          departments: nextDepartments,
+          isAdmin: false,
+          departments: [],
         });
       } catch {
         if (!cached) lastLoadedUserId = null;

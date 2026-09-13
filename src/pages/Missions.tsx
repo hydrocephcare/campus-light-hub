@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { useSEO } from "@/hooks/useSEO";
 import { Mission, MISSION_FIELDS, missionDateLabel } from "@/lib/missions";
+import { cloudinaryMissionArchive, cloudinaryMissionFallback } from "@/data/cloudinaryMissionArchive";
 import { ArrowRight, Camera, Globe2, Loader2, MapPin, Video } from "lucide-react";
 
 interface MissionWithCounts extends Mission {
@@ -16,14 +17,20 @@ interface MissionWithCounts extends Mission {
 }
 
 const Missions = () => {
-  const [missions, setMissions] = useState<MissionWithCounts[]>([]);
-  const [loading, setLoading] = useState(true);
+  const fallbackMission: MissionWithCounts = {
+    ...(cloudinaryMissionFallback as Mission),
+    photoCount: cloudinaryMissionArchive.length,
+    videoCount: 0,
+  };
+  const [missions, setMissions] = useState<MissionWithCounts[]>([fallbackMission]);
+  const [loading, setLoading] = useState(false);
 
   useSEO({
     title: "Missions — Taking the Gospel Beyond Campus",
     description:
       "Relive every MKU Christian Union mission: outreach photos, videos and stories from the field as students take the gospel beyond campus.",
-    url: "https://mkucuu.lovable.app/missions",
+    image: cloudinaryMissionFallback.cover_image || undefined,
+    url: "https://mku-cu-project.vercel.app/missions",
   });
 
   useEffect(() => {
@@ -49,9 +56,10 @@ const Missions = () => {
               m.cover_image || own.find((x) => x.media_type !== "video")?.media_url || null,
           };
         });
-        setMissions(withCounts);
+        setMissions(withCounts.length ? withCounts : [fallbackMission]);
       } catch (e) {
-        console.error("Failed to load missions", e);
+        console.error("Failed to load missions; using Cloudinary mission archive.", e);
+        setMissions([fallbackMission]);
       } finally {
         setLoading(false);
       }

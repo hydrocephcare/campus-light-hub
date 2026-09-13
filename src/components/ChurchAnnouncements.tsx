@@ -42,7 +42,7 @@ const currentSundayService: Announcement = {
   category: "Sunday Service",
   priority: "high",
   contact_link: null,
-  image_url: null,
+  image_url: "https://res.cloudinary.com/l4wbzpfr/image/upload/v1789286006/IMG-20260912-WA0039.jpg",
   theme: "Manifestation of the Glory of God",
   scripture: "Isaiah 60:1",
 };
@@ -99,7 +99,7 @@ export const ChurchAnnouncements = () => {
       const source = announcementResult.data && announcementResult.data.length > 0
         ? announcementResult.data
         : staticAnnouncements;
-      const serviceImage = serviceResult.data?.image_url || null;
+      const serviceImage = serviceResult.data?.image_url || currentSundayService.image_url || null;
 
       setAnnouncements(mergeAnnouncements(source as Announcement[], serviceImage));
     } catch (error) {

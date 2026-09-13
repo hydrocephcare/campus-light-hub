@@ -103,22 +103,28 @@ const Leadership = () => {
 
   useEffect(() => {
     const load = async () => {
-      const [{ data, error }, { data: termData }] = await Promise.all([
-        supabase
-          .from("leaders")
-          .select("id,name,position,image_url,display_order,term,docket,bio")
-          .eq("is_active", true)
-          .order("term", { ascending: false })
-          .order("display_order", { ascending: true }),
-        supabase
-          .from("leadership_terms")
-          .select("term,label,scripture,poster_url,is_current,display_order")
-          .order("display_order", { ascending: true }),
-      ]);
-      if (error) console.error("Error fetching leaders:", error);
-      setLeaders((data as Leader[]) || []);
-      setTermRows((termData as TermRow[]) || []);
-      setLoading(false);
+      try {
+        const [{ data, error }, { data: termData, error: termError }] = await Promise.all([
+          supabase
+            .from("leaders")
+            .select("id,name,position,image_url,display_order,term,docket,bio")
+            .eq("is_active", true)
+            .order("term", { ascending: false })
+            .order("display_order", { ascending: true }),
+          supabase
+            .from("leadership_terms")
+            .select("term,label,scripture,poster_url,is_current,display_order")
+            .order("display_order", { ascending: true }),
+        ]);
+        if (error) throw error;
+        if (termError) throw termError;
+        setLeaders((data as Leader[]) || []);
+        setTermRows((termData as TermRow[]) || []);
+      } catch (error) {
+        console.error("Live leadership data unavailable.", error);
+      } finally {
+        setLoading(false);
+      }
     };
     load();
   }, []);

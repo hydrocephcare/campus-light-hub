@@ -35,21 +35,29 @@ const fallbackImage = "https://images.unsplash.com/photo-1504052434569-70ad5836a
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
-  const [post, setPost] = useState<BlogPostRecord | null>(null);
+  const initialBuiltIn = slug ? (findBuiltInBlogPost(slug) as BlogPostRecord | null) : null;
+  const [post, setPost] = useState<BlogPostRecord | null>(initialBuiltIn);
   const [relatedPosts, setRelatedPosts] = useState<BlogPostRecord[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!initialBuiltIn);
 
   useEffect(() => {
     if (!slug) return;
     const fetchPost = async () => {
       try {
-        const builtInPost = findBuiltInBlogPost(slug);
+        const builtInPost = findBuiltInBlogPost(slug) as BlogPostRecord | null;
+        if (builtInPost) {
+          setPost(builtInPost);
+          setLoading(false);
+        }
+
         const { data, error } = await supabase.from("blog_posts").select("*")
           .eq("slug", slug).eq("is_published", true).maybeSingle();
         if (error && !builtInPost) throw error;
 
-        const resolvedPost = data || builtInPost;
-        setPost(resolvedPost);
+        // Built-in editorial articles win on a matching slug so an incomplete
+        // CMS row can never blank a published sermon.
+        const resolvedPost = builtInPost || data;
+        setPost(resolvedPost as BlogPostRecord | null);
 
         if (resolvedPost) {
           const { data: related } = await supabase.from("blog_posts").select("*")

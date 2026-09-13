@@ -14,7 +14,7 @@ import { semesterCalendar2026 } from "@/data/semesterCalendar2026";
 
 interface Event { id:string; title:string; description:string|null; event_date:string; start_time:string; end_time:string|null; location:string; category:string|null; image_url:string|null; registration_link:string|null; theme?:string|null; scripture?:string|null; }
 const localDateKey=()=>{const n=new Date();return `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`};
-const canonicalize=(e:Event):Event=>e.event_date==="2026-09-06"&&e.title.toLowerCase().includes("sunday")?{...e,title:"Sunday Service",description:"Come expectant and ready to hear from the Lord and be refreshed. We will also pray for our country, Kenya.",start_time:"7:00 AM",end_time:"12:45 PM",location:"CC Hall",category:"Sunday Service",theme:"Manifestation of the Glory of God",scripture:"Isaiah 60:1"}:e;
+const canonicalize=(e:Event):Event=>e.event_date==="2026-09-13"&&e.title.toLowerCase().includes("sunday")?{...e,title:"Sunday Service",description:"Once again, brothers and sisters in Christ, we invite you to our Sunday service. Come expectant, ready to listen to the Lord and be refreshed.",start_time:"7:00 AM",end_time:"12:45 PM",location:"CC Hall",category:"Sunday Service",theme:"Manifestation of the Glory of God",scripture:"Isaiah 60:1"}:e;
 const eventKey=(e:Event)=>`${e.event_date}|${e.title.toLowerCase().replace(/[^a-z0-9]+/g," ").trim()}`;
 
 export const UpcomingEvents=()=>{

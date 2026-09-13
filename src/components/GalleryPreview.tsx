@@ -33,7 +33,12 @@ export const GalleryPreview = () => {
         .order("created_at", { ascending: false })
         .limit(40);
       const live = (data || []).filter((item) => resolveMediaKind(item) === "poster");
-      if (live.length > 0) setPosters(live.slice(0, 8));
+      if (live.length > 0) {
+        const merged = new Map<string, GalleryItem>();
+        fallbackPosters.forEach((item) => merged.set(item.media_url, item));
+        live.forEach((item) => merged.set(item.media_url, item));
+        setPosters([...merged.values()].slice(0, 8));
+      }
     };
     fetchPosters();
   }, []);

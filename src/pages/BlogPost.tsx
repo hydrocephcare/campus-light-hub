@@ -27,6 +27,10 @@ interface BlogPostRecord {
   created_at: string | null;
 }
 
+const sermonVideoUrls: Record<string, string> = {
+  "arise-shine-it-is-your-season-to-shine": "https://www.youtube.com/embed/GvY4OFY1f4c",
+};
+
 const fallbackImage = "https://images.unsplash.com/photo-1504052434569-70ad5836ab65?auto=format&fit=crop&w=1200&q=85";
 
 const BlogPost = () => {
@@ -188,6 +192,22 @@ const BlogPost = () => {
                     first:prose-p:first-letter:leading-[0.78] first:prose-p:first-letter:text-[#7A2E22] dark:first:prose-p:first-letter:text-[#E08B76]"
                   dangerouslySetInnerHTML={{ __html: post.content }}
                 />
+
+                {sermonVideoUrls[post.slug] && (
+                  <section className="mt-14 border-t border-black/10 pt-8 dark:border-white/10">
+                    <p className="mb-4 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-black/55 dark:text-[#F1E9DC]/55">Watch the service</p>
+                    <div className="aspect-video overflow-hidden bg-black">
+                      <iframe
+                        className="h-full w-full"
+                        src={sermonVideoUrls[post.slug]}
+                        title={`${post.title} — Sunday Service video`}
+                        loading="lazy"
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                        allowFullScreen
+                      />
+                    </div>
+                  </section>
+                )}
 
                 {post.tags && post.tags.length > 0 && (
                   <div className="mt-16 border-t border-black/10 pt-8 dark:border-white/10">

@@ -20,7 +20,7 @@ import { shareItem } from "@/lib/shareLinks";
 interface Event { id:string; title:string; description:string|null; event_date:string; start_time:string; end_time:string|null; location:string; category:string|null; image_url:string|null; registration_link:string|null; is_featured:boolean|null; slug?:string|null; theme?:string|null; scripture?:string|null; }
 const todayKey=()=>{const d=new Date();return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`};
 const eventPath=(e:Event)=>`/events/${e.slug||e.id}`;
-const currentService=(e:Event):Event=>e.event_date==="2026-09-06"&&/sunday service/i.test(e.title)?{...e,title:"Sunday Service",description:"Come expectant and ready to listen to the Lord and be refreshed. We will also pray for our country, Kenya.",start_time:"7:00 AM",end_time:"12:45 PM",location:"CC Hall",category:"Sunday Service",theme:"Manifestation of the Glory of God",scripture:"Isaiah 60:1"}:e;
+const currentService=(e:Event):Event=>e.event_date==="2026-09-13"&&e.title.toLowerCase().includes("sunday")?{...e,title:"Sunday Service",description:"Once again, brothers and sisters in Christ, we invite you to our Sunday service. Come expectant, ready to listen to the Lord and be refreshed.",start_time:"7:00 AM",end_time:"12:45 PM",location:"CC Hall",category:"Sunday Service",theme:"Manifestation of the Glory of God",scripture:"Isaiah 60:1"}:e;
 
 export default function Events(){
  const [db,setDb]=useState<Event[]>([]),[loading,setLoading]=useState(true),[filter,setFilter]=useState("all"); const today=todayKey();

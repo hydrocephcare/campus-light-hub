@@ -71,7 +71,7 @@ const defaultFellowships = [
 
 export const CampusFellowships = () => {
   const [fellowships, setFellowships] = useState<Fellowship[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchFellowships();

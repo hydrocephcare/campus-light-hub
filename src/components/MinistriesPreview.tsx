@@ -54,8 +54,8 @@ const defaultMinistries = [
 ];
 
 export const MinistriesPreview = () => {
-  const [ministries, setMinistries] = useState<Ministry[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [ministries, setMinistries] = useState<Ministry[]>(staticMinistries.slice(0, 4) as Ministry[]);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchMinistries();

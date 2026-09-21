@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { resolveMediaKind } from "@/lib/mediaKind";
+import { cloudinaryGalleryArchive } from "@/data/cloudinaryGalleryArchive";
 
 interface PhotoItem {
   id: string;
@@ -19,7 +20,8 @@ interface PhotoItem {
  * announcement notice board.
  */
 export const PhotoGalleryPreview = () => {
-  const [photos, setPhotos] = useState<PhotoItem[]>([]);
+  const fallbackPhotos = (cloudinaryGalleryArchive as unknown as PhotoItem[]).slice(0, 8);
+  const [photos, setPhotos] = useState<PhotoItem[]>(fallbackPhotos);
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -30,7 +32,7 @@ export const PhotoGalleryPreview = () => {
         .order("created_at", { ascending: false })
         .limit(40);
       const live = (data || []).filter((item) => resolveMediaKind(item) === "photo");
-      setPhotos(live.slice(0, 8));
+      setPhotos(live.length > 0 ? live.slice(0, 8) : fallbackPhotos);
     };
     fetchPhotos();
   }, []);

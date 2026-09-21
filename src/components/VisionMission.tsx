@@ -7,7 +7,14 @@ const iconMap: Record<string, React.ElementType> = { Target, Heart, Users, BookO
 export const VisionMission = () => {
   const { data: vision } = useSiteSetting("vision", { title: "Our Vision", description: "To nurture a Christ-centred student community that knows God, lives out the Gospel and influences the campus and society." });
   const { data: mission } = useSiteSetting("mission", { title: "Our Mission", description: "To build believers through Scripture, prayer, worship, discipleship, fellowship, evangelism and missions." });
-  const { data: coreValues } = useSiteSetting("core_values", []);
+  const { data: coreValues } = useSiteSetting("core_values", [
+    { title: "Christ-Centred", description: "Jesus Christ remains at the centre of our faith, fellowship and service.", icon: "Heart" },
+    { title: "Scripture", description: "We are formed and guided by the Word of God.", icon: "BookOpen" },
+    { title: "Prayer", description: "We depend on God through personal and corporate prayer.", icon: "Sparkles" },
+    { title: "Fellowship", description: "We grow together as one family in Christ.", icon: "Users" },
+    { title: "Discipleship", description: "We intentionally grow believers toward Christ-like character.", icon: "Target" },
+    { title: "Mission", description: "We carry the Gospel from campus to the nations.", icon: "Globe" },
+  ]);
 
   return (
     <section className="py-12 md:py-16 lg:py-20 bg-card">

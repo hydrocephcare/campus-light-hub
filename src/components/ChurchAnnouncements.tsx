@@ -106,7 +106,7 @@ export const ChurchAnnouncements = () => {
       setAnnouncements(mergeAnnouncements(source as Announcement[], serviceImage));
     } catch (error) {
       console.error("Error fetching announcements:", error);
-      setAnnouncements(mergeAnnouncements(staticAnnouncements as Announcement[], null));
+      setAnnouncements(mergeAnnouncements(staticAnnouncements as Announcement[], currentSundayService.image_url || null));
     } finally {
       setLoading(false);
     }

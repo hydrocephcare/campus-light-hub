@@ -14,7 +14,7 @@ export function useSiteSetting<T>(key: string, fallback: T): { data: T; loading:
   };
 
   const [data, setData] = useState<T>(readCached);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const fetchSetting = async () => {
     const timeout = window.setTimeout(() => setLoading(false), 3500);

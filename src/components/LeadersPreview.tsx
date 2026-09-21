@@ -15,7 +15,7 @@ interface Leader {
 
 export const LeadersPreview = () => {
   const [leaders, setLeaders] = useState<Leader[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchLeaders = async () => {

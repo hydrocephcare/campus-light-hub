@@ -28,6 +28,11 @@ const BUILT_IN_POSTS = {
     title: 'Manifestation of the Glory of God',
     description: 'Pst. Kiseku Muange’s Sunday Service message from Isaiah 60:1: the Word brings light, light brings revelation, revelation brings transformation, and Christ in us becomes the manifestation of God’s glory.',
     image: 'https://res.cloudinary.com/l4wbzpfr/image/upload/mkucu/gallery/16ebf665-6936-4e38-b5fb-2c55d8a34224_bxfqhx'
+  },
+  'restoring-hope-in-a-hopeless-generation': {
+    title: 'Restoring Hope in a Hopeless Generation',
+    description: 'A Sunday Service message from Romans 4:13–20: God speaks in impossible situations, hope is built on His promises, and hope in God refuses to give up.',
+    image: 'https://res.cloudinary.com/l4wbzpfr/image/upload/v1789897690/IMG-20260919-WA0036.jpg'
   }
 };
 

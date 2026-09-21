@@ -9,8 +9,12 @@ import { COMMUNITY_LINK } from "@/lib/communityLink";
 
 const platformIcons: Record<string, React.ElementType> = { Facebook, Twitter, YouTube: Youtube, Instagram };
 
-const defaultContact = { whatsapp: "https://wa.me/254711201138", phone: "0711201138", email: "mkucuthika@gmail.com", location: "MKU Main Campus, Thika", map_link: "https://maps.app.goo.gl/Ci8S9Nhb25FSCrgX8" };
-const defaultSocial = [{ platform: "Facebook", link: "https://facebook.com/MKUCUTHIKA", handle: "MKU CU THIKA" }];
+const defaultContact = { whatsapp: "https://wa.me/254115475543", phone: "0115475543", email: "mkucuthika@gmail.com", location: "Mount Kenya University, Thika Campus", map_link: "https://maps.app.goo.gl/Ci8S9Nhb25FSCrgX8" };
+const defaultSocial = [
+  { platform: "Facebook", link: "https://facebook.com/MKUCUTHIKA", handle: "MKU CU THIKA" },
+  { platform: "Twitter", link: "https://x.com/MkucuThika", handle: "@MkucuThika" },
+  { platform: "YouTube", link: "https://www.youtube.com/@MKUCUThikaTV", handle: "MKU CU Thika TV" },
+];
 
 export const ConnectWithUs = () => {
   const { data: contact } = useSiteSetting("contact_info", defaultContact);

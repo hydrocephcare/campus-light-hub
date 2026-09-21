@@ -6,10 +6,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { Mission, MISSION_FIELDS, missionDateLabel } from "@/lib/missions";
 import { ArrowRight, Globe2, MapPin } from "lucide-react";
+import { cloudinaryMissionArchive, cloudinaryMissionFallback } from "@/data/cloudinaryMissionArchive";
 
 export const MissionsPreview = () => {
-  const [mission, setMission] = useState<Mission | null>(null);
-  const [previews, setPreviews] = useState<string[]>([]);
+  const [mission, setMission] = useState<Mission | null>(cloudinaryMissionFallback as Mission);
+  const [previews, setPreviews] = useState<string[]>(
+    cloudinaryMissionArchive.slice(0, 6).map((x) => x.thumbnail_url || x.media_url)
+  );
 
   useEffect(() => {
     const load = async () => {

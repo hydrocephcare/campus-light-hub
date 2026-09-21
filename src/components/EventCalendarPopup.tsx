@@ -23,7 +23,7 @@ interface Event {
 }
 
 export const EventCalendarPopup = () => {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<Event[]>(() => [...(semesterCalendar2026 as any), ...(staticEvents as any)].sort((a, b) => a.event_date.localeCompare(b.event_date)));
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
   const [isOpen, setIsOpen] = useState(false);
   const [hasFetched, setHasFetched] = useState(false);

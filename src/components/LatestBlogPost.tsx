@@ -4,7 +4,7 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Quote, ArrowRight, Calendar } from "lucide-react";
 import { Link } from "react-router-dom";
-import { mergePublishedBlogPosts } from "@/data/blogPosts";
+import { builtInBlogPosts, mergePublishedBlogPosts } from "@/data/blogPosts";
 
 interface BlogPost {
   id: string;
@@ -21,8 +21,8 @@ interface BlogPost {
 }
 
 export const LatestBlogPost = () => {
-  const [post, setPost] = useState<BlogPost | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [post, setPost] = useState<BlogPost | null>((builtInBlogPosts[0] as BlogPost) || null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchLatestPost();

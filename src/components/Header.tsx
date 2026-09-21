@@ -80,16 +80,16 @@ export const Header = () => {
   return (
     <>
       <header className="bg-background/95 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 shadow-sm fixed left-0 right-0 top-0 z-50 border-b border-border">
-        <div className="container mx-auto px-4">
-          <div className="flex h-16 items-center gap-3">
-            <Link to="/" className="group flex min-w-0 shrink items-center gap-2.5">
+        <div className="mx-auto w-full max-w-[1440px] px-4 md:px-6">
+          <div className="flex h-[72px] items-center gap-4">
+            <Link to="/" className="group flex min-w-0 shrink-0 items-center gap-3">
               <img
                 alt={branding.site_name}
-                className="h-9 w-9 flex-shrink-0 object-contain transition-transform group-hover:scale-105 md:h-11 md:w-11"
+                className="h-10 w-10 flex-shrink-0 object-contain transition-transform group-hover:scale-105 md:h-12 md:w-12"
                 src={branding.logo_url}
               />
-              <div className="min-w-0 max-w-[160px] lg:max-w-[120px] 2xl:max-w-[200px]">
-                <div className="truncate whitespace-nowrap font-serif text-sm font-bold leading-tight text-foreground transition-colors group-hover:text-primary md:text-base">
+              <div className="min-w-0 max-w-[210px]">
+                <div className="truncate whitespace-nowrap font-serif text-base font-bold leading-tight text-foreground transition-colors group-hover:text-primary md:text-lg">
                   {branding.site_name}
                 </div>
                 <div className="hidden truncate whitespace-nowrap text-[11px] italic leading-tight text-muted-foreground 2xl:block">
@@ -98,34 +98,44 @@ export const Header = () => {
               </div>
             </Link>
 
-            <nav className="hidden min-w-0 flex-1 flex-nowrap items-center justify-center overflow-hidden lg:flex">
+            <nav className="hidden min-w-0 flex-1 items-center justify-center gap-1 xl:flex">
               {navItems.map((item) => (
                 <Link
                   key={item.to}
                   to={item.to}
                   className={cn(
-                    "whitespace-nowrap rounded-lg px-2 py-2 text-[13px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground 2xl:px-3 2xl:text-sm",
-                    isActive(item.to) && "bg-accent text-accent-foreground",
-                    item.highlight && "bg-accent text-accent-foreground font-semibold"
+                    "whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors hover:bg-muted",
+                    isActive(item.to) && "bg-primary text-primary-foreground hover:bg-primary",
+                    item.highlight && !isActive(item.to) && "bg-primary text-primary-foreground hover:bg-primary/90"
                   )}
                 >
                   {item.label}
                 </Link>
               ))}
-              {navGroups.map((group) =>
-                group.items.map((item) => (
-                  <Link
-                    key={item.to}
-                    to={item.to}
-                    className={cn(
-                      "whitespace-nowrap rounded-lg px-2 py-2 text-[13px] font-medium transition-colors hover:bg-accent hover:text-accent-foreground 2xl:px-3 2xl:text-sm",
-                      isActive(item.to) && "bg-accent text-accent-foreground"
-                    )}
-                  >
-                    {item.label}
-                  </Link>
-                ))
-              )}
+              {navGroups.map((group) => (
+                <div key={group.label} className="group/nav relative">
+                  <button className="flex items-center gap-1 whitespace-nowrap rounded-full px-3 py-2 text-sm font-medium transition-colors hover:bg-muted">
+                    {group.label}<ChevronDown className="h-3.5 w-3.5" />
+                  </button>
+                  <div className="invisible absolute left-1/2 top-full z-[80] w-64 -translate-x-1/2 translate-y-2 rounded-2xl border border-border bg-card p-2 opacity-0 shadow-2xl transition-all group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100">
+                    {group.items.map((item) => {
+                      const Icon = item.icon;
+                      return (
+                        <Link key={item.to} to={item.to} className={cn(
+                          "flex items-start gap-3 rounded-xl px-3 py-2.5 transition-colors hover:bg-muted",
+                          isActive(item.to) && "bg-primary/10 text-primary"
+                        )}>
+                          <Icon className="mt-0.5 h-4 w-4 shrink-0" />
+                          <span className="min-w-0">
+                            <span className="block text-sm font-semibold">{item.label}</span>
+                            <span className="block truncate text-xs text-muted-foreground">{item.desc}</span>
+                          </span>
+                        </Link>
+                      );
+                    })}
+                  </div>
+                </div>
+              ))}
             </nav>
 
             <div className="ml-auto flex flex-shrink-0 items-center gap-1.5">
@@ -258,7 +268,7 @@ export const Header = () => {
         </div>
       </aside>
 
-      <div className="h-16" />
+      <div className="h-[72px]" />
     </>
   );
 };

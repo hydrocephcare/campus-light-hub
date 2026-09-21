@@ -2,6 +2,7 @@ import ariseShinePost from "./arise-shine-it-is-your-season-to-shine.json";
 import glorySermonPost from "./manifestation-of-the-glory-of-god.json";
 import sermonPost from "./manifesting-the-presence-of-the-lord.json";
 import welcomePost from "./welcome-to-mku-cu.json";
+import restoringHopePost from "./restoring-hope-in-a-hopeless-generation.json";
 
 export interface PublishedBlogPost {
   id: string;
@@ -18,6 +19,12 @@ export interface PublishedBlogPost {
 }
 
 export const builtInBlogPosts: PublishedBlogPost[] = [
+  {
+    ...restoringHopePost,
+    id: `built-in:${restoringHopePost.slug}`,
+    created_at: restoringHopePost.published_at,
+    is_published: true,
+  },
   {
     ...ariseShinePost,
     id: `built-in:${ariseShinePost.slug}`,

@@ -18,8 +18,8 @@ interface Sermon {
 }
 
 export const LatestSermons = () => {
-  const [sermons, setSermons] = useState<Sermon[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [sermons, setSermons] = useState<Sermon[]>(staticSermons.slice(0, 3));
+  const [loading, setLoading] = useState(false);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const { data: branding } = useSiteSetting("branding", { youtube_live_url: "https://www.youtube.com/live/2nKqPUZFPCE" });
 

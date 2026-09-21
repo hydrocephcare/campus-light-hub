@@ -10,11 +10,11 @@ const colorMap: Record<string, string> = {
 };
 
 const defaultActions = [
-  { icon: "Users", title: "Join Us", description: "Become a member", color: "bg-crimson", link: "/contact" },
+  { icon: "Users", title: "Join Us", description: "Become part of MKU CU", color: "bg-crimson", link: "/visitors" },
   { icon: "Calendar", title: "Events", description: "View calendar", color: "bg-navy", link: "/events" },
   { icon: "BookOpen", title: "Bible Study", description: "Study groups", color: "bg-gold", link: "/about" },
-  { icon: "Heart", title: "Serve", description: "Volunteer today", color: "bg-crimson", link: "/contact" },
-  { icon: "MessageCircle", title: "Prayer", description: "Request prayer", color: "bg-navy", link: "/contact" },
+  { icon: "Heart", title: "Serve", description: "Volunteer today", color: "bg-crimson", link: "/volunteer" },
+  { icon: "MessageCircle", title: "Prayer", description: "Request prayer", color: "bg-navy", link: "/contact#prayer" },
   { icon: "MapPin", title: "Visit", description: "Find us", color: "bg-gold", link: "/contact" },
 ];
 

@@ -22,9 +22,8 @@ const defaultBranding = {
 const defaultContact = { whatsapp: COMMUNITY_LINK, phone: "+254 115 475 543", email: "mkucuthika@gmail.com", location: "Mount Kenya University, Thika Campus", map_link: "" };
 const defaultSocial = [
   { platform: "Facebook", link: "https://facebook.com/MKUCUTHIKA", handle: "MKU CU THIKA" },
-  { platform: "YouTube", link: "https://www.youtube.com/@mkucuthikatv", handle: "MKU CU" },
-  { platform: "Instagram", link: "https://instagram.com/mkucu", handle: "@mkucu" },
-  { platform: "Twitter", link: "https://twitter.com/mkucu", handle: "@mkucu" },
+  { platform: "YouTube", link: "https://www.youtube.com/@mkucuthikatv", handle: "MKU CU Thika TV" },
+  { platform: "Twitter", link: "https://x.com/MkucuThika", handle: "@MkucuThika" },
 ];
 
 export const Footer = () => {

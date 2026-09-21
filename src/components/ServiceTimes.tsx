@@ -16,9 +16,16 @@ interface ScheduleItem {
 // Days that typically have main fellowship or service (prioritize these)
 const fellowshipDays = ["Sunday", "Wednesday", "Friday", "Saturday"];
 
+const fallbackServices: ScheduleItem[] = [
+  { id: "fallback-sunday", day_of_week: "Sunday", activity_name: "Sunday Service", start_time: "07:00", end_time: "12:45", venue: "Auditorium / CC Hall as announced", activity_type: "service" },
+  { id: "fallback-monday", day_of_week: "Monday", activity_name: "Home Fellowship", start_time: "19:00", end_time: null, venue: "Various fellowship areas", activity_type: "fellowship" },
+  { id: "fallback-thursday", day_of_week: "Thursday", activity_name: "Joint Fellowship", start_time: "19:00", end_time: null, venue: "CC Hall", activity_type: "fellowship" },
+  { id: "fallback-friday", day_of_week: "Friday", activity_name: "Kesha / Special Programme", start_time: "21:00", end_time: null, venue: "CC Hall", activity_type: "fellowship" },
+];
+
 export const ServiceTimes = () => {
-  const [services, setServices] = useState<ScheduleItem[]>([]);
-  const [loading, setLoading] = useState(true);
+  const [services, setServices] = useState<ScheduleItem[]>(fallbackServices);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchServices();
@@ -60,9 +67,10 @@ export const ServiceTimes = () => {
         })
         .slice(0, 4); // Limit to 4 services
 
-      setServices(sortedServices);
+      setServices(sortedServices.length > 0 ? sortedServices : fallbackServices);
     } catch (error) {
       console.error("Error fetching services:", error);
+      setServices(fallbackServices);
     } finally {
       setLoading(false);
     }

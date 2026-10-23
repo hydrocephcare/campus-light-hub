@@ -34,7 +34,7 @@ type Tab = "photos" | "videos";
 const MissionDetail = () => {
   const { slug } = useParams<{ slug: string }>();
   const fallbackMatches = slug === cloudinaryMissionFallback.slug;
-  const [mission, setMission] = useState<Mission | null>(fallbackMatches ? (cloudinaryMissionFallback as Mission) : null);
+  const [mission, setMission] = useState<Mission | null>(fallbackMatches ? (cloudinaryMissionFallback as unknown as Mission) : null);
   const [media, setMedia] = useState<MissionMedia[]>(fallbackMatches ? (cloudinaryMissionArchive as unknown as MissionMedia[]) : []);
   const [loading, setLoading] = useState(!fallbackMatches);
   const [tab, setTab] = useState<Tab>("photos");
@@ -64,14 +64,14 @@ const MissionDetail = () => {
           .maybeSingle();
         if (!m) {
           if (fallbackMatches) {
-            setMission(cloudinaryMissionFallback as Mission);
+            setMission(cloudinaryMissionFallback as unknown as Mission);
             setMedia(cloudinaryMissionArchive as unknown as MissionMedia[]);
           } else {
             setMission(null);
           }
           return;
         }
-        setMission(m as Mission);
+        setMission(m as unknown as Mission);
         const { data: mm } = await (supabase as any)
           .from("mission_media")
           .select("id,mission_id,media_url,media_type,thumbnail_url,caption,sort_order")
@@ -81,7 +81,7 @@ const MissionDetail = () => {
       } catch (e) {
         console.error("Failed to load mission; using Cloudinary fallback where available.", e);
         if (fallbackMatches) {
-          setMission(cloudinaryMissionFallback as Mission);
+          setMission(cloudinaryMissionFallback as unknown as Mission);
           setMedia(cloudinaryMissionArchive as unknown as MissionMedia[]);
         }
       } finally {

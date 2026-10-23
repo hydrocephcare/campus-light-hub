@@ -14,6 +14,7 @@ export default {
     },
     extend: {
       colors: {
+        forest: "hsl(var(--forest))",
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

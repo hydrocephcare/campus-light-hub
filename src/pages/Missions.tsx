@@ -18,7 +18,7 @@ interface MissionWithCounts extends Mission {
 
 const Missions = () => {
   const fallbackMission: MissionWithCounts = {
-    ...(cloudinaryMissionFallback as Mission),
+    ...(cloudinaryMissionFallback as unknown as Mission),
     photoCount: cloudinaryMissionArchive.length,
     videoCount: 0,
   };
@@ -46,7 +46,7 @@ const Missions = () => {
         ]);
 
         const media = (mediaRows || []) as { mission_id: string; media_type: string; media_url: string; thumbnail_url: string | null }[];
-        const withCounts: MissionWithCounts[] = ((missionRows || []) as Mission[]).map((m) => {
+        const withCounts: MissionWithCounts[] = ((missionRows || []) as unknown as Mission[]).map((m) => {
           const own = media.filter((x) => x.mission_id === m.id);
           return {
             ...m,

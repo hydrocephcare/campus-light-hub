@@ -9,7 +9,7 @@ import { ArrowRight, Globe2, MapPin } from "lucide-react";
 import { cloudinaryMissionArchive, cloudinaryMissionFallback } from "@/data/cloudinaryMissionArchive";
 
 export const MissionsPreview = () => {
-  const [mission, setMission] = useState<Mission | null>(cloudinaryMissionFallback as Mission);
+  const [mission, setMission] = useState<Mission | null>(cloudinaryMissionFallback as unknown as Mission);
   const [previews, setPreviews] = useState<string[]>(
     cloudinaryMissionArchive.slice(0, 6).map((x) => x.thumbnail_url || x.media_url)
   );
@@ -22,7 +22,7 @@ export const MissionsPreview = () => {
         .order("is_featured", { ascending: false })
         .order("start_date", { ascending: false })
         .limit(1);
-      const m = (data || [])[0] as Mission | undefined;
+      const m = (data || [])[0] as unknown as Mission | undefined;
       if (!m) return;
       setMission(m);
       const { data: media } = await (supabase as any)

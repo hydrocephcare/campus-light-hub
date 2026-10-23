@@ -26,22 +26,22 @@ const Index = () => (
   <div className="min-h-screen bg-background overflow-x-hidden">
     <SEOHead page="home" />
     <Header />
-    <main className="[&>*+*]:border-t [&>*+*]:border-border/40">
+    <main className="[&_section]:!bg-transparent">
       <EnhancedHeroSlider />
-      <AnimatedSection animation="fade-up"><QuickActions /></AnimatedSection>
-      <AnimatedSection animation="fade-up"><ServiceTimes /></AnimatedSection>
-      <AnimatedSection animation="fade-up"><UpcomingEvents /></AnimatedSection>
-      <AnimatedSection animation="fade-up"><ChurchAnnouncements /></AnimatedSection>
-      <AnimatedSection animation="fade-up"><DailyVerse /></AnimatedSection>
+      <QuickActions />
+      <div className="bg-background"><AnimatedSection animation="fade-up"><ServiceTimes /></AnimatedSection></div>
+      <div className="bg-muted/50"><AnimatedSection animation="fade-up"><UpcomingEvents /></AnimatedSection></div>
+      <div className="bg-background"><AnimatedSection animation="fade-up"><ChurchAnnouncements /></AnimatedSection></div>
+      <div className="bg-gradient-to-b from-primary/10 to-background"><AnimatedSection animation="fade-up"><DailyVerse /></AnimatedSection></div>
       <Suspense fallback={<SectionFallback />}>
-        <AnimatedSection animation="fade-up"><LatestSermons /></AnimatedSection>
-        <AnimatedSection animation="fade-up"><PhotoGalleryPreview /></AnimatedSection>
-        <AnimatedSection animation="fade-up"><MinistriesPreview /></AnimatedSection>
-        <AnimatedSection animation="fade-up"><VisionMission /></AnimatedSection>
-        <AnimatedSection animation="fade-up"><LeadersPreview /></AnimatedSection>
-        <AnimatedSection animation="fade-up"><PrayerRequestForm /></AnimatedSection>
-        <AnimatedSection animation="fade-up"><GivingSection /></AnimatedSection>
-        <AnimatedSection animation="fade-up"><ConnectWithUs /></AnimatedSection>
+        <div className="bg-background"><AnimatedSection animation="fade-up"><LatestSermons /></AnimatedSection></div>
+        <div className="bg-muted/50"><AnimatedSection animation="fade-up"><PhotoGalleryPreview /></AnimatedSection></div>
+        <div className="bg-background"><AnimatedSection animation="fade-up"><MinistriesPreview /></AnimatedSection></div>
+        <div className="bg-muted/50"><AnimatedSection animation="fade-up"><VisionMission /></AnimatedSection></div>
+        <div className="bg-background"><AnimatedSection animation="fade-up"><LeadersPreview /></AnimatedSection></div>
+        <div className="bg-muted/50"><AnimatedSection animation="fade-up"><PrayerRequestForm /></AnimatedSection></div>
+        <div className="bg-background"><AnimatedSection animation="fade-up"><GivingSection /></AnimatedSection></div>
+        <div className="bg-muted/50"><AnimatedSection animation="fade-up"><ConnectWithUs /></AnimatedSection></div>
       </Suspense>
     </main>
     <Footer />

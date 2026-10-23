@@ -28,7 +28,7 @@ const Index = () => (
     <Header />
     <main className="[&_section]:!bg-transparent">
       <EnhancedHeroSlider />
-      <div className="[&_section]:!bg-forest"><QuickActions /></div>
+      <QuickActions />
       <div className="bg-background"><AnimatedSection animation="fade-up"><ServiceTimes /></AnimatedSection></div>
       <div className="bg-muted/50"><AnimatedSection animation="fade-up"><UpcomingEvents /></AnimatedSection></div>
       <div className="bg-background"><AnimatedSection animation="fade-up"><ChurchAnnouncements /></AnimatedSection></div>

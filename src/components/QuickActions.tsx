@@ -16,7 +16,7 @@ export const QuickActions = () => {
   const { data: actions } = useSiteSetting("quick_actions", defaultActions);
 
   return (
-    <section className="relative bg-forest py-10 md:py-14">
+    <div className="relative bg-forest py-10 md:py-14">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.35),transparent_70%)] pointer-events-none" />
       <div className="container relative mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-6 md:mb-8 max-w-6xl mx-auto">
@@ -46,6 +46,6 @@ export const QuickActions = () => {
           })}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

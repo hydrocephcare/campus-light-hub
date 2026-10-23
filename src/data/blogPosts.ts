@@ -30,6 +30,7 @@ export const builtInBlogPosts: PublishedBlogPost[] = [
     id: `built-in:${ariseShinePost.slug}`,
     featured_image: ariseShinePost.featured_image,
     created_at: ariseShinePost.published_at,
+    is_published: true,
   },
   {
     ...glorySermonPost,

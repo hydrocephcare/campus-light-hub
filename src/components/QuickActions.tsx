@@ -16,30 +16,36 @@ export const QuickActions = () => {
   const { data: actions } = useSiteSetting("quick_actions", defaultActions);
 
   return (
-    <section className="py-6 md:py-10">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 gap-3 md:grid-cols-3 lg:grid-cols-6">
+    <div className="relative bg-forest py-10 md:py-14">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.35),transparent_70%)] pointer-events-none" />
+      <div className="container relative mx-auto px-4">
+        <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-2 mb-6 md:mb-8 max-w-6xl mx-auto">
+          <div>
+            <p className="text-xs uppercase tracking-[0.25em] text-secondary font-semibold mb-2">Get involved</p>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-primary-foreground">Find your place at MKU CU</h2>
+          </div>
+          <p className="text-sm text-primary-foreground/70 max-w-sm">Worship, study, serve and pray with students across campus.</p>
+        </div>
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3 max-w-6xl mx-auto">
           {actions.map((action: any, index: number) => {
             const Icon = iconMap[action.icon] || Star;
             return (
               <a
                 key={index}
                 href={action.link}
-                className="group flex flex-col rounded-3xl border border-border bg-card p-5 transition hover:-translate-y-1 hover:border-primary/40 hover:shadow-lg"
+                className="group relative rounded-xl border border-primary-foreground/10 bg-primary-foreground/5 p-4 md:p-5 backdrop-blur-sm transition-all duration-300 hover:bg-primary-foreground/10 hover:border-secondary/50 hover:-translate-y-0.5"
               >
-                <div className="mb-6 flex items-start justify-between">
-                  <span className="flex h-11 w-11 items-center justify-center rounded-full bg-primary/10 text-primary transition group-hover:bg-primary group-hover:text-primary-foreground">
-                    <Icon className="h-5 w-5" />
-                  </span>
-                  <ArrowUpRight className="h-4 w-4 text-muted-foreground transition group-hover:text-primary" />
+                <ArrowUpRight className="absolute right-3 top-3 w-4 h-4 text-primary-foreground/30 group-hover:text-secondary transition-colors" />
+                <div className="w-10 h-10 rounded-lg bg-primary/40 text-secondary flex items-center justify-center mb-3">
+                  <Icon className="w-5 h-5" />
                 </div>
-                <h3 className="font-sans text-base font-semibold tracking-normal text-foreground">{action.title}</h3>
-                <p className="mt-0.5 text-sm text-muted-foreground">{action.description}</p>
+                <h3 className="font-semibold text-sm md:text-base text-primary-foreground">{action.title}</h3>
+                <p className="text-xs text-primary-foreground/60 mt-0.5">{action.description}</p>
               </a>
             );
           })}
         </div>
       </div>
-    </section>
+    </div>
   );
 };

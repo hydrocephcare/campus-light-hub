@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { BookOpen, Heart } from "lucide-react";
+import { Card } from "@/components/ui/card";
 import { useSiteSetting } from "@/hooks/useSiteSettings";
 
 interface DailyContent { verse: string; reference: string; encouragement: string; }
@@ -19,17 +21,22 @@ export const DailyVerse = () => {
   }, [dailyContent]);
 
   return (
-    <section className="px-4 py-6 md:py-10">
-      <div className="container mx-auto">
-        <div className="relative overflow-hidden rounded-[2rem] bg-primary px-6 py-14 text-center text-primary-foreground md:px-16 md:py-24">
-          <div className="pointer-events-none absolute -left-24 -top-24 h-72 w-72 rounded-full bg-secondary/15 blur-3xl" />
-          <p className="relative text-xs font-semibold uppercase tracking-[0.25em] text-secondary">Verse of the day</p>
-          <blockquote className="relative mx-auto mt-6 max-w-3xl font-serif text-2xl leading-snug md:text-4xl">
-            “{todayContent.verse}”
+    <section className="py-8 md:py-12 bg-gradient-to-br from-background via-muted/20 to-background">
+      <div className="container mx-auto px-4">
+        <Card className="max-w-4xl mx-auto p-6 md:p-8 shadow-lg border-primary/20 bg-card">
+          <div className="flex items-center gap-3 mb-6">
+            <div className="p-2 bg-primary/10 rounded-full"><BookOpen className="w-5 h-5 md:w-6 md:h-6 text-primary" /></div>
+            <h2 className="text-lg md:text-xl font-serif font-bold">Verse of the Day</h2>
+          </div>
+          <blockquote className="mb-6">
+            <p className="text-base md:text-xl font-serif leading-relaxed mb-3 italic">"{todayContent.verse}"</p>
+            <footer className="text-right"><cite className="text-sm md:text-base font-semibold text-primary not-italic">— {todayContent.reference}</cite></footer>
           </blockquote>
-          <cite className="relative mt-6 block text-sm font-semibold not-italic tracking-wide text-secondary">{todayContent.reference}</cite>
-          <p className="relative mx-auto mt-6 max-w-md text-sm text-primary-foreground/70">{todayContent.encouragement}</p>
-        </div>
+          <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg border-l-4 border-accent">
+            <Heart className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
+            <p className="text-sm md:text-base italic text-foreground">{todayContent.encouragement}</p>
+          </div>
+        </Card>
       </div>
     </section>
   );

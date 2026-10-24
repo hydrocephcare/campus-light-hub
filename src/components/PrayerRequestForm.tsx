@@ -75,14 +75,15 @@ export const PrayerRequestForm = () => {
   };
 
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-br from-primary/5 via-background to-secondary/10">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8 md:mb-12">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
-              <MessageCircleHeart className="w-5 h-5" />
-              <span className="text-sm md:text-base font-semibold">Prayer Request</span>
-            </div>
+            <p className="mb-4 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
+              <span className="h-px w-8 bg-secondary" />
+              <MessageCircleHeart className="h-4 w-4" /> Prayer request
+              <span className="h-px w-8 bg-secondary" />
+            </p>
             <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-4 text-foreground">
               We're Here to Pray With You
             </h2>
@@ -92,7 +93,7 @@ export const PrayerRequestForm = () => {
           </div>
 
           {/* Encouraging Prompt Carousel */}
-          <Card className="p-4 mb-6 bg-gradient-to-r from-primary/10 to-accent/10 border-primary/20 transition-all duration-500">
+          <Card className="mb-6 rounded-2xl border-secondary/30 bg-secondary/10 p-4 transition-all duration-500">
             <div className="flex items-center gap-3">
               <div className="p-2 bg-primary/20 rounded-full">
                 <Sparkles className="w-5 h-5 text-primary animate-pulse" />
@@ -108,7 +109,7 @@ export const PrayerRequestForm = () => {
             </div>
           </Card>
 
-          <Card className="p-6 md:p-8 border-border bg-card shadow-lg">
+          <Card className="rounded-3xl border-border bg-card p-6 shadow-2xl md:p-10">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>

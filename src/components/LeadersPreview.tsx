@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { supabase } from "@/integrations/supabase/client";
 import { Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
+import { SectionHeading } from "@/components/SectionHeading";
 
 interface Leader {
   id: string;
@@ -15,7 +14,6 @@ interface Leader {
 
 export const LeadersPreview = () => {
   const [leaders, setLeaders] = useState<Leader[]>([]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const fetchLeaders = async () => {
@@ -41,14 +39,11 @@ export const LeadersPreview = () => {
         setLeaders(data || []);
       } catch (error) {
         console.error('Error fetching leaders:', error);
-      } finally {
-        setLoading(false);
       }
     };
     fetchLeaders();
   }, []);
 
-  if (loading) return null;
   const previewLeaders = leaders.length > 0 ? leaders : [
     { id: "chair", name: "2026/27 Leadership", position: "Chairperson", image_url: null },
     { id: "vice-chair", name: "2026/27 Leadership", position: "Vice Chairperson", image_url: null },
@@ -57,43 +52,46 @@ export const LeadersPreview = () => {
   ];
 
   return (
-    <section className="py-12 md:py-16 bg-gradient-to-br from-muted/30 via-background to-muted/20">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8 md:mb-10">
-          <div className="inline-flex items-center gap-1.5 bg-primary/10 text-primary px-3 py-1 rounded-full text-xs font-medium mb-3">
-            <Users className="w-3.5 h-3.5" />
-            Leadership
-          </div>
-          <h2 className="text-2xl md:text-4xl font-serif font-bold text-foreground">Meet Our Leaders</h2>
-        </div>
+        <SectionHeading
+          eyebrow="Leadership"
+          title="Meet our leaders"
+          description="The servants walking with you this spiritual year."
+          action={
+            <Link
+              to="/leadership"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+            >
+              View all leaders <ArrowRight className="h-4 w-4" />
+            </Link>
+          }
+        />
 
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-2 md:grid-cols-4 md:gap-6">
-          {previewLeaders.map((leader) => (
-            <Card key={leader.id} className="group overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 bg-card">
-              <div className="aspect-[4/5] overflow-hidden bg-muted">
+        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
+          {previewLeaders.map((leader, i) => (
+            <article key={leader.id} className={`group ${i % 2 === 1 ? "md:mt-10" : ""}`}>
+              <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-muted ring-1 ring-border/60">
                 {leader.image_url ? (
-                  <img src={leader.image_url} alt={leader.name} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" loading="lazy" decoding="async" />
+                  <img
+                    src={leader.image_url}
+                    alt={leader.name}
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                  />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-primary/20 to-secondary/20">
-                    <Users className="w-10 h-10 md:w-14 md:h-14 text-primary/40" />
+                  <div className="flex h-full w-full items-center justify-center bg-gradient-to-br from-primary/30 to-secondary/20">
+                    <Users className="h-12 w-12 text-secondary/60" />
                   </div>
                 )}
+                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent p-4 pt-16 md:p-5 md:pt-20">
+                  <h3 className="line-clamp-1 font-serif text-base font-semibold text-white md:text-xl">{leader.name}</h3>
+                  <p className="line-clamp-1 text-xs font-medium uppercase tracking-wider text-secondary md:text-sm">{leader.position}</p>
+                </div>
               </div>
-              <CardContent className="p-3 md:p-4 text-center">
-                <h3 className="font-bold text-sm md:text-lg text-foreground line-clamp-1">{leader.name}</h3>
-                <p className="text-xs md:text-sm text-muted-foreground line-clamp-1">{leader.position}</p>
-              </CardContent>
-            </Card>
+            </article>
           ))}
-        </div>
-
-        <div className="text-center mt-8">
-          <Link to="/leadership">
-            <Button variant="outline" className="group border-primary/50 text-primary hover:bg-primary hover:text-primary-foreground">
-              View All Leaders
-              <ArrowRight className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-          </Link>
         </div>
       </div>
     </section>

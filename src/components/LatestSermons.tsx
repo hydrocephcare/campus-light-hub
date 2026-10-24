@@ -1,10 +1,9 @@
-import { Youtube, Play } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Youtube, Play, ArrowUpRight } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { staticSermons } from "@/data/staticSiteContent";
 import { useSiteSetting } from "@/hooks/useSiteSettings";
+import { SectionHeading } from "@/components/SectionHeading";
 
 interface Sermon {
   id: string;
@@ -19,7 +18,6 @@ interface Sermon {
 
 export const LatestSermons = () => {
   const [sermons, setSermons] = useState<Sermon[]>(staticSermons.slice(0, 3));
-  const [loading, setLoading] = useState(false);
   const [activeVideo, setActiveVideo] = useState<string | null>(null);
   const { data: branding } = useSiteSetting("branding", { youtube_live_url: "https://www.youtube.com/live/2nKqPUZFPCE" });
 
@@ -36,8 +34,6 @@ export const LatestSermons = () => {
       } catch (error) {
         console.error("Error fetching sermons:", error);
         setSermons(staticSermons.slice(0, 3));
-      } finally {
-        setLoading(false);
       }
     };
     fetchSermons();
@@ -47,83 +43,95 @@ export const LatestSermons = () => {
     setActiveVideo(youtubeId);
   }, []);
 
-  if (loading) return null;
   if (sermons.length === 0) return null;
 
+  const [featured, ...rest] = sermons;
+
+  const player = (sermon: Sermon, big: boolean) => (
+    <div className="relative aspect-video overflow-hidden bg-muted">
+      {activeVideo === sermon.youtube_id ? (
+        <iframe
+          width="100%"
+          height="100%"
+          src={`https://www.youtube-nocookie.com/embed/${sermon.youtube_id}?autoplay=1&rel=0&playsinline=1`}
+          title={sermon.title}
+          loading="lazy"
+          referrerPolicy="strict-origin-when-cross-origin"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowFullScreen
+          className="absolute inset-0"
+        />
+      ) : (
+        <button
+          onClick={() => handlePlay(sermon.youtube_id)}
+          className="group/thumb absolute inset-0 h-full w-full cursor-pointer"
+          aria-label={`Play ${sermon.title}`}
+        >
+          <img
+            src={`https://img.youtube.com/vi/${sermon.youtube_id}/hqdefault.jpg`}
+            alt={sermon.title}
+            className="h-full w-full object-cover transition-transform duration-700 group-hover/thumb:scale-105"
+            loading="lazy"
+            decoding="async"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-black/10" />
+          <span
+            className={`absolute left-1/2 top-1/2 flex -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-secondary text-secondary-foreground shadow-xl transition-transform group-hover/thumb:scale-110 ${big ? "h-20 w-20" : "h-12 w-12"}`}
+          >
+            <Play className={`ml-0.5 ${big ? "h-8 w-8" : "h-5 w-5"}`} />
+          </span>
+        </button>
+      )}
+    </div>
+  );
+
+  const dateOf = (d: string | null) =>
+    d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : null;
+
   return (
-    <section className="py-12 md:py-20 bg-background">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-8 md:mb-12">
-          <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-3 py-2 md:px-4 rounded-full mb-3 md:mb-4">
-            <Youtube className="w-4 h-4 md:w-5 md:h-5" />
-            <span className="text-sm md:text-base font-semibold">Latest from MKU CU</span>
-          </div>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-serif font-bold mb-3 md:mb-4">
-            Watch & Be Blessed
-          </h2>
-          <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto px-4">
-            Catch up on recent messages and testimonies from our services
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Latest messages"
+          title="Watch & be blessed"
+          description="Catch up on recent messages and testimonies from our services."
+          action={
+            <a
+              href={branding.youtube_live_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+            >
+              <Youtube className="h-4 w-4" /> YouTube channel <ArrowUpRight className="h-4 w-4" />
+            </a>
+          }
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8 max-w-6xl mx-auto">
-          {sermons.map((sermon) => (
-            <Card key={sermon.id} className="overflow-hidden group hover:shadow-xl transition-all duration-300">
-              <div className="relative overflow-hidden aspect-video bg-muted">
-                {activeVideo === sermon.youtube_id ? (
-                  <iframe
-                    width="100%"
-                    height="100%"
-                    src={`https://www.youtube-nocookie.com/embed/${sermon.youtube_id}?autoplay=1&rel=0&playsinline=1`}
-                    title={sermon.title}
-                    loading="lazy"
-                    referrerPolicy="strict-origin-when-cross-origin"
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                    allowFullScreen
-                    className="absolute inset-0"
-                  />
-                ) : (
-                  <button
-                    onClick={() => handlePlay(sermon.youtube_id)}
-                    className="absolute inset-0 w-full h-full cursor-pointer group/thumb"
-                    aria-label={`Play ${sermon.title}`}
-                  >
-                    <img
-                      src={`https://img.youtube.com/vi/${sermon.youtube_id}/hqdefault.jpg`}
-                      alt={sermon.title}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                    <div className="absolute inset-0 bg-black/30 group-hover/thumb:bg-black/40 transition-colors flex items-center justify-center">
-                      <div className="w-14 h-14 md:w-16 md:h-16 bg-accent rounded-full flex items-center justify-center shadow-lg group-hover/thumb:scale-110 transition-transform">
-                        <Play className="w-6 h-6 md:w-7 md:h-7 text-white ml-1" />
-                      </div>
-                    </div>
-                  </button>
-                )}
-              </div>
-              <div className="p-4 md:p-5">
-                <h3 className="font-bold text-base md:text-lg mb-2 line-clamp-2">{sermon.title}</h3>
-                {sermon.speaker && <p className="text-xs md:text-sm text-muted-foreground mb-1">{sermon.speaker}</p>}
-                {sermon.sermon_date && (
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(sermon.sermon_date).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+        <div className="grid gap-6 lg:grid-cols-12">
+          <article className="overflow-hidden rounded-3xl border border-border bg-card lg:col-span-8">
+            {player(featured, true)}
+            <div className="p-6 md:p-8">
+              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-secondary">Latest</p>
+              <h3 className="font-serif text-2xl font-semibold leading-snug md:text-3xl">{featured.title}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">
+                {[featured.speaker, dateOf(featured.sermon_date)].filter(Boolean).join(" · ")}
+              </p>
+            </div>
+          </article>
+
+          <div className="flex flex-col gap-6 lg:col-span-4">
+            {rest.map((sermon) => (
+              <article key={sermon.id} className="flex-1 overflow-hidden rounded-3xl border border-border bg-card transition hover:border-primary/50">
+                {player(sermon, false)}
+                <div className="p-5">
+                  <h3 className="line-clamp-2 font-sans text-base font-semibold tracking-normal">{sermon.title}</h3>
+                  <p className="mt-1 text-xs text-muted-foreground">
+                    {[sermon.speaker, dateOf(sermon.sermon_date)].filter(Boolean).join(" · ")}
                   </p>
-                )}
-              </div>
-            </Card>
-          ))}
-        </div>
-
-        <div className="text-center mt-8 md:mt-12 space-y-3 md:space-y-4">
-          <a href={branding.youtube_live_url} target="_blank" rel="noopener noreferrer">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-white text-sm md:text-base w-full md:w-auto">
-              <Youtube className="w-4 h-4 md:w-5 md:h-5 mr-2" />
-              Visit Our YouTube Channel
-            </Button>
-          </a>
-          <p className="text-xs md:text-sm text-muted-foreground">Videos play directly on this site; subscribe on YouTube to get upload alerts.</p>
+                </div>
+              </article>
+            ))}
+          </div>
         </div>
       </div>
     </section>

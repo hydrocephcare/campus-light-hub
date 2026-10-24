@@ -1,5 +1,6 @@
 import { Heart, CreditCard, Info, BookOpen, Church, HandHeart, Sparkles } from "lucide-react";
 import { Card } from "@/components/ui/card";
+import { SectionHeading } from "@/components/SectionHeading";
 import { useSiteSetting } from "@/hooks/useSiteSettings";
 import titheImage from "@/assets/tithe-giving.jpg";
 
@@ -9,22 +10,15 @@ export const GivingSection = () => {
   const { data: giving } = useSiteSetting("giving_info", defaultGiving);
 
   return (
-    <section className="py-16 md:py-24 bg-gradient-to-b from-muted/30 via-background to-muted/30">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-5 py-2 rounded-full mb-6">
-              <Heart className="w-4 h-4 fill-primary" />
-              <span className="font-semibold text-sm uppercase tracking-wide">Tithes & Offerings</span>
-            </div>
-            <h2 className="text-3xl md:text-5xl font-serif font-bold mb-6 text-foreground">Give Cheerfully</h2>
-            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto mb-8">Your generous contributions help us spread the Gospel, support our community, and continue God's work at MKU Christian Union.</p>
-            <Card className="max-w-3xl mx-auto bg-gradient-to-br from-secondary/10 to-primary/5 border-secondary/20 p-6 md:p-10">
-              <BookOpen className="w-8 h-8 text-secondary mx-auto mb-4" />
-              <blockquote className="text-lg md:text-xl italic text-foreground leading-relaxed mb-3">"{giving.scripture}"</blockquote>
-              <cite className="text-secondary font-semibold">— {giving.scripture_ref}</cite>
-            </Card>
-          </div>
+          <SectionHeading eyebrow="Tithes & offerings" title="Give cheerfully" description="Your generous contributions help us spread the Gospel, support our community, and continue God's work at MKU Christian Union." />
+          <figure className="relative mb-12 overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-secondary/15 via-card to-card p-8 md:p-12">
+            <BookOpen className="mb-4 h-8 w-8 text-secondary" />
+            <blockquote className="max-w-4xl font-serif text-xl italic leading-relaxed text-foreground md:text-3xl">“{giving.scripture}”</blockquote>
+            <figcaption className="mt-4 text-sm font-semibold uppercase tracking-widest text-secondary">{giving.scripture_ref}</figcaption>
+          </figure>
 
           <div className="grid lg:grid-cols-2 gap-8 items-start">
             <div className="space-y-4">
@@ -50,7 +44,7 @@ export const GivingSection = () => {
             </div>
 
             <div>
-              <Card className="p-6 md:p-8 border-border bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
+              <Card className="rounded-3xl p-6 md:p-8 border-secondary/30 bg-gradient-to-br from-primary/25 to-card">
                 <div className="flex items-start gap-4 mb-6">
                   <div className="w-14 h-14 bg-green-600 rounded-full flex items-center justify-center flex-shrink-0"><CreditCard className="w-7 h-7 text-white" /></div>
                   <div><h3 className="text-xl md:text-2xl font-bold text-foreground mb-1">Pay via M-Pesa Till</h3><p className="text-muted-foreground text-sm">Quick, secure, and convenient giving</p></div>
@@ -58,7 +52,7 @@ export const GivingSection = () => {
                 <div className="bg-card rounded-xl p-5 border-2 border-green-200 dark:border-green-800 mb-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-muted-foreground font-medium">Till Number:</span>
-                    <span className="text-3xl md:text-4xl font-bold text-green-600">{giving.till_number}</span>
+                    <span className="font-serif text-3xl md:text-5xl font-semibold text-secondary">{giving.till_number}</span>
                   </div>
                   <p className="text-xs text-muted-foreground text-center">{giving.till_name}</p>
                 </div>

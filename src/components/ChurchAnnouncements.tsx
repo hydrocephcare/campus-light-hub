@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { staticAnnouncements } from "@/data/staticSiteContent";
 import { optimizedImageUrl } from "@/lib/imageUrl";
+import { SectionHeading } from "@/components/SectionHeading";
 
 interface Announcement {
   id: string;
@@ -115,24 +116,16 @@ export const ChurchAnnouncements = () => {
   if (announcements.length === 0) return null;
 
   return (
-    <section className="py-10 bg-muted/30">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 bg-accent/10 text-accent px-3 py-1.5 rounded-full mb-3">
-            <Megaphone className="w-4 h-4" />
-            <span className="text-xs font-semibold">Stay Updated</span>
-          </div>
-          <h2 className="text-2xl md:text-3xl font-serif font-bold text-foreground">
-            Church Announcements
-          </h2>
-        </div>
+        <SectionHeading eyebrow="Stay updated" title="Announcements" description="What is happening in the Christian Union right now." />
 
-        <div className="max-w-3xl mx-auto space-y-3">
+        <div className="grid items-start gap-5 lg:grid-cols-2">
           {announcements.map((announcement) => (
             <Card
               key={announcement.id}
-              className={`overflow-hidden hover:shadow-md transition-all duration-300 border-l-4 ${
-                announcement.priority === "high" ? "border-l-accent" : "border-l-primary"
+              className={`overflow-hidden rounded-3xl border-t-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+                announcement.priority === "high" ? "border-t-accent" : "border-t-secondary"
               } bg-card`}
             >
               {announcement.image_url && (

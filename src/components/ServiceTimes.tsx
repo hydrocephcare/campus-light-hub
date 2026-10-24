@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Clock, MapPin, Calendar, Loader2 } from "lucide-react";
+import { Clock, MapPin, ArrowRight } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { SectionHeading } from "@/components/SectionHeading";
 
 interface ScheduleItem {
   id: string;
@@ -25,7 +25,6 @@ const fallbackServices: ScheduleItem[] = [
 
 export const ServiceTimes = () => {
   const [services, setServices] = useState<ScheduleItem[]>(fallbackServices);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchServices();
@@ -50,10 +49,7 @@ export const ServiceTimes = () => {
         // Only keep one activity per day, prioritizing fellowship/service types
         if (!dayMap.has(item.day_of_week)) {
           dayMap.set(item.day_of_week, item);
-        } else if (
-          item.activity_type === "fellowship" ||
-          item.activity_type === "service"
-        ) {
+        } else if (item.activity_type === "fellowship" || item.activity_type === "service") {
           dayMap.set(item.day_of_week, item);
         }
       });
@@ -71,8 +67,6 @@ export const ServiceTimes = () => {
     } catch (error) {
       console.error("Error fetching services:", error);
       setServices(fallbackServices);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -90,90 +84,60 @@ export const ServiceTimes = () => {
     return format12h(start);
   };
 
-  if (loading) {
-    return (
-      <section className="py-16 bg-gradient-to-br from-card via-muted/20 to-card">
-        <div className="container mx-auto px-4 flex justify-center">
-          <Loader2 className="w-8 h-8 animate-spin text-primary" />
-        </div>
-      </section>
-    );
-  }
-
   if (services.length === 0) {
     return null;
   }
 
   return (
-    <section className="py-16 bg-gradient-to-br from-card via-muted/20 to-card">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <div className="inline-flex items-center gap-2 bg-secondary/10 text-secondary px-4 py-2 rounded-full text-sm font-medium mb-4">
-            <Clock className="w-4 h-4" />
-            Service Times
-          </div>
-          <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">
-            Join Us For Worship
-          </h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            We gather together to worship, learn, and grow in faith. Everyone is welcome!
-          </p>
-        </div>
-
-        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {services.map((service, index) => {
-            const isHighlight = service.day_of_week === "Sunday";
-            return (
-              <Card
-                key={service.id}
-                className={`border-0 shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden ${
-                  isHighlight
-                    ? "bg-gradient-to-br from-primary to-primary/80 text-primary-foreground"
-                    : "bg-card"
-                }`}
+        <div className="grid gap-10 lg:grid-cols-12 lg:gap-16">
+          <div className="lg:col-span-4">
+            <div className="lg:sticky lg:top-28">
+              <SectionHeading
+                eyebrow="Service times"
+                title="Come as you are. Leave renewed."
+                description="We gather to worship, learn and grow in faith. Everyone is welcome."
+                className="mb-6 md:mb-6"
+              />
+              <a
+                href="/visitors"
+                className="inline-flex items-center gap-2 rounded-full bg-secondary px-6 py-3 text-sm font-semibold text-secondary-foreground transition hover:bg-secondary/90"
               >
-                <CardContent className="p-6">
-                  <div
-                    className={`inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-medium mb-4 ${
-                      isHighlight
-                        ? "bg-white/20 text-white"
-                        : "bg-primary/10 text-primary"
-                    }`}
-                  >
-                    <Calendar className="w-3 h-3" />
-                    {service.day_of_week}
+                Plan your first visit <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          </div>
+
+          <ol className="divide-y divide-border overflow-hidden rounded-3xl border border-border bg-card/60 lg:col-span-8">
+            {services.map((service) => {
+              const isHighlight = service.day_of_week === "Sunday";
+              return (
+                <li
+                  key={service.id}
+                  className={`grid grid-cols-[5.5rem_1fr] items-center gap-4 p-5 transition-colors md:grid-cols-[8rem_1fr_auto] md:p-7 ${isHighlight ? "bg-primary/20" : "hover:bg-muted/40"}`}
+                >
+                  <div>
+                    <p className={`font-serif text-xl font-semibold md:text-3xl ${isHighlight ? "text-secondary" : "text-foreground"}`}>
+                      {service.day_of_week.slice(0, 3)}
+                    </p>
+                    <p className="text-xs uppercase tracking-widest text-muted-foreground">{service.day_of_week}</p>
                   </div>
-
-                  <h3
-                    className={`font-serif font-bold text-xl mb-3 ${
-                      isHighlight ? "text-white" : "text-foreground"
-                    }`}
-                  >
-                    {service.activity_name}
-                  </h3>
-
-                  <div className="space-y-2">
-                    <div
-                      className={`flex items-center gap-2 text-sm ${
-                        isHighlight ? "text-white/90" : "text-muted-foreground"
-                      }`}
-                    >
-                      <Clock className="w-4 h-4" />
-                      {formatTime(service.start_time, service.end_time)}
-                    </div>
-                    <div
-                      className={`flex items-center gap-2 text-sm ${
-                        isHighlight ? "text-white/90" : "text-muted-foreground"
-                      }`}
-                    >
-                      <MapPin className="w-4 h-4" />
+                  <div>
+                    <h3 className="font-sans text-base font-semibold tracking-normal text-foreground md:text-xl">{service.activity_name}</h3>
+                    <p className="mt-1 flex items-center gap-1.5 text-sm text-muted-foreground">
+                      <MapPin className="h-3.5 w-3.5 text-primary" />
                       {service.venue}
-                    </div>
+                    </p>
                   </div>
-                </CardContent>
-              </Card>
-            );
-          })}
+                  <p className="col-span-2 flex items-center gap-2 text-sm font-semibold text-foreground md:col-span-1 md:justify-end">
+                    <Clock className="h-4 w-4 text-secondary" />
+                    {formatTime(service.start_time, service.end_time)}
+                  </p>
+                </li>
+              );
+            })}
+          </ol>
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Camera, ArrowRight } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ArrowRight } from "lucide-react";
+import { SectionHeading } from "@/components/SectionHeading";
 import { supabase } from "@/integrations/supabase/client";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { resolveMediaKind } from "@/lib/mediaKind";
@@ -39,41 +39,47 @@ export const PhotoGalleryPreview = () => {
 
   if (photos.length === 0) return null;
 
-  return (
-    <section className="py-12 md:py-16">
-      <div className="container mx-auto px-4">
-        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <div className="mb-2 inline-flex items-center gap-2 rounded-full bg-secondary/10 px-3 py-1 text-secondary">
-              <Camera className="h-4 w-4" />
-              <span className="text-xs font-semibold uppercase tracking-wide">Photo gallery</span>
-            </div>
-            <h2 className="text-3xl font-serif font-bold text-foreground md:text-4xl">Moments With Us</h2>
-            <p className="mt-2 max-w-xl text-sm leading-6 text-muted-foreground">
-              Photos from services, fellowships, missions and campus life.
-            </p>
-          </div>
-          <Link to="/photos">
-            <Button variant="outline" className="gap-2">
-              All photos <ArrowRight className="h-4 w-4" />
-            </Button>
-          </Link>
-        </div>
+  // Bento mosaic: a few tiles are larger so the grid has rhythm instead of 8 identical squares.
+  const tileSpan = (i: number) =>
+    i === 0 ? "col-span-2 row-span-2" : i === 5 ? "md:col-span-2" : i === 3 ? "row-span-2" : "";
 
-        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:gap-3 lg:grid-cols-4">
-          {photos.map((photo) => (
+  return (
+    <section className="py-16 md:py-24">
+      <div className="container mx-auto px-4">
+        <SectionHeading
+          eyebrow="Photo gallery"
+          title="Moments with us"
+          description="Photos from services, fellowships, missions and campus life."
+          action={
+            <Link
+              to="/photos"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+            >
+              All photos <ArrowRight className="h-4 w-4" />
+            </Link>
+          }
+        />
+
+        <div className="grid auto-rows-[9rem] grid-flow-dense grid-cols-2 gap-3 sm:auto-rows-[11rem] md:grid-cols-4 md:gap-4">
+          {photos.map((photo, i) => (
             <Link
               key={photo.id}
               to="/photos"
-              className="group aspect-[4/5] overflow-hidden rounded-lg bg-muted ring-1 ring-border/60 transition-all hover:ring-2 hover:ring-primary/50"
+              className={`group relative overflow-hidden rounded-2xl bg-muted ring-1 ring-border/60 ${tileSpan(i)}`}
             >
               <img
-                src={optimizedImageUrl(photo.media_url, { width: 600, quality: 72 })}
+                src={optimizedImageUrl(photo.media_url, { width: i === 0 ? 1000 : 600, quality: 72 })}
                 alt={photo.title || "MKU Christian Union photo"}
-                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
                 loading="lazy"
                 decoding="async"
               />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              {photo.title && (
+                <p className="absolute bottom-3 left-4 right-4 line-clamp-1 text-sm font-medium text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  {photo.title}
+                </p>
+              )}
             </Link>
           ))}
         </div>

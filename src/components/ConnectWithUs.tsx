@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { MessageCircle, Phone, Mail, MapPin, Facebook, Twitter, Youtube, Instagram, ExternalLink, Navigation, Map } from "lucide-react";
 import { useSiteSetting } from "@/hooks/useSiteSettings";
 import { COMMUNITY_LINK } from "@/lib/communityLink";
+import { SectionHeading } from "@/components/SectionHeading";
 
 
 const platformIcons: Record<string, React.ElementType> = { Facebook, Twitter, YouTube: Youtube, Instagram };
@@ -59,21 +60,17 @@ export const ConnectWithUs = () => {
 
   return (
     <>
-      <section className="py-16 bg-gradient-to-br from-primary/5 via-background to-secondary/5">
+      <section className="py-16 md:py-24">
         <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full text-sm font-medium mb-4"><MessageCircle className="w-4 h-4" />Get In Touch</div>
-            <h2 className="text-3xl md:text-4xl font-serif font-bold text-foreground mb-4">Connect With Us</h2>
-            <p className="text-muted-foreground max-w-2xl mx-auto">We'd love to hear from you. Reach out through any of these channels.</p>
-          </div>
+          <SectionHeading eyebrow="Get in touch" title="Connect with us" description="We'd love to hear from you. Reach out through any of these channels." />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
             {contactMethods.map((method, index) => (
-              <Card key={index} className="group border-0 shadow-md hover:shadow-lg transition-all duration-300 bg-card overflow-hidden">
-                <CardContent className="p-6 text-center">
-                  <div className={`w-14 h-14 rounded-full ${method.color} flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform`}><method.icon className="w-7 h-7" /></div>
-                  <h3 className="font-semibold text-foreground mb-1">{method.title}</h3>
+              <Card key={index} className="group overflow-hidden rounded-3xl border border-border bg-card transition-all duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-2xl">
+                <CardContent className="p-7 text-left">
+                  <div className={`w-14 h-14 rounded-2xl ${method.color} flex items-center justify-center mb-6 group-hover:scale-110 transition-transform`}><method.icon className="w-7 h-7" /></div>
+                  <h3 className="font-serif text-xl font-semibold text-foreground mb-1">{method.title}</h3>
                   <p className="text-sm text-muted-foreground mb-4">{method.description}</p>
-                  <Button size="sm" variant="outline" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+                  <Button size="sm" variant="outline" className="w-full rounded-full group-hover:bg-secondary group-hover:text-secondary-foreground group-hover:border-secondary transition-colors"
                     onClick={() => method.type === "location" ? (setShowLocationModal(true), getUserLocation()) : window.open(method.link, "_blank")}>
                     {method.action}<ExternalLink className="w-3 h-3 ml-2" />
                   </Button>

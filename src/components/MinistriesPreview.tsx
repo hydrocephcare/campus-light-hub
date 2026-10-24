@@ -1,10 +1,9 @@
-import { Users, Heart, Music, BookOpen, Globe, HandHeart } from "lucide-react";
-import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Users, Heart, Music, BookOpen, Globe, HandHeart, ArrowUpRight, ArrowRight } from "lucide-react";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { staticMinistries } from "@/data/staticSiteContent";
+import { SectionHeading } from "@/components/SectionHeading";
 
 interface Ministry {
   id: string;
@@ -26,36 +25,8 @@ const iconMap: { [key: string]: any } = {
   Users: Users,
 };
 
-const defaultMinistries = [
-  {
-    icon: Music,
-    name: "Praise & Worship",
-    description: "Join our talented worship team in leading the congregation",
-    members: "45+ members",
-  },
-  {
-    icon: BookOpen,
-    name: "Sunday School",
-    description: "Teach and nurture children in the ways of the Lord",
-    members: "30+ teachers",
-  },
-  {
-    icon: Globe,
-    name: "Missions",
-    description: "Reach the unreached with the Gospel message",
-    members: "25+ missionaries",
-  },
-  {
-    icon: HandHeart,
-    name: "Outreach",
-    description: "Serve our community through practical acts of love",
-    members: "50+ volunteers",
-  },
-];
-
 export const MinistriesPreview = () => {
   const [ministries, setMinistries] = useState<Ministry[]>(staticMinistries.slice(0, 4) as Ministry[]);
-  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     fetchMinistries();
@@ -63,141 +34,75 @@ export const MinistriesPreview = () => {
 
   const fetchMinistries = async () => {
     try {
-      const { data, error } = await supabase
-        .from("ministries")
-        .select("*")
-        .eq("is_active", true)
-        .limit(4);
-
+      const { data, error } = await supabase.from("ministries").select("*").eq("is_active", true).limit(4);
       if (error) throw error;
-      setMinistries(data && data.length > 0 ? data : staticMinistries.slice(0, 4));
+      setMinistries(data && data.length > 0 ? data : (staticMinistries.slice(0, 4) as Ministry[]));
     } catch (error) {
       console.error("Error fetching ministries:", error);
-      setMinistries(staticMinistries.slice(0, 4));
-    } finally {
-      setLoading(false);
+      setMinistries(staticMinistries.slice(0, 4) as Ministry[]);
     }
   };
 
-  const getIcon = (iconName: string | null) => {
-    if (iconName && iconMap[iconName]) {
-      return iconMap[iconName];
-    }
-    return Heart;
-  };
+  const getIcon = (iconName: string | null) => (iconName && iconMap[iconName] ? iconMap[iconName] : Heart);
 
-  // Show default ministries if none from database
-  const displayMinistries = ministries.length > 0 ? ministries : null;
-
-  if (loading) {
-    return (
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center">Loading ministries...</div>
-        </div>
-      </section>
-    );
-  }
-
-  if (!displayMinistries) {
-    return (
-      <section className="py-16 bg-background">
-        <div className="container mx-auto px-4">
-          <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-foreground">
-              Get Involved in Ministry
-            </h2>
-            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-              Discover your calling and make a difference through one of our active ministries
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-            {defaultMinistries.map((ministry, index) => (
-              <Card
-                key={index}
-                className="p-6 hover:shadow-lg transition-all duration-300 group border-border bg-card"
-              >
-                <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <ministry.icon className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-card-foreground">{ministry.name}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{ministry.description}</p>
-                <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Users className="w-4 h-4" />
-                  <span>{ministry.members}</span>
-                </div>
-              </Card>
-            ))}
-          </div>
-
-          <div className="text-center">
-            <Link to="/ministries">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-                Explore All Ministries
-              </Button>
-            </Link>
-          </div>
-        </div>
-      </section>
-    );
-  }
+  if (ministries.length === 0) return null;
 
   return (
-    <section className="py-16 bg-background">
+    <section className="py-16 md:py-24">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-serif font-bold mb-4 text-foreground">
-            Get Involved in Ministry
-          </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
-            Discover your calling and make a difference through one of our active ministries
-          </p>
-        </div>
+        <SectionHeading
+          eyebrow="Ministries"
+          title="Find where you fit"
+          description="Discover your calling and make a difference through one of our active ministries."
+          action={
+            <Link
+              to="/ministries"
+              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+            >
+              All ministries <ArrowRight className="h-4 w-4" />
+            </Link>
+          }
+        />
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
-          {displayMinistries.map((ministry) => {
-            const IconComponent = getIcon(ministry.icon);
+        <div className="grid gap-5 md:grid-cols-2">
+          {ministries.map((ministry, index) => {
+            const Icon = getIcon(ministry.icon);
             return (
-              <Card
+              <article
                 key={ministry.id}
-                className="p-6 hover:shadow-lg transition-all duration-300 group border-border bg-card"
+                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-2xl md:p-9"
               >
-                <div className="w-14 h-14 bg-primary/10 rounded-full flex items-center justify-center mb-4 group-hover:bg-primary/20 transition-colors">
-                  <IconComponent className="w-7 h-7 text-primary" />
-                </div>
-                <h3 className="text-xl font-bold mb-2 text-card-foreground">{ministry.name}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{ministry.description}</p>
-                {ministry.meeting_schedule && (
-                  <p className="text-xs text-muted-foreground mb-2">{ministry.meeting_schedule}</p>
-                )}
-                {ministry.leader_name && (
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Users className="w-4 h-4" />
-                    <span>Led by {ministry.leader_name}</span>
+                <span className="pointer-events-none absolute -right-2 -top-6 select-none font-serif text-[9rem] font-semibold leading-none text-foreground/[0.04] transition-colors group-hover:text-secondary/10">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <span className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/30 text-secondary transition-colors group-hover:bg-secondary group-hover:text-secondary-foreground">
+                  <Icon className="h-7 w-7" />
+                </span>
+                <h3 className="relative font-serif text-2xl font-semibold text-card-foreground md:text-3xl">{ministry.name}</h3>
+                <p className="relative mt-3 flex-1 text-base leading-relaxed text-muted-foreground">{ministry.description}</p>
+                {(ministry.meeting_schedule || ministry.leader_name) && (
+                  <div className="relative mt-5 flex flex-wrap gap-2 text-xs text-muted-foreground">
+                    {ministry.meeting_schedule && <span className="rounded-full border border-border px-3 py-1">{ministry.meeting_schedule}</span>}
+                    {ministry.leader_name && (
+                      <span className="inline-flex items-center gap-1.5 rounded-full border border-border px-3 py-1">
+                        <Users className="h-3 w-3" /> {ministry.leader_name}
+                      </span>
+                    )}
                   </div>
                 )}
-                <a
-                  href={ministry.joining_link}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="block mt-4"
-                >
-                  <Button size="sm" variant="outline" className="w-full">
-                    Join Ministry
-                  </Button>
-                </a>
-              </Card>
+                {ministry.joining_link && (
+                  <a
+                    href={ministry.joining_link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="relative mt-6 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-secondary underline-offset-8 hover:underline"
+                  >
+                    Join this ministry <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                )}
+              </article>
             );
           })}
-        </div>
-
-        <div className="text-center">
-          <Link to="/ministries">
-            <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground">
-              Explore All Ministries
-            </Button>
-          </Link>
         </div>
       </div>
     </section>

@@ -1,5 +1,5 @@
 import { lazy, Suspense } from "react";
-import { EnhancedHeroSlider } from "@/components/EnhancedHeroSlider";
+import { HomeHero } from "@/components/HomeHero";
 import { DailyVerse } from "@/components/DailyVerse";
 import { QuickActions } from "@/components/QuickActions";
 import { ServiceTimes } from "@/components/ServiceTimes";
@@ -23,25 +23,25 @@ const ConnectWithUs = lazy(() => import("@/components/ConnectWithUs").then(m => 
 const SectionFallback = () => <div className="py-8" />;
 
 const Index = () => (
-  <div className="min-h-screen bg-background overflow-x-hidden">
+  <div className="min-h-screen overflow-x-hidden bg-background">
     <SEOHead page="home" />
     <Header />
-    <main className="dark bg-background text-foreground [&_section]:!bg-transparent">
-      <EnhancedHeroSlider />
+    <main className="[&_section]:!bg-transparent [&_section.keep-bg]:!bg-primary">
+      <HomeHero />
       <QuickActions />
-      <div className="bg-background"><AnimatedSection animation="fade-up"><ServiceTimes /></AnimatedSection></div>
-      <div className="bg-card/60 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.12),transparent_60%)]"><AnimatedSection animation="fade-up"><UpcomingEvents /></AnimatedSection></div>
-      <div className="bg-background"><AnimatedSection animation="fade-up"><ChurchAnnouncements /></AnimatedSection></div>
-      <div className="bg-gradient-to-b from-primary/25 via-background to-background"><AnimatedSection animation="fade-up"><DailyVerse /></AnimatedSection></div>
+      <AnimatedSection animation="fade-up"><UpcomingEvents /></AnimatedSection>
+      <AnimatedSection animation="fade-up"><ServiceTimes /></AnimatedSection>
+      <AnimatedSection animation="fade-up"><DailyVerse /></AnimatedSection>
+      <AnimatedSection animation="fade-up"><ChurchAnnouncements /></AnimatedSection>
       <Suspense fallback={<SectionFallback />}>
-        <div className="bg-background"><AnimatedSection animation="fade-up"><LatestSermons /></AnimatedSection></div>
-        <div className="bg-card/60 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.12),transparent_60%)]"><AnimatedSection animation="fade-up"><PhotoGalleryPreview /></AnimatedSection></div>
-        <div className="bg-background"><AnimatedSection animation="fade-up"><MinistriesPreview /></AnimatedSection></div>
-        <div className="bg-card/60 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.12),transparent_60%)]"><AnimatedSection animation="fade-up"><VisionMission /></AnimatedSection></div>
-        <div className="bg-background"><AnimatedSection animation="fade-up"><LeadersPreview /></AnimatedSection></div>
-        <div className="bg-card/60 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.12),transparent_60%)]"><AnimatedSection animation="fade-up"><PrayerRequestForm /></AnimatedSection></div>
-        <div className="bg-background"><AnimatedSection animation="fade-up"><GivingSection /></AnimatedSection></div>
-        <div className="bg-card/60 bg-[radial-gradient(ellipse_at_top,hsl(var(--primary)/0.12),transparent_60%)]"><AnimatedSection animation="fade-up"><ConnectWithUs /></AnimatedSection></div>
+        <AnimatedSection animation="fade-up"><LatestSermons /></AnimatedSection>
+        <AnimatedSection animation="fade-up"><PhotoGalleryPreview /></AnimatedSection>
+        <AnimatedSection animation="fade-up"><MinistriesPreview /></AnimatedSection>
+        <AnimatedSection animation="fade-up"><VisionMission /></AnimatedSection>
+        <AnimatedSection animation="fade-up"><LeadersPreview /></AnimatedSection>
+        <AnimatedSection animation="fade-up"><PrayerRequestForm /></AnimatedSection>
+        <AnimatedSection animation="fade-up"><GivingSection /></AnimatedSection>
+        <AnimatedSection animation="fade-up"><ConnectWithUs /></AnimatedSection>
       </Suspense>
     </main>
     <Footer />

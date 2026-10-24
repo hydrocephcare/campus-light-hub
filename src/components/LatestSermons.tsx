@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { staticSermons } from "@/data/staticSiteContent";
 import { useSiteSetting } from "@/hooks/useSiteSettings";
 import { SectionHeading } from "@/components/SectionHeading";
+import { ScrollRow } from "@/components/ScrollRow";
 
 interface Sermon {
   id: string;
@@ -44,8 +45,6 @@ export const LatestSermons = () => {
   }, []);
 
   if (sermons.length === 0) return null;
-
-  const [featured, ...rest] = sermons;
 
   const player = (sermon: Sermon, big: boolean) => (
     <div className="relative aspect-video overflow-hidden bg-muted">
@@ -89,7 +88,7 @@ export const LatestSermons = () => {
     d ? new Date(d).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" }) : null;
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <SectionHeading
           eyebrow="Latest messages"
@@ -107,32 +106,17 @@ export const LatestSermons = () => {
           }
         />
 
-        <div className="grid gap-6 lg:grid-cols-12">
-          <article className="overflow-hidden rounded-3xl border border-border bg-card lg:col-span-8">
-            {player(featured, true)}
-            <div className="p-6 md:p-8">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-[0.2em] text-secondary">Latest</p>
-              <h3 className="font-serif text-2xl font-semibold leading-snug md:text-3xl">{featured.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">
-                {[featured.speaker, dateOf(featured.sermon_date)].filter(Boolean).join(" · ")}
-              </p>
-            </div>
-          </article>
-
-          <div className="flex flex-col gap-6 lg:col-span-4">
-            {rest.map((sermon) => (
-              <article key={sermon.id} className="flex-1 overflow-hidden rounded-3xl border border-border bg-card transition hover:border-primary/50">
-                {player(sermon, false)}
-                <div className="p-5">
-                  <h3 className="line-clamp-2 font-sans text-base font-semibold tracking-normal">{sermon.title}</h3>
-                  <p className="mt-1 text-xs text-muted-foreground">
-                    {[sermon.speaker, dateOf(sermon.sermon_date)].filter(Boolean).join(" · ")}
-                  </p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </div>
+        <ScrollRow>
+          {sermons.map((sermon) => (
+            <article key={sermon.id} className="w-[88%] shrink-0 snap-start overflow-hidden rounded-3xl border border-border bg-card transition hover:border-secondary/50 sm:w-[26rem]">
+              {player(sermon, false)}
+              <div className="p-5">
+                <h3 className="line-clamp-2 font-serif text-xl font-semibold leading-snug">{sermon.title}</h3>
+                <p className="mt-2 text-xs text-muted-foreground">{[sermon.speaker, dateOf(sermon.sermon_date)].filter(Boolean).join(" · ")}</p>
+              </div>
+            </article>
+          ))}
+        </ScrollRow>
       </div>
     </section>
   );

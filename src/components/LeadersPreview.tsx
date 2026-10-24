@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Users, ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { SectionHeading } from "@/components/SectionHeading";
+import { ScrollRow } from "@/components/ScrollRow";
 
 interface Leader {
   id: string;
@@ -52,7 +53,7 @@ export const LeadersPreview = () => {
   ];
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <SectionHeading
           eyebrow="Leadership"
@@ -68,9 +69,9 @@ export const LeadersPreview = () => {
           }
         />
 
-        <div className="grid grid-cols-2 gap-4 md:grid-cols-4 md:gap-6">
-          {previewLeaders.map((leader, i) => (
-            <article key={leader.id} className={`group ${i % 2 === 1 ? "md:mt-10" : ""}`}>
+        <ScrollRow>
+          {previewLeaders.map((leader) => (
+            <article key={leader.id} className="group w-[62%] shrink-0 snap-start sm:w-64">
               <div className="relative aspect-[3/4] overflow-hidden rounded-3xl bg-muted ring-1 ring-border/60">
                 {leader.image_url ? (
                   <img
@@ -92,7 +93,7 @@ export const LeadersPreview = () => {
               </div>
             </article>
           ))}
-        </div>
+        </ScrollRow>
       </div>
     </section>
   );

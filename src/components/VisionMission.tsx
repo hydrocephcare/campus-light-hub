@@ -17,7 +17,7 @@ export const VisionMission = () => {
   ]);
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <SectionHeading eyebrow="Who we are" title="Vision, mission & values" />
 

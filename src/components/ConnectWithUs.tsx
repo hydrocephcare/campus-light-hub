@@ -60,7 +60,7 @@ export const ConnectWithUs = () => {
 
   return (
     <>
-      <section className="py-16 md:py-24">
+      <section className="py-12 md:py-16">
         <div className="container mx-auto px-4">
           <SectionHeading eyebrow="Get in touch" title="Connect with us" description="We'd love to hear from you. Reach out through any of these channels." />
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">

@@ -7,6 +7,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { staticAnnouncements } from "@/data/staticSiteContent";
 import { optimizedImageUrl } from "@/lib/imageUrl";
 import { SectionHeading } from "@/components/SectionHeading";
+import { ScrollRow } from "@/components/ScrollRow";
 
 interface Announcement {
   id: string;
@@ -116,15 +117,15 @@ export const ChurchAnnouncements = () => {
   if (announcements.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <SectionHeading eyebrow="Stay updated" title="Announcements" description="What is happening in the Christian Union right now." />
 
-        <div className="grid items-start gap-5 lg:grid-cols-2">
+        <ScrollRow className="items-stretch">
           {announcements.map((announcement) => (
             <Card
               key={announcement.id}
-              className={`overflow-hidden rounded-3xl border-t-4 transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
+              className={`w-[88%] shrink-0 snap-start overflow-hidden rounded-3xl border-t-4 sm:w-[26rem] transition-all duration-300 hover:-translate-y-1 hover:shadow-2xl ${
                 announcement.priority === "high" ? "border-t-accent" : "border-t-secondary"
               } bg-card`}
             >
@@ -217,7 +218,7 @@ export const ChurchAnnouncements = () => {
               </div>
             </Card>
           ))}
-        </div>
+        </ScrollRow>
       </div>
     </section>
   );

@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Link } from "react-router-dom";
 import { staticMinistries } from "@/data/staticSiteContent";
 import { SectionHeading } from "@/components/SectionHeading";
+import { ScrollRow } from "@/components/ScrollRow";
 
 interface Ministry {
   id: string;
@@ -48,7 +49,7 @@ export const MinistriesPreview = () => {
   if (ministries.length === 0) return null;
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <SectionHeading
           eyebrow="Ministries"
@@ -64,13 +65,13 @@ export const MinistriesPreview = () => {
           }
         />
 
-        <div className="grid gap-5 md:grid-cols-2">
+        <ScrollRow>
           {ministries.map((ministry, index) => {
             const Icon = getIcon(ministry.icon);
             return (
               <article
                 key={ministry.id}
-                className="group relative flex flex-col overflow-hidden rounded-3xl border border-border bg-card p-7 transition duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-2xl md:p-9"
+                className="group relative flex w-[86%] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-border bg-card p-7 sm:w-[24rem] transition duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-2xl md:p-9"
               >
                 <span className="pointer-events-none absolute -right-2 -top-6 select-none font-serif text-[9rem] font-semibold leading-none text-foreground/[0.04] transition-colors group-hover:text-secondary/10">
                   {String(index + 1).padStart(2, "0")}
@@ -103,7 +104,7 @@ export const MinistriesPreview = () => {
               </article>
             );
           })}
-        </div>
+        </ScrollRow>
       </div>
     </section>
   );

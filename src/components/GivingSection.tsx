@@ -10,7 +10,7 @@ export const GivingSection = () => {
   const { data: giving } = useSiteSetting("giving_info", defaultGiving);
 
   return (
-    <section className="py-16 md:py-24">
+    <section className="py-12 md:py-16">
       <div className="container mx-auto px-4">
         <div className="max-w-6xl mx-auto">
           <SectionHeading eyebrow="Tithes & offerings" title="Give cheerfully" description="Your generous contributions help us spread the Gospel, support our community, and continue God's work at MKU Christian Union." />

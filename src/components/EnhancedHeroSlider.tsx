@@ -165,52 +165,59 @@ export const EnhancedHeroSlider = () => {
     if (dx < 0) nextSlide(); else prevSlide();
   };
 
+  const linkProps = (link: string) => (isExternal(link) ? { target: "_blank", rel: "noopener noreferrer" } : {});
+  const pad = (n: number) => String(n).padStart(2, "0");
+
   return (
     <div
-      className="relative h-[85vh] sm:h-[80vh] md:h-[85vh] lg:h-[90vh] min-h-[500px] max-h-[900px] w-full overflow-hidden touch-pan-y select-none"
+      className="relative h-[88vh] min-h-[540px] max-h-[920px] w-full overflow-hidden touch-pan-y select-none pt-[72px]"
       onTouchStart={onTouchStart}
       onTouchEnd={onTouchEnd}
     >
       {slides.map((slide, index) => (
         <div
           key={slide.id}
-          className={`absolute inset-0 transition-opacity duration-1000 ${index === currentSlide ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+          aria-hidden={index !== currentSlide}
+          className={`absolute inset-0 transition-opacity duration-[1400ms] ease-in-out ${index === currentSlide ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         >
           <img
             src={optimizedImageUrl(slide.image_url, { width: index === currentSlide ? 1600 : 900, quality: 72 })}
             alt={slide.title}
-            className="absolute inset-0 w-full h-full object-cover"
+            className={`absolute inset-0 w-full h-full object-cover ${index === currentSlide ? "animate-hero-zoom" : ""}`}
             loading={index === 0 ? "eager" : "lazy"}
             decoding="async"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-black/75 via-black/60 to-black/40" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/55 to-black/20" />
+          <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-background to-transparent" />
 
-          <div className="relative h-full flex items-center justify-center text-center px-4">
-            <div className="max-w-5xl mx-auto">
-              <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-serif font-bold text-white mb-3 md:mb-5 leading-tight drop-shadow-lg">{slide.title}</h1>
-              {slide.subtitle && <p className="text-lg sm:text-xl md:text-2xl lg:text-3xl text-secondary mb-3 md:mb-5 font-semibold">{slide.subtitle}</p>}
-              {slide.verse && <p className="text-sm sm:text-base md:text-lg text-white/90 italic mb-2 max-w-3xl mx-auto leading-relaxed">{slide.verse}</p>}
-              {slide.verse_ref && <p className="text-xs sm:text-sm md:text-base text-secondary/80 mb-6 md:mb-8">{slide.verse_ref}</p>}
-
-              <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center w-full max-w-lg mx-auto">
-                {slide.cta1_text && slide.cta1_link && (
-                  <a href={slide.cta1_link} target={isExternal(slide.cta1_link) ? "_blank" : undefined} rel={isExternal(slide.cta1_link) ? "noopener noreferrer" : undefined} className="w-full sm:w-auto">
-                    <Button size="lg" className="bg-primary hover:bg-primary/90 text-primary-foreground font-semibold px-6 py-3 md:px-8 md:py-4 text-sm md:text-base shadow-lg w-full">{slide.cta1_text} →</Button>
-                  </a>
+          <div className="relative flex h-full items-center px-4 pb-20 md:pb-24">
+            <div className="container mx-auto">
+              <div key={index === currentSlide ? `on-${slide.id}` : slide.id} className={`max-w-2xl text-left ${index === currentSlide ? "animate-hero-text" : ""}`}>
+                <p className="mb-4 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
+                  <span className="h-px w-8 bg-secondary" />
+                  MKU Christian Union
+                </p>
+                <h1 className="mb-4 font-serif text-4xl font-semibold leading-[1.05] text-white drop-shadow-lg sm:text-5xl md:text-6xl lg:text-7xl">{slide.title}</h1>
+                {slide.subtitle && <p className="mb-5 text-lg font-medium text-secondary md:text-2xl">{slide.subtitle}</p>}
+                {slide.verse && (
+                  <p className="mb-7 max-w-xl border-l-2 border-secondary/70 pl-4 text-sm italic leading-relaxed text-white/85 md:text-base">
+                    {slide.verse}
+                    {slide.verse_ref && <span className="mt-1 block text-xs not-italic font-semibold tracking-wide text-secondary/90">{slide.verse_ref}</span>}
+                  </p>
                 )}
-                {slide.cta2_text && slide.cta2_link && (
-                  <a href={slide.cta2_link} target={isExternal(slide.cta2_link) ? "_blank" : undefined} rel={isExternal(slide.cta2_link) ? "noopener noreferrer" : undefined} className="w-full sm:w-auto">
-                    <Button size="lg" variant="outline" className="border-2 border-white bg-white/10 backdrop-blur-sm text-white hover:bg-white hover:text-foreground font-semibold px-6 py-3 md:px-8 md:py-4 text-sm md:text-base w-full">{slide.cta2_text} →</Button>
-                  </a>
-                )}
-              </div>
-
-              {index === currentSlide && (
-                <div className="mt-8 hidden animate-bounce flex-col items-center md:flex">
-                  <p className="mb-1 text-xs text-white/70 drop-shadow-lg">Scroll to explore</p>
-                  <ChevronDown className="h-6 w-6 text-white/70 drop-shadow-lg" />
+                <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+                  {slide.cta1_text && slide.cta1_link && (
+                    <a href={slide.cta1_link} {...linkProps(slide.cta1_link)}>
+                      <Button size="lg" className="rounded-full bg-secondary px-8 font-semibold text-secondary-foreground shadow-lg shadow-black/30 hover:bg-secondary/90">{slide.cta1_text} →</Button>
+                    </a>
+                  )}
+                  {slide.cta2_text && slide.cta2_link && (
+                    <a href={slide.cta2_link} {...linkProps(slide.cta2_link)} className="text-sm font-semibold text-white underline decoration-white/40 underline-offset-8 transition hover:decoration-secondary">
+                      {slide.cta2_text}
+                    </a>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
           </div>
         </div>
@@ -218,17 +225,28 @@ export const EnhancedHeroSlider = () => {
 
       {slides.length > 1 && (
         <>
-          <button onClick={prevSlide} className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all z-10" aria-label="Previous slide"><ChevronLeft className="w-6 h-6 text-white" /></button>
-          <button onClick={nextSlide} className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/20 hover:bg-white/30 backdrop-blur-sm transition-all z-10" aria-label="Next slide"><ChevronRight className="w-6 h-6 text-white" /></button>
-        </>
-      )}
+          <button onClick={prevSlide} className="hidden md:flex absolute left-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm border border-white/20 transition-all z-10" aria-label="Previous slide"><ChevronLeft className="w-6 h-6 text-white" /></button>
+          <button onClick={nextSlide} className="hidden md:flex absolute right-4 top-1/2 -translate-y-1/2 p-3 rounded-full bg-white/10 hover:bg-white/25 backdrop-blur-sm border border-white/20 transition-all z-10" aria-label="Next slide"><ChevronRight className="w-6 h-6 text-white" /></button>
 
-      {slides.length > 1 && (
-        <div className="absolute bottom-6 md:bottom-12 left-1/2 transform -translate-x-1/2 flex gap-2 md:gap-3 z-10">
-          {slides.map((_, index) => (
-            <button key={index} onClick={() => goToSlide(index)} className={`h-2 md:h-3 rounded-full transition-all ${index === currentSlide ? "bg-primary w-8 md:w-10" : "bg-white/50 w-2 md:w-3 hover:bg-white/70"}`} aria-label={`Go to slide ${index + 1}`} />
-          ))}
-        </div>
+          <div className="absolute bottom-6 md:bottom-10 inset-x-0 z-10">
+            <div className="container mx-auto flex items-center gap-4 px-4">
+              <span className="font-serif text-sm tabular-nums text-white/80">{pad(currentSlide + 1)} <span className="text-white/40">/ {pad(slides.length)}</span></span>
+              <div className="flex flex-1 max-w-md gap-2">
+                {slides.map((_, index) => (
+                  <button key={index} onClick={() => goToSlide(index)} className="group h-6 flex-1 flex items-center" aria-label={`Go to slide ${index + 1}`}>
+                    <span className="relative block h-[3px] w-full overflow-hidden rounded-full bg-white/25 transition-all group-hover:bg-white/40">
+                      <span
+                        key={index === currentSlide ? `p-${currentSlide}-${isAutoPlaying}` : "idle"}
+                        className={`absolute inset-y-0 left-0 rounded-full bg-secondary ${index < currentSlide ? "w-full" : index === currentSlide ? (isAutoPlaying ? "animate-hero-progress" : "w-full") : "w-0"}`}
+                      />
+                    </span>
+                  </button>
+                ))}
+              </div>
+              <ChevronDown className="ml-auto hidden h-5 w-5 animate-bounce text-white/60 md:block" aria-hidden />
+            </div>
+          </div>
+        </>
       )}
     </div>
   );

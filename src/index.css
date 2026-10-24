@@ -278,3 +278,23 @@ All colors MUST be HSL.
     opacity: 0.5;
   }
 }
+
+@keyframes heroZoom { from { transform: scale(1); } to { transform: scale(1.09); } }
+@keyframes heroText { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes heroProgress { from { width: 0%; } to { width: 100%; } }
+
+@layer utilities {
+  .animate-hero-zoom { animation: heroZoom 7s ease-out forwards; }
+  .animate-hero-text { animation: heroText 0.9s 0.15s cubic-bezier(0.22, 1, 0.36, 1) both; }
+  .animate-hero-progress { animation: heroProgress 5s linear forwards; }
+  .section-divider { height: 1px; background: linear-gradient(90deg, transparent, hsl(var(--secondary) / 0.45), transparent); }
+}
+
+html { scroll-behavior: smooth; }
+::selection { background: hsl(var(--secondary) / 0.4); }
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-hero-zoom, .animate-hero-text, .animate-hero-progress { animation: none; }
+  .animate-hero-progress { width: 100%; }
+  html { scroll-behavior: auto; }
+}

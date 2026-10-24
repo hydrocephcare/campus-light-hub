@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { BookOpen, Heart } from "lucide-react";
-import { Card } from "@/components/ui/card";
+import { Heart } from "lucide-react";
+import { optimizedImageUrl } from "@/lib/imageUrl";
+import { COMMUNITY_IMAGES } from "@/lib/siteImages";
 import { useSiteSetting } from "@/hooks/useSiteSettings";
 
 interface DailyContent { verse: string; reference: string; encouragement: string; }
@@ -21,22 +22,19 @@ export const DailyVerse = () => {
   }, [dailyContent]);
 
   return (
-    <section className="py-8 md:py-12 bg-gradient-to-br from-background via-muted/20 to-background">
-      <div className="container mx-auto px-4">
-        <Card className="max-w-4xl mx-auto p-6 md:p-8 shadow-lg border-primary/20 bg-card">
-          <div className="flex items-center gap-3 mb-6">
-            <div className="p-2 bg-primary/10 rounded-full"><BookOpen className="w-5 h-5 md:w-6 md:h-6 text-primary" /></div>
-            <h2 className="text-lg md:text-xl font-serif font-bold">Verse of the Day</h2>
-          </div>
-          <blockquote className="mb-6">
-            <p className="text-base md:text-xl font-serif leading-relaxed mb-3 italic">"{todayContent.verse}"</p>
-            <footer className="text-right"><cite className="text-sm md:text-base font-semibold text-primary not-italic">— {todayContent.reference}</cite></footer>
-          </blockquote>
-          <div className="flex items-start gap-3 p-4 bg-muted/50 rounded-lg border-l-4 border-accent">
-            <Heart className="w-5 h-5 text-accent flex-shrink-0 mt-0.5" />
-            <p className="text-sm md:text-base italic text-foreground">{todayContent.encouragement}</p>
-          </div>
-        </Card>
+    <section className="relative isolate overflow-hidden py-20 md:py-32">
+      <img src={optimizedImageUrl(COMMUNITY_IMAGES[2], { width: 1600, quality: 65 })} alt="" aria-hidden className="absolute inset-0 -z-20 h-full w-full object-cover" loading="lazy" decoding="async" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-black/75 to-background" />
+      <div className="container mx-auto px-4 text-center">
+        <p className="mb-6 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-secondary">
+          <span className="h-px w-8 bg-secondary" /> Verse of the Day <span className="h-px w-8 bg-secondary" />
+        </p>
+        <blockquote className="mx-auto max-w-4xl font-serif text-2xl italic leading-snug text-white md:text-4xl lg:text-5xl">“{todayContent.verse}”</blockquote>
+        <cite className="mt-6 block text-base font-semibold not-italic tracking-wide text-secondary">{todayContent.reference}</cite>
+        <p className="mx-auto mt-8 inline-flex max-w-xl items-start gap-3 rounded-full border border-white/15 bg-white/5 px-6 py-3 text-sm text-white/80 backdrop-blur-sm">
+          <Heart className="mt-0.5 h-4 w-4 flex-shrink-0 text-accent" />
+          {todayContent.encouragement}
+        </p>
       </div>
     </section>
   );

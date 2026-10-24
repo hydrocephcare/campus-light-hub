@@ -40,7 +40,7 @@ export const AnimatedSection: React.FC<AnimatedSectionProps> = ({
     <div
       ref={ref}
       className={cn(
-        'transition-all duration-700 ease-out overflow-hidden',
+        'transition-all duration-700 ease-out overflow-x-clip',
         isVisible ? visibleClasses[animation] : animationClasses[animation],
         className
       )}

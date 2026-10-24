@@ -34,7 +34,7 @@ export const ScrollRow = ({ children, className }: ScrollRowProps) => {
         type="button"
         onClick={() => scroll(-1)}
         aria-label="Scroll left"
-        className="absolute -left-3 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-background/90 text-foreground shadow-xl backdrop-blur transition hover:bg-secondary hover:text-secondary-foreground md:flex"
+        className="absolute -left-3 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-xl transition hover:bg-secondary hover:text-secondary-foreground md:flex"
       >
         <ChevronLeft className="h-5 w-5" />
       </button>
@@ -42,7 +42,7 @@ export const ScrollRow = ({ children, className }: ScrollRowProps) => {
         type="button"
         onClick={() => scroll(1)}
         aria-label="Scroll right"
-        className="absolute -right-3 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/20 bg-background/90 text-foreground shadow-xl backdrop-blur transition hover:bg-secondary hover:text-secondary-foreground md:flex"
+        className="absolute -right-3 top-1/2 z-10 hidden h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-border bg-card text-foreground shadow-xl transition hover:bg-secondary hover:text-secondary-foreground md:flex"
       >
         <ChevronRight className="h-5 w-5" />
       </button>

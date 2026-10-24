@@ -54,7 +54,7 @@ export const ConnectWithUs = () => {
   const contactMethods = [
     { icon: MessageCircle, title: "WhatsApp", description: "Join our community group", action: "Join Group", link: COMMUNITY_LINK, color: "bg-green-500/10 text-green-600 dark:text-green-400", type: "external" },
     { icon: Phone, title: "Call Us", description: contact.phone, action: "Call", link: `tel:+254${contact.phone.replace(/^0/, "")}`, color: "bg-primary/10 text-primary", type: "external" },
-    { icon: Mail, title: "Email", description: contact.email, action: "Send Email", link: `mailto:${contact.email}`, color: "bg-secondary/10 text-secondary", type: "external" },
+    { icon: Mail, title: "Email", description: contact.email, action: "Send Email", link: `mailto:${contact.email}`, color: "bg-secondary/10 text-primary", type: "external" },
     { icon: MapPin, title: "Location", description: contact.location, action: "Get Directions", link: contact.map_link, color: "bg-accent/10 text-accent", type: "location" },
   ];
 

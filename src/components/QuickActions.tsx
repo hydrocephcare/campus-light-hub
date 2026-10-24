@@ -20,7 +20,7 @@ export const QuickActions = () => {
       <div className="container relative mx-auto px-4">
         <div className="mb-6 flex flex-col gap-2 md:mb-8 md:flex-row md:items-end md:justify-between">
           <div>
-            <p className="mb-2 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-secondary"><span className="h-px w-8 bg-secondary" />Get involved</p>
+            <p className="mb-2 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-primary"><span className="h-px w-8 bg-secondary" />Get involved</p>
             <h2 className="font-serif text-3xl font-semibold text-foreground md:text-4xl">Find your place at MKU CU</h2>
           </div>
           <p className="max-w-sm text-sm text-muted-foreground">Worship, study, serve and pray with students across campus.</p>
@@ -34,8 +34,8 @@ export const QuickActions = () => {
                 href={action.link}
                 className="group relative rounded-3xl border border-border bg-card/80 p-5 backdrop-blur-sm transition-all duration-300 hover:-translate-y-1 hover:border-secondary/60 hover:bg-card hover:shadow-xl"
               >
-                <ArrowUpRight className="absolute right-4 top-4 h-4 w-4 text-muted-foreground transition-colors group-hover:text-secondary" />
-                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/30 text-secondary transition-colors group-hover:bg-secondary group-hover:text-secondary-foreground">
+                <ArrowUpRight className="absolute right-4 top-4 h-4 w-4 text-muted-foreground transition-colors group-hover:text-primary" />
+                <div className="mb-5 flex h-11 w-11 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-secondary group-hover:text-secondary-foreground">
                   <Icon className="w-5 h-5" />
                 </div>
                 <h3 className="font-sans text-base font-semibold tracking-normal text-foreground">{action.title}</h3>

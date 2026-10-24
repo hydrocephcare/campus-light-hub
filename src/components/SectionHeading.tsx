@@ -13,8 +13,8 @@ interface SectionHeadingProps {
 export const SectionHeading = ({ eyebrow, title, description, action, className }: SectionHeadingProps) => (
   <div className={cn("mb-8 flex flex-col gap-4 md:mb-12 md:flex-row md:items-end md:justify-between", className)}>
     <div className="max-w-2xl">
-      <p className="mb-3 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
-        <span className="h-px w-8 bg-secondary" />
+      <p className="mb-3 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
+        <span className="h-0.5 w-8 rounded bg-secondary" />
         {eyebrow}
       </p>
       <h2 className="text-3xl font-semibold leading-tight text-foreground md:text-5xl">{title}</h2>

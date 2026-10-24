@@ -79,7 +79,7 @@ export const PrayerRequestForm = () => {
       <div className="container mx-auto px-4">
         <div className="max-w-3xl mx-auto">
           <div className="text-center mb-8 md:mb-12">
-            <p className="mb-4 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-secondary">
+            <p className="mb-4 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.25em] text-primary">
               <span className="h-px w-8 bg-secondary" />
               <MessageCircleHeart className="h-4 w-4" /> Prayer request
               <span className="h-px w-8 bg-secondary" />

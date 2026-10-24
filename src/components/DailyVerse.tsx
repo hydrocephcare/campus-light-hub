@@ -24,7 +24,7 @@ export const DailyVerse = () => {
   return (
     <section className="relative isolate overflow-hidden py-20 md:py-32">
       <img src={optimizedImageUrl(COMMUNITY_IMAGES[2], { width: 1600, quality: 65 })} alt="" aria-hidden className="absolute inset-0 -z-20 h-full w-full object-cover" loading="lazy" decoding="async" />
-      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-background via-black/75 to-background" />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/80 via-black/70 to-black/80" />
       <div className="container mx-auto px-4 text-center">
         <p className="mb-6 inline-flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.3em] text-secondary">
           <span className="h-px w-8 bg-secondary" /> Verse of the Day <span className="h-px w-8 bg-secondary" />

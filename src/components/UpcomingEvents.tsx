@@ -29,7 +29,7 @@ export const UpcomingEvents=()=>{
     <SectionHeading
      eyebrow="2026/2027 semester"
      title="Coming up"
-     action={<Button asChild variant="outline" className="rounded-full border-white/20"><Link to="/events">Full calendar <ArrowRight className="ml-2 h-4 w-4"/></Link></Button>}
+     action={<Button asChild variant="outline" className="rounded-full border-border"><Link to="/events">Full calendar <ArrowRight className="ml-2 h-4 w-4"/></Link></Button>}
     />
     <ScrollRow>
      {events.map(event => {
@@ -47,13 +47,13 @@ export const UpcomingEvents=()=>{
         </Link>
         <div className="flex flex-1 flex-col p-5">
          <h3 className="line-clamp-2 font-serif text-xl font-semibold leading-snug text-card-foreground">{event.title}</h3>
-         {event.theme && <p className="mt-1 line-clamp-1 text-sm font-medium text-secondary">{event.theme}</p>}
+         {event.theme && <p className="mt-1 line-clamp-1 text-sm font-medium text-primary">{event.theme}</p>}
          <div className="mt-3 space-y-1.5 text-sm text-muted-foreground">
           <p className="flex items-center gap-2"><Clock className="h-3.5 w-3.5 text-primary"/>{event.start_time}{event.end_time?` – ${event.end_time}`:""}</p>
           <p className="flex items-center gap-2"><MapPin className="h-3.5 w-3.5 text-primary"/>{event.location}</p>
          </div>
          <div className="mt-auto flex items-center justify-between pt-5">
-          <Link to={`/events/${event.id}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-secondary hover:underline underline-offset-8">View details <ArrowRight className="h-4 w-4"/></Link>
+          <Link to={`/events/${event.id}`} className="inline-flex items-center gap-1.5 text-sm font-semibold text-primary hover:underline underline-offset-8">View details <ArrowRight className="h-4 w-4"/></Link>
           <Button variant="outline" size="icon" className="h-9 w-9 rounded-full" aria-label={`Share ${event.title}`} onClick={()=>shareItem({kind:"event",key:event.id,title:event.title,text:`${event.title} — ${d.toLocaleDateString()} · ${event.start_time} · ${event.location}`,onCopied:()=>toast.success("Event link copied!")})}><Share2 className="h-3.5 w-3.5"/></Button>
          </div>
         </div>

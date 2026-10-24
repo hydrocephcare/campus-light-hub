@@ -62,7 +62,7 @@ export const LeadersPreview = () => {
           action={
             <Link
               to="/leadership"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
             >
               View all leaders <ArrowRight className="h-4 w-4" />
             </Link>

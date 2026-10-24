@@ -15,9 +15,9 @@ export const GivingSection = () => {
         <div className="max-w-6xl mx-auto">
           <SectionHeading eyebrow="Tithes & offerings" title="Give cheerfully" description="Your generous contributions help us spread the Gospel, support our community, and continue God's work at MKU Christian Union." />
           <figure className="relative mb-12 overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-secondary/15 via-card to-card p-8 md:p-12">
-            <BookOpen className="mb-4 h-8 w-8 text-secondary" />
+            <BookOpen className="mb-4 h-8 w-8 text-primary" />
             <blockquote className="max-w-4xl font-serif text-xl italic leading-relaxed text-foreground md:text-3xl">“{giving.scripture}”</blockquote>
-            <figcaption className="mt-4 text-sm font-semibold uppercase tracking-widest text-secondary">{giving.scripture_ref}</figcaption>
+            <figcaption className="mt-4 text-sm font-semibold uppercase tracking-widest text-primary">{giving.scripture_ref}</figcaption>
           </figure>
 
           <div className="grid lg:grid-cols-2 gap-8 items-start">
@@ -30,7 +30,7 @@ export const GivingSection = () => {
               </Card>
               <Card className="p-5 border-border hover:shadow-lg transition-shadow bg-card">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0"><BookOpen className="w-6 h-6 text-secondary" /></div>
+                  <div className="w-12 h-12 bg-secondary/10 rounded-full flex items-center justify-center flex-shrink-0"><BookOpen className="w-6 h-6 text-primary" /></div>
                   <div><h3 className="font-bold text-lg mb-2 text-foreground">Bible Teaching</h3><p className="text-muted-foreground text-sm leading-relaxed">Enable quality biblical education, resources, and training that equip believers to grow in their faith.</p></div>
                 </div>
               </Card>
@@ -52,7 +52,7 @@ export const GivingSection = () => {
                 <div className="bg-card rounded-xl p-5 border-2 border-green-200 dark:border-green-800 mb-6">
                   <div className="flex items-center justify-between mb-2">
                     <span className="text-sm text-muted-foreground font-medium">Till Number:</span>
-                    <span className="font-serif text-3xl md:text-5xl font-semibold text-secondary">{giving.till_number}</span>
+                    <span className="font-serif text-3xl md:text-5xl font-semibold text-primary">{giving.till_number}</span>
                   </div>
                   <p className="text-xs text-muted-foreground text-center">{giving.till_name}</p>
                 </div>
@@ -72,7 +72,7 @@ export const GivingSection = () => {
                 </div>
               </Card>
               <div className="text-center mt-8">
-                <Sparkles className="w-6 h-6 text-secondary mx-auto mb-3" />
+                <Sparkles className="w-6 h-6 text-primary mx-auto mb-3" />
                 <h4 className="text-lg font-bold text-foreground mb-2">Every Gift Makes a Difference</h4>
                 <p className="text-sm text-muted-foreground leading-relaxed">Whether you give your tithes, offerings, or special contributions, your generosity is making an eternal impact.</p>
               </div>

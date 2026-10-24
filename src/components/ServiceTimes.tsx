@@ -118,7 +118,7 @@ export const ServiceTimes = () => {
                   className={`grid grid-cols-[5.5rem_1fr] items-center gap-4 p-5 transition-colors md:grid-cols-[8rem_1fr_auto] md:p-7 ${isHighlight ? "bg-primary/20" : "hover:bg-muted/40"}`}
                 >
                   <div>
-                    <p className={`font-serif text-xl font-semibold md:text-3xl ${isHighlight ? "text-secondary" : "text-foreground"}`}>
+                    <p className={`font-serif text-xl font-semibold md:text-3xl ${isHighlight ? "text-primary" : "text-foreground"}`}>
                       {service.day_of_week.slice(0, 3)}
                     </p>
                     <p className="text-xs uppercase tracking-widest text-muted-foreground">{service.day_of_week}</p>
@@ -131,7 +131,7 @@ export const ServiceTimes = () => {
                     </p>
                   </div>
                   <p className="col-span-2 flex items-center gap-2 text-sm font-semibold text-foreground md:col-span-1 md:justify-end">
-                    <Clock className="h-4 w-4 text-secondary" />
+                    <Clock className="h-4 w-4 text-primary" />
                     {formatTime(service.start_time, service.end_time)}
                   </p>
                 </li>

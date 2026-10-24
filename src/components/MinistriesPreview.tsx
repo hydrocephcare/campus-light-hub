@@ -58,7 +58,7 @@ export const MinistriesPreview = () => {
           action={
             <Link
               to="/ministries"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-primary"
             >
               All ministries <ArrowRight className="h-4 w-4" />
             </Link>
@@ -73,10 +73,10 @@ export const MinistriesPreview = () => {
                 key={ministry.id}
                 className="group relative flex w-[86%] shrink-0 snap-start flex-col overflow-hidden rounded-3xl border border-border bg-card p-7 sm:w-[24rem] transition duration-300 hover:-translate-y-1 hover:border-secondary/50 hover:shadow-2xl md:p-9"
               >
-                <span className="pointer-events-none absolute -right-2 -top-6 select-none font-serif text-[9rem] font-semibold leading-none text-foreground/[0.04] transition-colors group-hover:text-secondary/10">
+                <span className="pointer-events-none absolute -right-2 -top-6 select-none font-serif text-[9rem] font-semibold leading-none text-foreground/[0.04] transition-colors group-hover:text-primary/10">
                   {String(index + 1).padStart(2, "0")}
                 </span>
-                <span className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/30 text-secondary transition-colors group-hover:bg-secondary group-hover:text-secondary-foreground">
+                <span className="relative mb-6 flex h-14 w-14 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-secondary group-hover:text-secondary-foreground">
                   <Icon className="h-7 w-7" />
                 </span>
                 <h3 className="relative font-serif text-2xl font-semibold text-card-foreground md:text-3xl">{ministry.name}</h3>
@@ -96,7 +96,7 @@ export const MinistriesPreview = () => {
                     href={ministry.joining_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="relative mt-6 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-secondary underline-offset-8 hover:underline"
+                    className="relative mt-6 inline-flex items-center gap-1.5 self-start text-sm font-semibold text-primary underline-offset-8 hover:underline"
                   >
                     Join this ministry <ArrowUpRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
                   </a>

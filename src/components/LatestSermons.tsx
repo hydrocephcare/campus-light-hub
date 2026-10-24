@@ -99,7 +99,7 @@ export const LatestSermons = () => {
               href={branding.youtube_live_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-primary"
             >
               <Youtube className="h-4 w-4" /> YouTube channel <ArrowUpRight className="h-4 w-4" />
             </a>

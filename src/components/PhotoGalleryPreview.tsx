@@ -50,7 +50,7 @@ export const PhotoGalleryPreview = () => {
           action={
             <Link
               to="/photos"
-              className="inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-secondary"
+              className="inline-flex items-center gap-2 rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-foreground transition hover:border-secondary hover:text-primary"
             >
               All photos <ArrowRight className="h-4 w-4" />
             </Link>

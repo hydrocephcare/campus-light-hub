@@ -23,12 +23,12 @@ export const VisionMission = () => {
 
         <div className="grid gap-5 lg:grid-cols-2">
           <article className="relative overflow-hidden rounded-3xl border border-secondary/30 bg-gradient-to-br from-primary/40 via-card to-card p-8 md:p-12">
-            <Target className="mb-6 h-9 w-9 text-secondary" />
+            <Target className="mb-6 h-9 w-9 text-primary" />
             <h3 className="font-serif text-2xl font-semibold text-foreground md:text-4xl">{vision.title}</h3>
             <p className="mt-4 text-lg leading-relaxed text-foreground/80 md:text-xl">{vision.description}</p>
           </article>
           <article className="relative overflow-hidden rounded-3xl border border-border bg-card p-8 md:p-12">
-            <Heart className="mb-6 h-9 w-9 text-secondary" />
+            <Heart className="mb-6 h-9 w-9 text-primary" />
             <h3 className="font-serif text-2xl font-semibold text-foreground md:text-4xl">{mission.title}</h3>
             <p className="mt-4 text-lg leading-relaxed text-foreground/80 md:text-xl">{mission.description}</p>
           </article>
@@ -42,7 +42,7 @@ export const VisionMission = () => {
                 const ValIcon = iconMap[value.icon] || Star;
                 return (
                   <li key={index} className="group flex gap-4 border-b border-border p-6 transition-colors hover:bg-muted/40 md:p-8 lg:border-r">
-                    <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/30 text-secondary transition-colors group-hover:bg-secondary group-hover:text-secondary-foreground">
+                    <span className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-2xl bg-primary/10 text-primary transition-colors group-hover:bg-secondary group-hover:text-secondary-foreground">
                       <ValIcon className="h-6 w-6" />
                     </span>
                     <div>

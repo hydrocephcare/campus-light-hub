@@ -26,22 +26,22 @@ const Index = () => (
   <div className="min-h-screen bg-background overflow-x-hidden">
     <SEOHead page="home" />
     <Header />
-    <main className="dark bg-background text-foreground [&_section]:!bg-transparent">
+    <main className="bg-background text-foreground [&_section]:!bg-transparent">
       <EnhancedHeroSlider />
       <QuickActions />
-      <div className="bg-background"><AnimatedSection animation="fade-up"><ServiceTimes /></AnimatedSection></div>
+      <div className="bg-background"><div className="bg-muted/60"><AnimatedSection animation="fade-up"><ServiceTimes /></AnimatedSection></div></div>
       <div className="bg-card/40"><AnimatedSection animation="fade-up"><UpcomingEvents /></AnimatedSection></div>
-      <div className="bg-background"><AnimatedSection animation="fade-up"><ChurchAnnouncements /></AnimatedSection></div>
+      <div className="bg-background"><div className="bg-muted/60"><AnimatedSection animation="fade-up"><ChurchAnnouncements /></AnimatedSection></div></div>
       <div><AnimatedSection animation="fade-up"><DailyVerse /></AnimatedSection></div>
       <Suspense fallback={<SectionFallback />}>
         <div className="bg-background"><AnimatedSection animation="fade-up"><LatestSermons /></AnimatedSection></div>
-        <div className="bg-card/40"><AnimatedSection animation="fade-up"><PhotoGalleryPreview /></AnimatedSection></div>
+        <div className="bg-card/40"><div className="bg-muted/60"><AnimatedSection animation="fade-up"><PhotoGalleryPreview /></AnimatedSection></div></div>
         <div className="bg-background"><AnimatedSection animation="fade-up"><MinistriesPreview /></AnimatedSection></div>
-        <div className="bg-card/40"><AnimatedSection animation="fade-up"><VisionMission /></AnimatedSection></div>
+        <div className="bg-card/40"><div className="bg-muted/60"><AnimatedSection animation="fade-up"><VisionMission /></AnimatedSection></div></div>
         <div className="bg-background"><AnimatedSection animation="fade-up"><LeadersPreview /></AnimatedSection></div>
-        <div className="bg-card/40"><AnimatedSection animation="fade-up"><PrayerRequestForm /></AnimatedSection></div>
+        <div className="bg-card/40"><div className="bg-muted/60"><AnimatedSection animation="fade-up"><PrayerRequestForm /></AnimatedSection></div></div>
         <div className="bg-background"><AnimatedSection animation="fade-up"><GivingSection /></AnimatedSection></div>
-        <div className="bg-card/40"><AnimatedSection animation="fade-up"><ConnectWithUs /></AnimatedSection></div>
+        <div className="bg-card/40"><div className="bg-muted/60"><AnimatedSection animation="fade-up"><ConnectWithUs /></AnimatedSection></div></div>
       </Suspense>
     </main>
     <Footer />
